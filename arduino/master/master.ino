@@ -1,4 +1,5 @@
-#include <Bounce2.h>
+#include <Wire.h> // I2C communications between arduinos
+#include <Bounce2.h> // For buttons and switch debouncing
 
 // Lights
 // BCN
@@ -36,6 +37,21 @@ Bounce2::Button btn_lights_STRB = Bounce2::Button();
 #define EVENT_STRB_ON 0x1051
 #define EVENT_STRB_OFF 0x1050
 
+
+// Engine and systems
+// Left Pump
+Bounce2::Button btn_engine_LPUMP = Bounce2::Button();
+#define BTN_LPUMP_PIN 14 // TO BE CHANGED
+#define LED_LPUMP_PIN 15 // TO BE CHANGED
+#define EVENT_LPUMP_ON 0x2011
+#define EVENT_LPUMP_OFF 0x2010
+// Right Pump
+Bounce2::Button btn_engine_RPUMP = Bounce2::Button();
+#define BTN_RPUMP_PIN 16 // TO BE CHANGED
+#define LED_RPUMP_PIN 17 // TO BE CHANGED
+#define EVENT_RPUMP_ON 0x2021
+#define EVENT_RPUMP_OFF 0x2020
+
 void setup()
 {
     Serial.begin(9600); // Init Serial interface
@@ -56,6 +72,14 @@ void setup()
     // Strobe
     btn_lights_STRB.attach(BTN_STRB_PIN, INPUT_PULLUP);
     btn_lights_STRB.interval(25);
+
+    // Engine and systems
+    // Left Pump
+    btn_engine_LPUMP.attach(BTN_LPUMP_PIN, INPUT_PULLUP);
+    btn_engine_LPUMP.interval(25);
+    // Righut Pump
+    btn_engine_RPUMP.attach(BTN_RPUMP_PIN, INPUT_PULLUP);
+    btn_engine_RPUMP.interval(25);
 }
 
 void loop()
@@ -120,5 +144,31 @@ void loop()
     { // Switch moved to ON
         Serial.write(EVENT_STRB_OFF);
         digitalWrite(LED_STRB_PIN, LOW);
+    }
+
+    // Engines
+    // Left Pump
+    btn_engine_LPUMP.update();
+    if (btn_engine_LPUMP.fell())
+    { // Switch moved to OFF
+        Serial.write(EVENT_LPUMP_ON);
+        digitalWrite(LED_LPUMP_PIN, HIGH);
+    }
+    else if (btn_engine_LPUMP.rose())
+    { // Switch moved to ON
+        Serial.write(EVENT_LPUMP_OFF);
+        digitalWrite(LED_LPUMP_PIN, LOW);
+    }
+    // Right Pump
+    btn_engine_RPUMP.update();
+    if (btn_engine_RPUMP.fell())
+    { // Switch moved to OFF
+        Serial.write(EVENT_RPUMP_ON);
+        digitalWrite(LED_RPUMP_PIN, HIGH);
+    }
+    else if (btn_engine_RPUMP.rose())
+    { // Switch moved to ON
+        Serial.write(EVENT_RPUMP_OFF);
+        digitalWrite(LED_RPUMP_PIN, LOW);
     }
 }
