@@ -81,6 +81,38 @@ LED led_engine_ANTI_ICE = LED(LED_ANTI_ICE_PIN);
 #define EVENT_ANTI_ICE_ON 0xffff
 #define EVENT_ANTI_ICE_OFF 0xffff
 
+// Landing gear
+Bounce2::Button btn_LDG_GEAR = Bounce2::Button();
+#define BTN_LDG_GEAR_PIN 46
+#define LED_LDG_GEAR_RED_PIN 42
+LED led_LDG_GEAR_RED = LED(LED_LDG_GEAR_RED_PIN);
+#define LED_LDG_GEAR_GREEN_LEFT_PIN 43
+LED led_LDG_GEAR_GREEN_LEFT = LED(LED_LDG_GEAR_GREEN_LEFT_PIN);
+#define LED_LDG_GEAR_GREEN_CENTER_PIN 44
+LED led_LDG_GEAR__GREEN_CENTER = LED(LED_LDG_GEAR_GREEN_CENTER_PIN);
+#define LED_LDG_GEAR_GREEN_RIGHT_PIN 45
+LED led_LDG_GEAR_GREEN_RIGHT = LED(LED_LDG_GEAR_GREEN_RIGHT_PIN);
+#define EVENT_LDG_GEAR_UP 0x6020
+#define EVENT_LDG_GEAR_DN 0x6021
+
+// Flaps
+Bounce2::Button btn_FLAPS_UP = Bounce2::Button();
+#define BTN_FLAPS_UP_PIN 51
+Bounce2::Button btn_FLAPS_DN = Bounce2::Button();
+#define BTN_FLAPS_DN_PIN 52
+#define LED_FLAPS_0_PIN 47
+#define LED_FLAPS_1_PIN 48
+#define LED_FLAPS_2_PIN 49
+#define LED_FLAPS_FULL_PIN 50
+LED led_FLAPS[4];
+led_FLAPS[0] = LED(LED_FLAPS_0_PIN);
+led_FLAPS[1] = LED(LED_FLAPS_1_PIN);
+led_FLAPS[2] = LED(LED_FLAPS_2_PIN);
+led_FLAPS[3] = LED(LED_FLAPS_FULL_PIN);
+int current_flaps = 0;
+#define EVENT_FLAPS_INC 0x6061
+#define EVENT_FLAPS_DEC 0x6060
+
 void setup()
 {
     Serial.begin(9600); // Init Serial interface
@@ -118,6 +150,16 @@ void setup()
     // Anti-ice
     btn_engine_ANTI_ICE.attach(BTN_ANTI_ICE_PIN, INPUT_PULLUP);
     btn_engine_ANTI_ICE.interval(25);
+    
+    // Landing Gear
+    btn_LDG_GEAR.attach(BTN_LDG_GEAR_PIN, INPUT_PULLUP);
+    btn_LDG_GEAR.interval(25);
+    
+    // Flaps
+    btn_FLAPS_UP.attach(BTN_FLAPS_UP_PIN, INPUT_PULLUP);
+    btn_FLAPS_UP.interval(25);
+    btn_FLAPS_DN.attach(BTN_FLAPS_DN_PIN, INPUT_PULLUP);
+    btn_FLAPS_DN.interval(25);
 }
 
 void loop()
@@ -244,5 +286,44 @@ void loop()
     { // Switch moved to ON
         Serial.write(EVENT_ANTI_ICE_ON);
         led_engine_ANTI_ICE.on();
+    }
+
+    // Landing gear
+    btn_LDG_GEAR.update();
+    if (btn_LDG_GEAR.fell())
+    { // Switch moved to OFF
+        Serial.write(EVENT_LDG_GEAR_DN);
+        led_engine_ANTI_ICE.off(); 
+        led_LDG_GEAR_GREEN_LEFT.on();
+        led_LDG_GEAR_GREEN_CENTER.on();
+        led_LDG_GEAR_GREEN_RIGHT.on();
+    }
+    else if (btn_LDG_GEAR.rose())
+    { // Switch moved to ON
+        Serial.write(EVENT_LDG_GEAR_UP);
+        led_LDG_GEAR_RED.off();
+        led_LDG_GEAR_GREEN_LEFT.off();
+        led_LDG_GEAR_GREEN_CENTER.off();
+        led_LDG_GEAR_GREEN_RIGHT.off();
+    }
+
+    // Flaps up
+    btn_FLAPS_UP.update();
+    if (btn_FLAPS_UP.rose() && current_flaps > 0)
+    { // Switch moved to ON
+        led_FLAPS[current_flaps].off();
+        ccurrent_flaps--;
+        led_FLAPS[current_flaps].on();
+        Serial.write(EVENT_FLAPS_DEC);
+    }
+
+    // Flaps down
+    btn_FLAPS_Dn.update();
+    if (btn_FLAPS_DN.rose() && current_flaps < 3)
+    { // Switch moved to ON
+        led_FLAPS[current_flaps].off();
+        ccurrent_flaps++;
+        led_FLAPS[current_flaps].on();
+        Serial.write(EVENT_FLAPS_INC);
     }
 }
