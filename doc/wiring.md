@@ -24,3 +24,14 @@ There will be two arduinos mega, numbered 1 and 2
 | Switch   | NA light sw                        | 1       | D39  |
 | Led      | STRB light led                     | 1       | D40  |
 | Switch   | STRB light sw                      | 1       | D41  |
+| Led      | RED landing gear led               | 1       | D42  |
+| Led      | GREEN left landing gear led        | 1       | D43  |
+| Led      | GREEN front landing gear led       | 1       | D44  |
+| Led      | GREEN right landing gear led       | 1       | D45  |
+| Switch   | Landing gear sw                    | 1       | D46  |
+| Led      | FLAP 0 led                         | 1       | D47  |
+| Led      | FLAP 1 led                         | 1       | D46  |
+| Led      | FLAP 2 led                         | 1       | D49  |
+| Led      | FLAP FULL led                      | 1       | D50  |
+| Switch   | Flap up sw                         | 1       | D51  |
+| Switch   | Flap down sw                       | 1       | D52  |
