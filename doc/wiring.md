@@ -61,8 +61,8 @@ To limit the number of inputs, most push up buttons on the G1000 interface will 
 | Row 1  | PFD FN 1 | PFD FN 2 | PFD FN 3 | PFD FN 4 | PFD FN 5 | PFD FN 6 | PFD FN 7 | PFD FN 8 |
 | Row 2  | PFD FN 9 | PFD FN 10 | PFD FN 11 | PFD FN 12 | MFD FN 1 | MFD FN 2 | MFD FN 3 | MFD FN 4 |
 | Row 3  | MFD FN 5 | MFD FN 6 | MFD FN 7 | MFD FN 8 | MFD FN 9 | MFD FN 10 | MFD FN 11 | MFD FN 12 |
-| Row 4  |          |          |          |          |          |          |          |          |
-| Row 5  |          |          |          |          |          |          |          |          |
+| Row 4  | AP       | FD       | Yaw Dplr | Speed IAS | HDG     | ALT      | NAV      | VNV      |
+| Row 5  | APR      | Back CRS | VS       | FLC      | UP       | DWN      |          |          |
 | Row 6  |          |          |          |          |          |          |          |          |
 | Row 7  |          |          |          |          |          |          |          |          |
 | Row 8  |          |          |          |          |          |          |          |          |
