@@ -131,6 +131,11 @@ void setup()
     }
     LOG_STACK[LOG_DEPTH - 1] = "Initialization started...";
     
+    // Initializing screen
+    u8g2.begin();   
+    u8g2.setFont(u8g2_font_ncenB08_tr); // choose a suitable font
+    update_display = 1;
+    
     Serial.begin(9600); // Init Serial interface
 
     // Initiate lights
@@ -387,6 +392,12 @@ void updateDisplay()
 {
     if(update_display)
     {
+        u8g2.clearBuffer();
+        for(i = 0 ; i < LOG_DEPTH ; i++)
+        {
+            u8g2.drawStr(1 + 16 * i, 1, LOG_STACK[i].c_str());
+        }
+        u8g2.sendBuffer();
         update_display = 0;
     }
 }
