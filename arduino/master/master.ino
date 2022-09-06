@@ -59,6 +59,27 @@ Bounce2::Button btn_engine_RPUMP = Bounce2::Button();
 LED led_engine_RPUMP = LED(LED_RPUMP_PIN);
 #define EVENT_RPUMP_ON 0x2021
 #define EVENT_RPUMP_OFF 0x2020
+// Carb Head
+Bounce2::Button btn_engine_CARB = Bounce2::Button();
+#define BTN_CARB_PIN 27
+#define LED_CARB_PIN 26
+LED led_engine_CARB = LED(LED_CARB_PIN);
+#define EVENT_CARB_ON 0x2031
+#define EVENT_CARB_OFF 0x2030
+// Pitot Head
+Bounce2::Button btn_engine_PITOT = Bounce2::Button();
+#define BTN_PITOT_PIN 29
+#define LED_PITOT_PIN 28
+LED led_engine_PITOT = LED(LED_PITOT_PIN);
+#define EVENT_PITOT_ON 0x6011
+#define EVENT_PITOT_OFF 0x6010
+// Anti ice
+Bounce2::Button btn_engine_ANTI_ICE = Bounce2::Button();
+#define BTN_ANTI_ICE_PIN 31
+#define LED_ANTI_ICE_PIN 30
+LED led_engine_ANTI_ICE = LED(LED_ANTI_ICE_PIN);
+#define EVENT_ANTI_ICE_ON 0xffff
+#define EVENT_ANTI_ICE_OFF 0xffff
 
 void setup()
 {
@@ -85,9 +106,18 @@ void setup()
     // Left Pump
     btn_engine_LPUMP.attach(BTN_LPUMP_PIN, INPUT_PULLUP);
     btn_engine_LPUMP.interval(25);
-    // Righut Pump
+    // Right Pump
     btn_engine_RPUMP.attach(BTN_RPUMP_PIN, INPUT_PULLUP);
     btn_engine_RPUMP.interval(25);
+    // Carb Heat
+    btn_engine_CARB.attach(BTN_CARB_PIN, INPUT_PULLUP);
+    btn_engine_CARB.interval(25);
+    // Pitot Heat
+    btn_engine_PITOT.attach(BTN_PITOT_PIN, INPUT_PULLUP);
+    btn_engine_PITOT.interval(25);
+    // Anti-ice
+    btn_engine_ANTI_ICE.attach(BTN_ANTI_ICE_PIN, INPUT_PULLUP);
+    btn_engine_ANTI_ICE.interval(25);
 }
 
 void loop()
@@ -178,5 +208,41 @@ void loop()
     { // Switch moved to ON
         Serial.write(EVENT_RPUMP_ON);
         led_engine_RPUMP.on();
+    }
+    // Carb Head
+    btn_engine_CARB.update();
+    if (btn_engine_CARB.fell())
+    { // Switch moved to OFF
+        Serial.write(EVENT_CARB_OFF);
+        led_engine_CARB.off();
+    }
+    else if (btn_engine_CARB.rose())
+    { // Switch moved to ON
+        Serial.write(EVENT_CARB_ON);
+        led_engine_CARB.on();
+    }
+    // Pitot Head
+    btn_engine_PITOT.update();
+    if (btn_engine_PITOT.fell())
+    { // Switch moved to OFF
+        Serial.write(EVENT_PITOT_OFF);
+        led_engine_PITOT.off();
+    }
+    else if (btn_engine_PITOT.rose())
+    { // Switch moved to ON
+        Serial.write(EVENT_PITOT_ON);
+        led_engine_PITOT.on();
+    }}
+    // Anti ice
+    btn_engine_ANTI_ICE.update();
+    if (btn_engine_ANTI_ICE.fell())
+    { // Switch moved to OFF
+        Serial.write(EVENT_ANTI_ICE_OFF);
+        led_engine_ANTI_ICE.off();
+    }
+    else if (btn_engine_ANTI_ICE.rose())
+    { // Switch moved to ON
+        Serial.write(EVENT_ANTI_ICE_ON);
+        led_engine_ANTI_ICE.on();
     }
 }
