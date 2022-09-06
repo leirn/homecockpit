@@ -4,36 +4,36 @@
 // Lights
 // BCN
 Bounce2::Button btn_lights_BCN = Bounce2::Button();
-#define BTN_BCN_PIN 4 // TO BE CHANGED
-#define LED_BCN_PIN 5 // TO BE CHANGED
+#define BTN_BCN_PIN 33
+#define LED_BCN_PIN 32
 #define EVENT_BCN_ON 0x1011
 #define EVENT_BCN_OFF 0x1010
 
 // LAND
 Bounce2::Button btn_lights_LAND = Bounce2::Button();
-#define BTN_LAND_PIN 6 // TO BE CHANGED
-#define LED_LAND_PIN 7 // TO BE CHANGED
+#define BTN_LAND_PIN 35
+#define LED_LAND_PIN 34
 #define EVENT_LAND_ON 0x1021
 #define EVENT_LAND_OFF 0x1020
 
 // TAXI
 Bounce2::Button btn_lights_TAXI = Bounce2::Button();
-#define BTN_TAXI_PIN 8 // TO BE CHANGED
-#define LED_TAXI_PIN 9 // TO BE CHANGED
+#define BTN_TAXI_PIN 37
+#define LED_TAXI_PIN 36
 #define EVENT_TAXI_ON 0x1031
 #define EVENT_TAXI_OFF 0x1030
 
 // NAV
 Bounce2::Button btn_lights_NAV = Bounce2::Button();
-#define BTN_NAV_PIN 10 // TO BE CHANGED
-#define LED_NAV_PIN 11 // TO BE CHANGED
+#define BTN_NAV_PIN 39
+#define LED_NAV_PIN 38
 #define EVENT_NAV_ON 0x1041
 #define EVENT_NAV_OFF 0x1040
 
 // Strobe
 Bounce2::Button btn_lights_STRB = Bounce2::Button();
-#define BTN_STRB_PIN 12 // TO BE CHANGED
-#define LED_STRB_PIN 13 // TO BE CHANGED
+#define BTN_STRB_PIN 41
+#define LED_STRB_PIN 40
 #define EVENT_STRB_ON 0x1051
 #define EVENT_STRB_OFF 0x1050
 
@@ -41,14 +41,14 @@ Bounce2::Button btn_lights_STRB = Bounce2::Button();
 // Engine and systems
 // Left Pump
 Bounce2::Button btn_engine_LPUMP = Bounce2::Button();
-#define BTN_LPUMP_PIN 14 // TO BE CHANGED
-#define LED_LPUMP_PIN 15 // TO BE CHANGED
+#define BTN_LPUMP_PIN 23
+#define LED_LPUMP_PIN 22
 #define EVENT_LPUMP_ON 0x2011
 #define EVENT_LPUMP_OFF 0x2010
 // Right Pump
 Bounce2::Button btn_engine_RPUMP = Bounce2::Button();
-#define BTN_RPUMP_PIN 16 // TO BE CHANGED
-#define LED_RPUMP_PIN 17 // TO BE CHANGED
+#define BTN_RPUMP_PIN 25
+#define LED_RPUMP_PIN 24
 #define EVENT_RPUMP_ON 0x2021
 #define EVENT_RPUMP_OFF 0x2020
 
