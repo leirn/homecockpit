@@ -4,6 +4,11 @@ There will be two arduinos mega, numbered 1 and 2
 
 | Type     | Description                        | Arduino | Port |
 |----------|------------------------------------|---------|------|
+| Screen   | CS                                 | 1       | D2   |
+| Screen   | DC                                 | 1       | D3   |
+| Screen   | RESET                              | 1       | D4   |
+| Screen   | Data                               | 1       | D5   |
+| Screen   | Clock                              | 1       | D6   |
 | Led      | Left pump led                      | 1       | D22  |
 | Switch   | Left pump sw                       | 1       | D23  |
 | Led      | Right pump led                     | 1       | D24  |
