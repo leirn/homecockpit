@@ -2,6 +2,12 @@
 #include <Bounce2.h> // For buttons and switch debouncing
 #include <LED.h> // To handle LEDs. Allows led.blink()
 
+#include <Arduino.h>
+#include <U8g2lib.h>
+#include <SPI.h>
+
+U8G2_SSD1309_128X64_NONAME0_F_4W_SW_SPI u8g2(U8G2_R0, /* clock=*/ 6, /* data=*/ 5, /* cs=*/ 2, /* dc=*/ 3, /* reset=*/ 4);
+
 // Lights
 // BCN
 Bounce2::Button btn_lights_BCN = Bounce2::Button();
@@ -113,8 +119,18 @@ int current_flaps = 0;
 #define EVENT_FLAPS_INC 0x6061
 #define EVENT_FLAPS_DEC 0x6060
 
+int update_display = 0;
+LOG_DEPTH = 8;
+String LOG_STACK[LOG_DEPTH];
+
 void setup()
 {
+    for(i = 0; i < LOG_DEPTH - 1 ; i++)
+    {
+        LOG_STACK[0] = " ";
+    }
+    LOG_STACK[LOG_DEPTH - 1] = "Initialization started...";
+    
     Serial.begin(9600); // Init Serial interface
 
     // Initiate lights
@@ -164,6 +180,13 @@ void setup()
 
 void loop()
 {
+    updateButtons();
+    readSerialInputFromComputer();
+    readSerialInputFromSlave();
+    updateDisplay();
+}
+
+void updateButtons() {
     // Lights
     // BCN
     btn_lights_BCN.update();
@@ -171,11 +194,13 @@ void loop()
     { // Switch moved to OFF
         Serial.write(EVENT_BCN_OFF);
         led_lights_BCN.off();
+        log("BCN light set to OFF");
     }
     else if (btn_lights_BCN.rose())
     { // Switch moved to ON
         Serial.write(EVENT_BCN_ON);
         led_lights_BCN.on();
+        log("BCN light set to ON");
     }
     // LAND
     btn_lights_LAND.update();
@@ -183,11 +208,13 @@ void loop()
     { // Switch moved to OFF
         Serial.write(EVENT_LAND_OFF);
         led_lights_LAND.off();
+        log("LAND light set to OFF");
     }
     else if (btn_lights_LAND.rose())
     { // Switch moved to ON
         Serial.write(EVENT_LAND_ON);
         led_lights_LAND.on();
+        log("LAND light set to ON");
     }
     // TAXI
     btn_lights_TAXI.update();
@@ -195,11 +222,13 @@ void loop()
     { // Switch moved to OFF
         Serial.write(EVENT_TAXI_OFF);
         led_lights_TAXI.off();
+        log("TAXI light set to OFF");
     }
     else if (btn_lights_TAXI.rose())
     { // Switch moved to ON
         Serial.write(EVENT_TAXI_ON);
         led_lights_TAXI.on();
+        log("TAXI light set to ON");
     }
     // NAV
     btn_lights_NAV.update();
@@ -207,11 +236,13 @@ void loop()
     { // Switch moved to OFF
         Serial.write(EVENT_NAV_OFF);
         led_lights_NAV.off();
+        log("NAV light set to OFF");
     }
     else if (btn_lights_NAV.rose())
     { // Switch moved to ON
         Serial.write(EVENT_NAV_ON);
         led_lights_NAV.on();
+        log("NAV light set to ON");
     }
     // Strobe
     btn_lights_STRB.update();
@@ -219,11 +250,13 @@ void loop()
     { // Switch moved to OFF
         Serial.write(EVENT_STRB_OFF);
         led_lights_STRB.off();
+        log("STRB light set to OFF");
     }
     else if (btn_lights_STRB.rose())
     { // Switch moved to ON
         Serial.write(EVENT_STRB_ON);
         led_lights_STRB.on();
+        log("STRB light set to ON");
     }
 
     // Engines
@@ -233,11 +266,13 @@ void loop()
     { // Switch moved to OFF
         Serial.write(EVENT_LPUMP_OFF);
         led_engine_LPUMP.off();
+        log("Left pump set to OFF");
     }
     else if (btn_engine_LPUMP.rose())
     { // Switch moved to ON
         Serial.write(EVENT_LPUMP_ON);
         led_engine_LPUMP.on();
+        log("Left pump set to ON");
     }
     // Right Pump
     btn_engine_RPUMP.update();
@@ -245,11 +280,13 @@ void loop()
     { // Switch moved to OFF
         Serial.write(EVENT_RPUMP_OFF);
         led_engine_LPUMP.off();
+        log("Right pump set to OFF");
     }
     else if (btn_engine_RPUMP.rose())
     { // Switch moved to ON
         Serial.write(EVENT_RPUMP_ON);
         led_engine_RPUMP.on();
+        log("Right pump set to ON");
     }
     // Carb Head
     btn_engine_CARB.update();
@@ -257,11 +294,13 @@ void loop()
     { // Switch moved to OFF
         Serial.write(EVENT_CARB_OFF);
         led_engine_CARB.off();
+        log("Carb. heat set to OFF");
     }
     else if (btn_engine_CARB.rose())
     { // Switch moved to ON
         Serial.write(EVENT_CARB_ON);
         led_engine_CARB.on();
+        log("Carb. heat set to ON");
     }
     // Pitot Head
     btn_engine_PITOT.update();
@@ -269,11 +308,13 @@ void loop()
     { // Switch moved to OFF
         Serial.write(EVENT_PITOT_OFF);
         led_engine_PITOT.off();
+        log("Pitot heat set to OFF");
     }
     else if (btn_engine_PITOT.rose())
     { // Switch moved to ON
         Serial.write(EVENT_PITOT_ON);
         led_engine_PITOT.on();
+        log("Pitot heat set to ON");
     }}
     // Anti ice
     btn_engine_ANTI_ICE.update();
@@ -281,11 +322,13 @@ void loop()
     { // Switch moved to OFF
         Serial.write(EVENT_ANTI_ICE_OFF);
         led_engine_ANTI_ICE.off();
+        log("Anti-ice set to OFF");
     }
     else if (btn_engine_ANTI_ICE.rose())
     { // Switch moved to ON
         Serial.write(EVENT_ANTI_ICE_ON);
         led_engine_ANTI_ICE.on();
+        log("Anti-ice set to ON");
     }
 
     // Landing gear
@@ -297,6 +340,7 @@ void loop()
         led_LDG_GEAR_GREEN_LEFT.on();
         led_LDG_GEAR_GREEN_CENTER.on();
         led_LDG_GEAR_GREEN_RIGHT.on();
+        log("Landing gear set to DOWN");
     }
     else if (btn_LDG_GEAR.rose())
     { // Switch moved to ON
@@ -305,6 +349,7 @@ void loop()
         led_LDG_GEAR_GREEN_LEFT.off();
         led_LDG_GEAR_GREEN_CENTER.off();
         led_LDG_GEAR_GREEN_RIGHT.off();
+        log("Landing gear set to UP");
     }
 
     // Flaps up
@@ -315,6 +360,7 @@ void loop()
         ccurrent_flaps--;
         led_FLAPS[current_flaps].on();
         Serial.write(EVENT_FLAPS_DEC);
+        log("FLAPS DECREMENTED");
     }
 
     // Flaps down
@@ -325,5 +371,33 @@ void loop()
         ccurrent_flaps++;
         led_FLAPS[current_flaps].on();
         Serial.write(EVENT_FLAPS_INC);
+        log("FLAPS INCREMENTED");
     }
+}
+
+void readSerialInputFromComputer()
+{
+}
+
+void readSerialInputFromSlave()
+{
+}
+
+void updateDisplay()
+{
+    if(update_display)
+    {
+        update_display = 0;
+    }
+}
+
+void log(String log)
+{
+    update_display = 1;
+    delete LOG_STACK[0]
+    for(i=0 ; i < LOG_DEPTH - 1 ; i ++)
+    {
+        LOG_STACK[i] = LOG_STACK[i + 1];
+    }
+    LOG_STACK[LOG_DEPTH - 1] = log;
 }
