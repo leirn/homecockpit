@@ -3,22 +3,6 @@
  * Contains all protocol messages
  */
 
-// Engine and systems
-// Left Pump
-#define EVENT_LPUMP_ON 0x2011
-#define EVENT_LPUMP_OFF 0x2010
-// Right Pump
-#define EVENT_RPUMP_ON 0x2021
-#define EVENT_RPUMP_OFF 0x2020
-// Carb. heat
-#define EVENT_CARB_ON 0x2031
-#define EVENT_CARB_OFF 0x2030
-// Pitot heat
-#define EVENT_PITOT_ON 0x6011
-#define EVENT_PITOT_OFF 0x6010
-// Anti-ice
-#define EVENT_ANTI_ICE_ON 0xffff
-#define EVENT_ANTI_ICE_OFF 0xffff
 
 // Lights
 // BCN
@@ -47,6 +31,50 @@
 #define STATUS_STRB_OFF 0x0052
 #define STATUS_STRB_ON 0x0053
 
+
+// Engine and systems
+// Left Pump
+#define EVENT_LPUMP_OFF 0x2010
+#define EVENT_LPUMP_ON 0x2011
+#define STATUS_LPUMP_OFF 0x2012
+#define STATUS_LPUMP_ON 0x2013
+// Right Pump
+#define EVENT_RPUMP_OFF 0x2020
+#define EVENT_RPUMP_ON 0x2021
+#define STATUS_RPUMP_OFF 0x2022
+#define STATUS_RPUMP_ON 0x2023
+// Carb. heat
+#define EVENT_CARB_OFF 0x2030
+#define EVENT_CARB_ON 0x2031
+#define STATUS_CARB_OFF 0x2032
+#define STATUS_CARB_ON 0x2033
+// Anti-ice
+#define EVENT_ANTI_ICE_ON 0xffff
+#define EVENT_ANTI_ICE_OFF 0xffff
+#define STATUS_ANTI_ICE_OFF 0xffff
+#define STATUS_ANTI_ICE_ON 0xffff
+
+// Autopilots
+#define EVENT_TOGGLE_AP_MASTER 0x3011
+#define EVENT_TOGGLE_FLIGHT_DIRECTOR 0x3021
+#define EVENT_TOGGLE_YAW_DAMPLER 0x3031
+#define EVENT_TOGGLE_IAS 0x3041
+#define EVENT_TOGGLE_HEADING 0x3051
+#define EVENT_TOGGLE_ALTITUDE 0x3061
+#define EVENT_TOGGLE_NAV 0x3071
+#define EVENT_TOGGLE_VNV 0x3081
+#define EVENT_TOGGLE_APPROACH_MODE 0x3091
+#define EVENT_TOGGLE_BACK_COURSE 0x30a1
+#define EVENT_TOGGLE_VS_MODE 0x30b1
+#define EVENT_TOGGLE_VS_UP 0x30c1
+#define EVENT_TOGGLE_VS_DOWN 0x30d1
+#define EVENT_SET_HEADING_BUG 0x3110 // Last 4 bits used for value
+#define EVENT_SET_COURSE_BUG 0x3120 // Last 4 bits used for value
+#define EVENT_ALTITUDE_DEC_100 0x3131 
+#define EVENT_ALTITUDE_DEC_1000 0x3132 
+#define EVENT_ALTITUDE_INC_100 0x3135 
+#define EVENT_ALTITUDE_INC_1000 0x3136 
+
 // Landing gear
 #define EVENT_LDG_GEAR_UP 0x6020
 #define EVENT_LDG_GEAR_DN 0x6021
@@ -54,3 +82,9 @@
 // Flaps
 #define EVENT_FLAPS_INC 0x6061
 #define EVENT_FLAPS_DEC 0x6060
+
+// Pitot heat
+#define EVENT_PITOT_OFF 0x6010
+#define EVENT_PITOT_ON 0x6011
+#define STATUS_PITOT_OFF 0x6012
+#define STATUS_PITOT_ON 0x6013
