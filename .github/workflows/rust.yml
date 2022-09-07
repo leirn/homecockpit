@@ -17,4 +17,4 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Format
-      run: cargo fmt  --all -- --check --manifest-path rust/Cargo.toml
+      run: cargo fmt  --manifest-path rust/Cargo.toml  --all -- --check
