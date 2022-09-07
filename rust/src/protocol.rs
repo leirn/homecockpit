@@ -1,4 +1,4 @@
-// Protocol between Computer and Arduino
+//! Protocol between Computer and Arduino
 
 const MASK_CATEGORY: u16 = 0b1111000000000000;
 const MASK_COMPONENT: u16 = 0b0000111111110000;
