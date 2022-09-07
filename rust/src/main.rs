@@ -1,9 +1,10 @@
 //! Homecockpit server entry file
 
 use serialport::*;
+use std::fmt;
 
 mod protocol;
-use protocol::*;
+use crate::protocol::*;
 
 /// Message class
 /// This class represents messages used on the serial connection
@@ -14,7 +15,7 @@ struct Message {
     action: u8,
 }
 
-impl message {
+impl Message {
     /// Creates an empty message with 0 as values
     pub fn null() -> Message {
         Message {
@@ -28,6 +29,8 @@ impl message {
     pub fn new(received_bytes: [u8; 2]) -> Message {
         let message: u16 = (received_bytes[0] as u16) << 8 + received_bytes[1] as u16;
         let category = ((message & MASK_CATEGORY) >> 12) as u8;
+        let component = ((message & MASK_COMPONENT) >> 4) as u8;
+        let action = (message & MASK_ACTION) as u8;
         Message {
             category: category,
             component: component,
@@ -37,7 +40,7 @@ impl message {
 
     /// Retrieve the two bytes representing the message
     pub fn get_bytes_message(&self) -> [u8; 2] {
-        let buffer = [0: u8; 2];
+        let mut buffer = [0, 0];
         let message = self.get_message();
         buffer[0] = ((message & 0xff00) >> 8) as u8;
         buffer[1] = (message & 0xff) as u8;
@@ -50,7 +53,7 @@ impl message {
     }
 }
 
-impl fmt::Display for User {
+impl fmt::Display for Message {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.get_message())
     }
@@ -66,16 +69,16 @@ fn main() {
         println!("Port name : {}", port.port_name);
     }
 
-    let port = serialport::new("COM3", 9600)
+    let mut port = serialport::new("COM1", 9600)
         .open()
         .expect("Failed to open port");
 
-    while true {
-        let mut buffer = [0: u8; 2];
+    loop {
+        let mut buffer: [u8; 2] = [0, 0];
 
-        bytes_to_read = port.bytes_to_read()?;
-        if (bytes_to_read > 1) {
-            port.read_exact(&mut buffer)?;
+        let bytes_to_read = port.bytes_to_read().unwrap();
+        if bytes_to_read > 1 {
+            port.read_exact(&mut buffer).unwrap();
 
             let message = Message::new(buffer);
 
@@ -91,12 +94,12 @@ fn main() {
                 CATEGORY_RADIO_NAV_EVENTS => radio_nav_events_handler(message),
                 _ => {
                     println!("Unrecognized category for message {}", message);
-                    0
+                    Message::null()
                 }
             };
 
-            if (reponse.get_message() != 0) {
-                port.write(reponse.get_bytes_message());
+            if reponse.get_message() != 0 {
+                port.write(&reponse.get_bytes_message()).unwrap();
             }
         }
     }
@@ -131,11 +134,11 @@ fn g1000_events_handler(message: Message) -> Message {
 }
 
 /// Manage messages from the serial port where category is CATEGORY_MISC_EVENTS
-fn misc_events_handler(message: u16) -> u16 {
+fn misc_events_handler(message: Message) -> Message {
     Message::null()
 }
 
 /// Manage messages from the serial port where category is CATEGORY_RADIO_NAV_EVENTS
-fn radio_nav_events_handler(message: u16) -> u16 {
+fn radio_nav_events_handler(message: Message) -> Message {
     Message::null()
 }
