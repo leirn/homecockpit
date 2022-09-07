@@ -89,7 +89,7 @@ A *Event* message goes from Arduino to the PC, a *Status* message goes the other
 | Event  | 0x30b1 | 0b00001011 | 0b0001 | Toggle VS mode         | AP_PANEL_VS_HOLD       |
 | Event  | 0x30c1 | 0b00001100 | 0b0001 | Toggle VS Up           | AP_VS_VAR_INC          |
 | Event  | 0x30d1 | 0b00001101 | 0b0001 | Toggle VS Down         | AP_VS_VAR_DEC          |
-| Event  | 0x3141 | 0b00010100 | 0b0001 | Toggle FLC mode        |                        |
+| Event  | 0x30e1 | 0b00001110 | 0b0001 | Toggle FLC mode        |                        |
 | Event  | 0x311x | 0b00010001 | 0bxxxx | Decrease HDG bug by x     | HEADING_BUG_DEC        |
 | Event  | 0x311x | 0b00010001 | 0bxxxx | Increase HDG bug by x     | HEADING_BUG_INC        |
 | Event  | 0x311f | 0b00010001 | 0b1111 | Set HDG bug to cur. HDG   | HEADING_BUG_SET        |
