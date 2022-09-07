@@ -16,7 +16,5 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Build
-      run: cargo build --verbose --manifest-path rust/Cargo.toml
-    - name: Run tests
-      run: cargo test --verbose --manifest-path rust/Cargo.toml
+    - name: Format
+      run: cargo fmt  --all -- --check --manifest-path rust/Cargo.toml
