@@ -23,7 +23,7 @@ impl message {
             action: 0,
         }
     }
-    
+
     /// Creates a message based on received bytes from serial port
     pub fn new(received_bytes: [u8; 2]) -> Message {
         let message: u16 = (received_bytes[0] as u16) << 8 + received_bytes[1] as u16;
