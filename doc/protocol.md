@@ -4,7 +4,7 @@
 
 Exchange is mode of 2-byte messages
 
-0baaaaaabbbbbbcccc:
+0baaaabbbbbbbbcccc:
 - aaaa : event category
 - bbbbbbbb : component
 - cccc : action
