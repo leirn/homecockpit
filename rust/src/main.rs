@@ -25,8 +25,8 @@ impl message {
     }
     
     /// Creates a message based on received bytes from serial port
-    pub fn new(received_bytes:u8[2]) -> Message {
-        let message:u16 = received_bytes[0] as u16 << 8 + received_bytes[1] as u16;
+    pub fn new(received_bytes:[u8; 2]) -> Message {
+        let message:u16 = (received_bytes[0] as u16) << 8 + received_bytes[1] as u16;
         let category = ((message & MASK_CATEGORY ) >> 12) as u8;
         Message {
             category: category,
@@ -36,7 +36,7 @@ impl message {
     }
     
     /// Retrieve the two bytes representing the message
-    pub fn get_bytes_message(&self) -> u8[2] {
+    pub fn get_bytes_message(&self) -> [u8; 2] {
         let buffer = [0:u8; 2];
         let message = self.get_message();
         buffer[0] = ((message & 0xff00) >> 8) as u8;
@@ -46,7 +46,7 @@ impl message {
     
     /// Retrieve the message as u16 value
     pub fn get_message(&self) -> u16 {
-        self.category as u16 << 12 + self.component as u16 << 4 + self.action as u16
+        (self.category as u16) << 12 + (self.component as u16) << 4 + self.action as u16
     }
 }
 
@@ -91,7 +91,7 @@ fn main() {
                     println!("Unrecognized category for message {}", message);
                     0
                 },
-            }
+            };
             
             if (reponse.get_message() != 0) {
                 port.write(reponse.get_bytes_message());
@@ -103,13 +103,13 @@ fn main() {
 /// Manage messages from the serial port where category is CATEGORY_ELECTRICAL_EVENTS 
 fn electrical_events_handler(message: Message) -> Message {
     let mut response = Message::null();
-    let response.category = message.category;
-    let response.component = message.component;
-    let response.action = match message.action {
+    response.category = message.category;
+    response.component = message.component;
+    response.action = match message.action {
         EVENT_GENERAL_OFF => STATUS_GENERAL_OFF,
         EVENT_GENERAL_ON => STATUS_GENERAL_ON,
         _ => STATUS_GENERAL_ERROR
-    }
+    };
     response
 }
 
