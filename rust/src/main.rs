@@ -1,8 +1,13 @@
+//! Homecockpit server entry file 
+
 use serialport::*;
 
 mod protocol;
 use protocol::*;
 
+/// Message class
+/// This class represents messages used on the serial connection
+/// between the computer and the master Arduino module
 struct Message {
     category: u8,
     component: u8,
@@ -10,6 +15,7 @@ struct Message {
 }
 
 impl message {
+    /// Creates an empty message with 0 as values
     pub fn null() -> Message {
         Message {
             category: 0,
@@ -18,6 +24,7 @@ impl message {
         }
     }
     
+    /// Creates a message based on received bytes from serial port
     pub fn new(received_bytes:u8[2]) -> Message {
         let message:u16 = received_bytes[0] as u16 << 8 + received_bytes[1] as u16;
         let category = ((message & MASK_CATEGORY ) >> 12) as u8;
@@ -28,6 +35,7 @@ impl message {
         }
     }
     
+    /// Retrieve the two bytes representing the message
     pub fn get_bytes_message(&self) -> u8[2] {
         let buffer = [0:u8; 2];
         let message = self.get_message();
@@ -36,6 +44,7 @@ impl message {
         buffer        
     }
     
+    /// Retrieve the message as u16 value
     pub fn get_message(&self) -> u16 {
         self.category as u16 << 12 + self.component as u16 << 4 + self.action as u16
     }
@@ -47,6 +56,7 @@ impl fmt::Display for User {
     }
 }
 
+/// Program main function
 fn main() {
     println!("Hello, world!");
     
@@ -90,6 +100,7 @@ fn main() {
     }
 }
 
+/// Manage messages from the serial port where category is CATEGORY_ELECTRICAL_EVENTS 
 fn electrical_events_handler(message: Message) -> Message {
     let mut response = Message::null();
     let response.category = message.category;
@@ -102,21 +113,26 @@ fn electrical_events_handler(message: Message) -> Message {
     response
 }
 
+/// Manage messages from the serial port where category is CATEGORY_ENGINE_EVENTS  
 fn engine_events_handler(message: Message) -> Message {
 }
 
+/// Manage messages from the serial port where category is CATEGORY_AUTOPILOT_EVENTS   
 fn autopilot_events_handler(message: Message) -> Message {
     Message::null()
 }
 
+/// Manage messages from the serial port where category is CATEGORY_G1000_PFD_EVENTS or CATEGORY_G1000_MFD_EVENTS   
 fn g1000_events_handler(message: Message) -> Message {
     Message::null()
 }
 
+/// Manage messages from the serial port where category is CATEGORY_MISC_EVENTS  
 fn misc_events_handler(message: u16) -> u16 {
     Message::null()
 }
 
+/// Manage messages from the serial port where category is CATEGORY_RADIO_NAV_EVENTS  
 fn radio_nav_events_handler(message: u16) -> u16 {
     Message::null()
 }
