@@ -1,6 +1,7 @@
 use serialport::*;
 
 mod protocol;
+use protocol::*;
 
 struct Message {
     category: u8,
@@ -90,10 +91,18 @@ fn main() {
 }
 
 fn electrical_events_handler(message: Message) -> Message {
-    Message::null()
+    let mut response = Message::null();
+    let response.category = message.category;
+    let response.component = message.component;
+    let response.action = match message.action {
+        EVENT_GENERAL_OFF => STATUS_GENERAL_OFF,
+        EVENT_GENERAL_ON => STATUS_GENERAL_ON,
+        _ => STATUS_GENERAL_ERROR
+    }
+    response
 }
 
-fn engine_events_handler(message: Message) -> Message {v
+fn engine_events_handler(message: Message) -> Message {
 }
 
 fn autopilot_events_handler(message: Message) -> Message {
