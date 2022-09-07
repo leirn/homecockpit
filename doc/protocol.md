@@ -201,12 +201,12 @@ As a consequence, the server component will need to define whether commands shou
 | Event  | 0x7021 | 0b00000010 | 0b0001 | Swap active frequency        | COMX_RADIO_SWAP      |
 | Event  | 0x7031 | 0b00000011 | 0b0001 | Increment active freq. 25kHz | COMX_RADIO_FRACT_DEC |
 | Event  | 0x7032 | 0b00000011 | 0b0010 | Decrement active freq. 25kHz | COMX_RADIO_FRACT_INC |
-| Event  | 0x7041 | 0b00000011 | 0b0001 | Increment active freq. 1MHz  | COMX_RADIO_WHOLE_DEC |
-| Event  | 0x7042 | 0b00000011 | 0b0010 | Decrement active freq. 1MHz  | COMX_RADIO_WHOLE_INC |
+| Event  | 0x7033 | 0b00000011 | 0b0011 | Increment active freq. 1MHz  | COMX_RADIO_WHOLE_DEC |
+| Event  | 0x7034 | 0b00000011 | 0b0100 | Decrement active freq. 1MHz  | COMX_RADIO_WHOLE_INC |
 | Event  | 0x7111 | 0b00010001 | 0b0001 | Swap NAV1/NAV2               | NAV_RADIO            |
 | Event  | 0x7121 | 0b00010010 | 0b0001 | Swap active frequency        | NAVX_RADIO_SWAP      |
 | Event  | 0x7131 | 0b00010011 | 0b0001 | Increment active freq. 25kHz | NAVX_RADIO_FRACT_DEC |
 | Event  | 0x7132 | 0b00010011 | 0b0010 | Decrement active freq. 25kHz | NAVX_RADIO_FRACT_INC |
-| Event  | 0x7141 | 0b00010011 | 0b0001 | Increment active freq. 1MHz  | NAVX_RADIO_WHOLE_DEC |
-| Event  | 0x7142 | 0b00010011 | 0b0010 | Decrement active freq. 1MHz  | NAVX_RADIO_WHOLE_INC |
+| Event  | 0x7133 | 0b00010011 | 0b0011 | Increment active freq. 1MHz  | NAVX_RADIO_WHOLE_DEC |
+| Event  | 0x7134 | 0b00010011 | 0b0100 | Decrement active freq. 1MHz  | NAVX_RADIO_WHOLE_INC |
 
