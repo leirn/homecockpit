@@ -23,6 +23,19 @@ A *Event* message goes from Arduino to the PC, a *Status* message goes the other
 | 0b0110 | Misc events       |
 | 0b0111 | Radio/Nav events  |
 
+## List of general actions
+
+These actions should be implement in most case, except when not relevant
+
+| Value  | Action            |
+|--------|-------------------|
+| 0b0000 | Event off         |
+| 0b0001 | Event on          |
+| 0b0010 | Status off        |
+| 0b0011 | Status on         |
+| 0b0100 | Status error      |
+| 0b0001 | Event toggle      |
+
 
 ## List of Electrical events
 
