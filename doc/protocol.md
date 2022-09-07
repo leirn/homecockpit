@@ -21,7 +21,7 @@ A *Event* message goes from Arduino to the PC, a *Status* message goes the other
 | 0b0100 | G1000 PFD events  |
 | 0b0101 | G1000 MFD events  |
 | 0b0110 | Misc events       |
-| 0b1000 | Radio/Nav events  |
+| 0b0111 | Radio/Nav events  |
 
 
 ## List of Electrical events
