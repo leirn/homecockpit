@@ -75,7 +75,7 @@ fn main() {
         if (bytes_to_read > 1) {
             port.read_exact(&mut buffer)?;
             
-            let message = Messgae::new(buffer);
+            let message = Message::new(buffer);
             
             println!("Message received : {}", message);
             
