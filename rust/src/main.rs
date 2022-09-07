@@ -72,8 +72,8 @@ fn main() {
                 CATEGORY_ELECTRICAL_EVENTS => electrical_events_handler(message),
                 CATEGORY_ENGINE_EVENTS  => engine_events_handler(message),
                 CATEGORY_AUTOPILOT_EVENTS  => autopilot_events_handler(message),
-                CATEGORY_G1000_PFD_EVENTS  => g1000_pfd_events_handler(message),
-                CATEGORY_G1000_MFD_EVENTS  => g1000_mfd_events_handler(message),
+                CATEGORY_G1000_PFD_EVENTS  => g1000_events_handler(message),
+                CATEGORY_G1000_MFD_EVENTS  => g1000_events_handler(message),
                 CATEGORY_MISC_EVENTS  => misc_events_handler(message),
                 CATEGORY_RADIO_NAV_EVENTS  => radio_nav_events_handler(message),
                 _ => {
@@ -100,11 +100,7 @@ fn autopilot_events_handler(message: Message) -> Message {
     Message::null()
 }
 
-fn g1000_pfd_events_handler(message: Message) -> Message {
-    Message::null()
-}
-
-fn g1000_mfd_events_handler(message: Message) -> Message {
+fn g1000_events_handler(message: Message) -> Message {
     Message::null()
 }
 
