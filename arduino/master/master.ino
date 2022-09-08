@@ -338,6 +338,136 @@ void updateButtons()
 
 void readSerialInputFromComputer()
 {
+  if(Serial.available() > 1)
+  {
+    int high_byte = Serial.read();
+    int low_byte = Serial.read();
+    int command = high_byte << 8 + low_byte;
+
+    switch(command) {
+      case STATUS_BCN_OFF:
+        led_lights_BCN.off();
+        break;
+      case STATUS_BCN_ON:
+        led_lights_BCN.on();
+        break;
+      case STATUS_BCN_ERROR:
+        led_lights_BCN.blink(0, 1000);
+        break;
+      case STATUS_TAXI_OFF:
+        led_lights_TAXI.off();
+        break;
+      case STATUS_TAXI_ON:
+        led_lights_TAXI.on();
+        break;
+      case STATUS_TAXI_ERROR:
+        led_lights_TAXI.blink(0, 1000);
+        break;
+      case STATUS_LAND_OFF:
+        led_lights_LAND.off();
+        break;
+      case STATUS_LAND_ON:
+        led_lights_LAND.on();
+        break;
+      case STATUS_LAND_ERROR:
+        led_lights_LAND.blink(0, 1000);
+        break;
+      case STATUS_NAV_OFF:
+        led_lights_NAV.off();
+        break;
+      case STATUS_NAV_ON:
+        led_lights_NAV.on();
+        break;
+      case STATUS_NAV_ERROR:
+        led_lights_NAV.blink(0, 1000);
+        break;
+      case STATUS_STRB_OFF:
+        led_lights_STRB.off();
+        break;
+      case STATUS_STRB_ON:
+        led_lights_STRB.on();
+        break;
+      case STATUS_STRB_ERROR:
+        led_lights_STRB.blink(0, 1000);
+        break;
+      case STATUS_LPUMP_OFF:
+        led_engine_LPUMP.off();
+        break;
+      case STATUS_LPUMP_ON:
+        led_engine_LPUMP.on();
+        break;
+      case STATUS_LPUMP_ERROR:
+        led_engine_LPUMP.blink(0, 1000);
+        break;
+      case STATUS_RPUMP_OFF:
+        led_engine_RPUMP.off();
+        break;
+      case STATUS_RPUMP_ON:
+        led_engine_RPUMP.on();
+        break;
+      case STATUS_RPUMP_ERROR:
+        led_engine_RPUMP.blink(0, 1000);
+        break;
+      case STATUS_CARB_OFF:
+        led_engine_CARB.off();
+        break;
+      case STATUS_CARB_ON:
+        led_engine_CARB.on();
+        break;
+      case STATUS_CARB_ERROR:
+        led_engine_ANTI_ICE.blink(0, 1000);
+        break;
+      case STATUS_ANTI_ICE_OFF:
+        led_engine_ANTI_ICE.off();
+        break;
+      case STATUS_ANTI_ICE_ON:
+        led_engine_ANTI_ICE.on();
+        break;
+      case STATUS_ANTI_ICE_ERROR:
+        led_engine_ANTI_ICE.blink(0, 1000);
+        break;
+      case STATUS_PITOT_OFF:
+        led_engine_PITOT.off();
+        break;
+      case STATUS_PITOT_ON:
+        led_engine_PITOT.on();
+        break;
+      case STATUS_PITOT_ERROR:
+        led_engine_PITOT.blink(0, 1000);
+        break;
+      // TODO : define right behaviour for red. Will require internal states. Red when moving ?
+      case STATUS_LDG_GEAR_CENTER_UP:
+        led_LDG_GEAR_GREEN_CENTER.off();
+        break;
+      case STATUS_LDG_GEAR_CENTER_DOWN:
+        led_LDG_GEAR_GREEN_CENTER.on();
+        break;
+      case STATUS_LDG_GEAR_CENTER_UNKNOWN:
+        led_LDG_GEAR_GREEN_CENTER.off();
+        break;
+      case STATUS_LDG_GEAR_LEFT_UP:
+        led_LDG_GEAR_GREEN_LEFT.off();
+        break;
+      case STATUS_LDG_GEAR_LEFT_DOWN:
+        led_LDG_GEAR_GREEN_LEFT.on();
+        break;
+      case STATUS_LDG_GEAR_LEFT_UNKNOWN:
+        led_LDG_GEAR_GREEN_LEFT.off();
+        break;
+      case STATUS_LDG_GEAR_RIGHT_UP:
+        led_LDG_GEAR_GREEN_RIGHT.off();
+        break;
+      case STATUS_LDG_GEAR_RIGHT_DOWN:
+        led_LDG_GEAR_GREEN_RIGHT.on();
+        break;
+      case STATUS_LDG_GEAR_RIGHT_UNKNOWN:
+        led_LDG_GEAR_GREEN_RIGHT.off();
+        break;
+      default:
+        logger("Unknow command");
+        break;
+    }
+  }
 }
 
 void readSerialInputFromSlave()
