@@ -14,9 +14,7 @@ fn main() {
     println!("Hello, world!");
 
     // Start thread to handle communication with arduino modules
-    let _arduino_thread_handle = thread::spawn(|| {
-        arduino_communication_handler()
-    });
+    let _arduino_thread_handle = thread::spawn(|| arduino_communication_handler());
 
     // Start CLI
     cli::cli();
