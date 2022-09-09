@@ -68,7 +68,7 @@ struct ArduinoCommunicationHandler {
 impl ArduinoCommunicationHandler {
     pub fn new(
         rx_to_arduino: Receiver<T>,
-        tx_to_simconnect: Sender<T>
+        tx_to_simconnect: Sender<T>,
     ) -> ArduinoCommunicationHandler {
         ArduinoCommunicationHandler {
             rx_to_arduino: rx_to_arduino,
