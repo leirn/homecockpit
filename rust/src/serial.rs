@@ -57,172 +57,190 @@ impl fmt::Display for Message {
     }
 }
 
-/// Function to handle all communication received from Arduino
-pub fn arduino_communication_handler(rx_to_arduino: Receiver<T>, tx_to_simconnect: Sender<T>) {
-    let mut started: bool = false;
-    let mut port_id = "COM1";
-    let mut port = serialport::new(port_id, SERIAL_PORT_SPEED);
 
-    loop {
-        if started {
-            let mut buffer: [u8; 2] = [0, 0];
+struct ArduinoCommunicationHandler {
+    rx_to_arduino: Receiver<T>,
+    tx_to_simconnect: Sender<T>,
+    port_id: String,
+    port_speed: u32,
+    started: bool,
+}
 
-            let bytes_to_read = port.bytes_to_read().unwrap();
-            if bytes_to_read > 1 {
-                port.read_exact(&mut buffer).unwrap();
+impl ArduinoCommunicationHandler {
+    pub fn new(rx_to_arduino: Receiver<T>, tx_to_simconnect: Sender<T>) -> ArduinoCommunicationHandler {
+        ArduinoCommunicationHandler {
+            rx_to_arduino: rx_to_arduino,
+            tx_to_simconnect: tx_to_simconnect,
+            port_id: "COM1",
+            port_speed: SERIAL_PORT_SPEED,
+            started: false,
+        }
+    }
 
-                let message = Message::new(buffer);
+    /// Function to handle all communication received from Arduino
+    pub fn run(&mut self) {
+        let mut port: SerialPort;
 
-                println!("Message received : {}", message);
+        loop {
+            if started {
+                let mut buffer: [u8; 2] = [0, 0];
 
-                let reponses = match message.category {
-                    CATEGORY_ELECTRICAL_EVENTS => electrical_events_handler(message),
-                    CATEGORY_ENGINE_EVENTS => engine_events_handler(message),
-                    CATEGORY_AUTOPILOT_EVENTS => autopilot_events_handler(message),
-                    CATEGORY_G1000_PFD_EVENTS => g1000_events_handler(message),
-                    CATEGORY_G1000_MFD_EVENTS => g1000_events_handler(message),
-                    CATEGORY_MISC_EVENTS => misc_events_handler(message),
-                    CATEGORY_RADIO_NAV_EVENTS => radio_nav_events_handler(message),
-                    _ => {
-                        println!("Unrecognized category for message {}", message);
-                        Message::null()
+                let bytes_to_read = port.bytes_to_read().unwrap();
+                if bytes_to_read > 1 {
+                    port.read_exact(&mut buffer).unwrap();
+
+                    let message = Message::new(buffer);
+
+                    println!("Message received : {}", message);
+
+                    let reponses = match message.category {
+                        CATEGORY_ELECTRICAL_EVENTS => self.electrical_events_handler(message),
+                        CATEGORY_ENGINE_EVENTS => self.engine_events_handler(message),
+                        CATEGORY_AUTOPILOT_EVENTS => self.autopilot_events_handler(message),
+                        CATEGORY_G1000_PFD_EVENTS => self.g1000_events_handler(message),
+                        CATEGORY_G1000_MFD_EVENTS => self.g1000_events_handler(message),
+                        CATEGORY_MISC_EVENTS => self.misc_events_handler(message),
+                        CATEGORY_RADIO_NAV_EVENTS => self.radio_nav_events_handler(message),
+                        _ => {
+                            println!("Unrecognized category for message {}", message);
+                        }
+                    };
+
+                    for response in responses {
+                        port.write(&reponse.get_bytes_message()).unwrap();
                     }
+                }
+            }
+            // Check for message on inter-thread channel
+            for msg in self.rx_to_arduino.try_iter() {
+                match msg.message_type {
+                    ListOfMessageTypes::SerialStart => {
+                        self.started = true;
+                        port = serialport::new(port_id, SERIAL_PORT_SPEED)
+                            .open()
+                            .expect("Failed to open port");
+                    }
+                    ListOfMessageTypes::SerialStop => {
+                        self.started = false;
+                        port.close();
+                    }
+                    ListOfMessageTypes::SerialSend => port.write(msg.payload),
+                    ListOfMessageTypes::SerialPort => self.port_id = msg.payload,
+                }
+                port.write(&buffer).unwrap();
+            }
+        }
+    }
+
+    /// Manage messages from the serial port where category is CATEGORY_ELECTRICAL_EVENTS
+    fn electrical_events_handler(&self, message: Message) -> Vec<Message> {
+        let mut responses: Vec<Message> = Vec::new();
+        let response = Message {
+            category: CATEGORY_ELECTRICAL_EVENTS,
+            component: message.component,
+            action: match message.action {
+                EVENT_GENERAL_OFF => STATUS_GENERAL_OFF,
+                EVENT_GENERAL_ON => STATUS_GENERAL_ON,
+                _ => STATUS_GENERAL_ERROR,
+            },
+        };
+        responses.push(response);
+        responses
+    }
+
+    /// Manage messages from the serial port where category is CATEGORY_ENGINE_EVENTS
+    fn engine_events_handler(&self, message: Message) -> Vec<Message> {
+        let responses: Vec<Message> = Vec::new();
+        let response = Message {
+            category: CATEGORY_ENGINE_EVENTS,
+            component: message.component,
+            action: match message.action {
+                EVENT_GENERAL_OFF => STATUS_GENERAL_OFF,
+                EVENT_GENERAL_ON => STATUS_GENERAL_ON,
+                _ => STATUS_GENERAL_ERROR,
+            },
+        };
+        responses
+    }
+
+    /// Manage messages from the serial port where category is CATEGORY_AUTOPILOT_EVENTS
+    fn autopilot_events_handler(&self, message: Message) -> Vec<Message> {
+        let responses: Vec<Message> = Vec::new();
+        responses
+    }
+
+    /// Manage messages from the serial port where category is CATEGORY_G1000_PFD_EVENTS or CATEGORY_G1000_MFD_EVENTS
+    fn g1000_events_handler(&self, message: Message) -> Vec<Message> {
+        let responses: Vec<Message> = Vec::new();
+        responses
+    }
+
+    /// Manage messages from the serial port where category is CATEGORY_MISC_EVENTS
+    fn misc_events_handler(&self, message: Message) -> Vec<Message> {
+        let mut responses: Vec<Message> = Vec::new();
+        match message.component {
+            COMPONENT_PITOT_HEAT => {
+                let response = Message {
+                    category: CATEGORY_MISC_EVENTS,
+                    component: COMPONENT_PITOT_HEAT,
+                    action: match message.action {
+                        EVENT_GENERAL_OFF => STATUS_GENERAL_OFF,
+                        EVENT_GENERAL_ON => STATUS_GENERAL_ON,
+                        _ => STATUS_GENERAL_ERROR,
+                    },
                 };
-
-                for response in responses {
-                    port.write(&reponse.get_bytes_message()).unwrap();
-                }
+                responses.push(response);
             }
-        }
-        // Check for message on inter-thread channel
-        for msg in rx_to_arduino.try_iter() {
-            match msg.message_type {
-                ListOfMessageTypes::SerialStart => {
-                    started = true;
-                    port = serialport::new(port_id, SERIAL_PORT_SPEED)
-                        .open()
-                        .expect("Failed to open port");
-                }
-                ListOfMessageTypes::SerialStop => {
-                    started = false;
-                    port.close();
-                }
-                ListOfMessageTypes::SerialSend => port.write(msg.payload),
-                ListOfMessageTypes::SerialPort => port_id = msg.payload,
+            COMPONENT_LANDING_GEAR => {
+                // Center Gear
+                let response = Message {
+                    category: CATEGORY_MISC_EVENTS,
+                    component: COMPONENT_LANDING_GEAR_CENTER,
+                    action: match message.action {
+                        ACTION_LDG_GEAR_UP => STATUS_LDG_GEAR_UP,
+                        ACTION_LDG_GEAR_DOWN => STATUS_LDG_GEAR_DOWN,
+                        _ => STATUS_LDG_GEAR_UNKNOWN,
+                    },
+                };
+                responses.push(response);
+                // Left Gear
+                let response = Message {
+                    category: CATEGORY_MISC_EVENTS,
+                    component: COMPONENT_LANDING_GEAR_LEFT,
+                    action: match message.action {
+                        ACTION_LDG_GEAR_UP => STATUS_LDG_GEAR_UP,
+                        ACTION_LDG_GEAR_DOWN => STATUS_LDG_GEAR_DOWN,
+                        _ => STATUS_LDG_GEAR_UNKNOWN,
+                    },
+                };
+                responses.push(response);
+                // Right Gear
+                let response = Message {
+                    category: CATEGORY_MISC_EVENTS,
+                    component: COMPONENT_LANDING_GEAR_LEFT,
+                    action: match message.action {
+                        ACTION_LDG_GEAR_UP => STATUS_LDG_GEAR_UP,
+                        ACTION_LDG_GEAR_DOWN => STATUS_LDG_GEAR_DOWN,
+                        _ => STATUS_LDG_GEAR_UNKNOWN,
+                    },
+                };
+                responses.push(response);
             }
-            port.write(&buffer).unwrap();
+            COMPONENT_FLAPS => {
+                let response = Message {
+                    category: CATEGORY_MISC_EVENTS,
+                    component: COMPONENT_FLAPS,
+                    action: message.action,
+                };
+                responses.push(response);
+            }
+            _ => println!("Unknown component {}", message.component),
         }
+        responses
     }
-}
 
-/// Manage messages from the serial port where category is CATEGORY_ELECTRICAL_EVENTS
-fn electrical_events_handler(message: Message) -> Vec<Message> {
-    let mut responses: Vec<Message> = Vec::new();
-    let response = Message {
-        category: CATEGORY_ELECTRICAL_EVENTS,
-        component: message.component,
-        action: match message.action {
-            EVENT_GENERAL_OFF => STATUS_GENERAL_OFF,
-            EVENT_GENERAL_ON => STATUS_GENERAL_ON,
-            _ => STATUS_GENERAL_ERROR,
-        },
-    };
-    responses.push(response);
-    responses
-}
-
-/// Manage messages from the serial port where category is CATEGORY_ENGINE_EVENTS
-fn engine_events_handler(message: Message) -> Vec<Message> {
-    let responses: Vec<Message> = Vec::new();
-    let response = Message {
-        category: CATEGORY_ENGINE_EVENTS,
-        component: message.component,
-        action: match message.action {
-            EVENT_GENERAL_OFF => STATUS_GENERAL_OFF,
-            EVENT_GENERAL_ON => STATUS_GENERAL_ON,
-            _ => STATUS_GENERAL_ERROR,
-        },
-    };
-    responses
-}
-
-/// Manage messages from the serial port where category is CATEGORY_AUTOPILOT_EVENTS
-fn autopilot_events_handler(message: Message) -> Vec<Message> {
-    let responses: Vec<Message> = Vec::new();
-    responses
-}
-
-/// Manage messages from the serial port where category is CATEGORY_G1000_PFD_EVENTS or CATEGORY_G1000_MFD_EVENTS
-fn g1000_events_handler(message: Message) -> Vec<Message> {
-    let responses: Vec<Message> = Vec::new();
-    responses
-}
-
-/// Manage messages from the serial port where category is CATEGORY_MISC_EVENTS
-fn misc_events_handler(message: Message) -> Vec<Message> {
-    let mut responses: Vec<Message> = Vec::new();
-    match message.component {
-        COMPONENT_PITOT_HEAT => {
-            let response = Message {
-                category: CATEGORY_MISC_EVENTS,
-                component: COMPONENT_PITOT_HEAT,
-                action: match message.action {
-                    EVENT_GENERAL_OFF => STATUS_GENERAL_OFF,
-                    EVENT_GENERAL_ON => STATUS_GENERAL_ON,
-                    _ => STATUS_GENERAL_ERROR,
-                },
-            };
-            responses.push(response);
-        }
-        COMPONENT_LANDING_GEAR => {
-            // Center Gear
-            let response = Message {
-                category: CATEGORY_MISC_EVENTS,
-                component: COMPONENT_LANDING_GEAR_CENTER,
-                action: match message.action {
-                    ACTION_LDG_GEAR_UP => STATUS_LDG_GEAR_UP,
-                    ACTION_LDG_GEAR_DOWN => STATUS_LDG_GEAR_DOWN,
-                    _ => STATUS_LDG_GEAR_UNKNOWN,
-                },
-            };
-            responses.push(response);
-            // Left Gear
-            let response = Message {
-                category: CATEGORY_MISC_EVENTS,
-                component: COMPONENT_LANDING_GEAR_LEFT,
-                action: match message.action {
-                    ACTION_LDG_GEAR_UP => STATUS_LDG_GEAR_UP,
-                    ACTION_LDG_GEAR_DOWN => STATUS_LDG_GEAR_DOWN,
-                    _ => STATUS_LDG_GEAR_UNKNOWN,
-                },
-            };
-            responses.push(response);
-            // Right Gear
-            let response = Message {
-                category: CATEGORY_MISC_EVENTS,
-                component: COMPONENT_LANDING_GEAR_LEFT,
-                action: match message.action {
-                    ACTION_LDG_GEAR_UP => STATUS_LDG_GEAR_UP,
-                    ACTION_LDG_GEAR_DOWN => STATUS_LDG_GEAR_DOWN,
-                    _ => STATUS_LDG_GEAR_UNKNOWN,
-                },
-            };
-            responses.push(response);
-        }
-        COMPONENT_FLAPS => {
-            let response = Message {
-                category: CATEGORY_MISC_EVENTS,
-                component: COMPONENT_FLAPS,
-                action: message.action,
-            };
-            responses.push(response);
-        }
-        _ => println!("Unknown component {}", message.component),
+    /// Manage messages from the serial port where category is CATEGORY_RADIO_NAV_EVENTS
+    fn radio_nav_events_handler(&self, message: Message) -> Vec<Message> {
+        let responses: Vec<Message> = Vec::new();
     }
-    responses
-}
-
-/// Manage messages from the serial port where category is CATEGORY_RADIO_NAV_EVENTS
-fn radio_nav_events_handler(message: Message) -> Vec<Message> {
-    let responses: Vec<Message> = Vec::new();
 }
