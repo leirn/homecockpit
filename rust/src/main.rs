@@ -1,7 +1,8 @@
 //! Homecockpit server entry file
 
-use serialport::*;
 use std::fmt;
+use std::thread;
+use serialport::*;
 
 mod protocol;
 use crate::protocol::*;
@@ -63,46 +64,48 @@ impl fmt::Display for Message {
 fn main() {
     println!("Hello, world!");
 
-    let ports = available_ports().expect("Failed to list serial ports");
 
-    for port in ports {
-        println!("Port name : {}", port.port_name);
-    }
+    let serial_thread_handle = thread::spawn(|| {
+        // TODO : List port, select port, start, stop listening with channels
+        // https://doc.rust-lang.org/rust-by-example/std_misc/channels.html
+        // https://doc.rust-lang.org/book/ch16-02-message-passing.html
+        let mut port = serialport::new("COM1", 9600)
+            .open()
+            .expect("Failed to open port");
 
-    let mut port = serialport::new("COM1", 9600)
-        .open()
-        .expect("Failed to open port");
+        loop {
+            let mut buffer: [u8; 2] = [0, 0];
 
-    loop {
-        let mut buffer: [u8; 2] = [0, 0];
+            let bytes_to_read = port.bytes_to_read().unwrap();
+            if bytes_to_read > 1 {
+                port.read_exact(&mut buffer).unwrap();
 
-        let bytes_to_read = port.bytes_to_read().unwrap();
-        if bytes_to_read > 1 {
-            port.read_exact(&mut buffer).unwrap();
+                let message = Message::new(buffer);
 
-            let message = Message::new(buffer);
+                println!("Message received : {}", message);
 
-            println!("Message received : {}", message);
+                let reponse = match message.category {
+                    CATEGORY_ELECTRICAL_EVENTS => electrical_events_handler(message),
+                    CATEGORY_ENGINE_EVENTS => engine_events_handler(message),
+                    CATEGORY_AUTOPILOT_EVENTS => autopilot_events_handler(message),
+                    CATEGORY_G1000_PFD_EVENTS => g1000_events_handler(message),
+                    CATEGORY_G1000_MFD_EVENTS => g1000_events_handler(message),
+                    CATEGORY_MISC_EVENTS => misc_events_handler(message),
+                    CATEGORY_RADIO_NAV_EVENTS => radio_nav_events_handler(message),
+                    _ => {
+                        println!("Unrecognized category for message {}", message);
+                        Message::null()
+                    }
+                };
 
-            let reponse = match message.category {
-                CATEGORY_ELECTRICAL_EVENTS => electrical_events_handler(message),
-                CATEGORY_ENGINE_EVENTS => engine_events_handler(message),
-                CATEGORY_AUTOPILOT_EVENTS => autopilot_events_handler(message),
-                CATEGORY_G1000_PFD_EVENTS => g1000_events_handler(message),
-                CATEGORY_G1000_MFD_EVENTS => g1000_events_handler(message),
-                CATEGORY_MISC_EVENTS => misc_events_handler(message),
-                CATEGORY_RADIO_NAV_EVENTS => radio_nav_events_handler(message),
-                _ => {
-                    println!("Unrecognized category for message {}", message);
-                    Message::null()
+                if reponse.get_message() != 0 {
+                    port.write(&reponse.get_bytes_message()).unwrap();
                 }
-            };
-
-            if reponse.get_message() != 0 {
-                port.write(&reponse.get_bytes_message()).unwrap();
             }
         }
-    }
+    });
+
+    cli::cli();
 }
 
 /// Manage messages from the serial port where category is CATEGORY_ELECTRICAL_EVENTS
