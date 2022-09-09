@@ -75,14 +75,14 @@ These actions should be implement in most case, except when not relevant
 | Status | 0x2023 | 0b00000010 | 0b0011 | Right Pump is On       | GENERAL ENG FUEL PUMP ON:1 |
 | Event  | 0x2020 | 0b00000010 | 0b0000 | Right Pump set to Off  | FUELSYSTEM_PUMP_OFF        |
 | Status | 0x2022 | 0b00000010 | 0b0010 | Right Pump is Off      | GENERAL ENG FUEL PUMP ON:1 |
-| Event  | 0x2031 | 0b00000011 | 0b0001 | Carb. heat set to On   | ANTI_ICE_ON                |
-| Status | 0x2033 | 0b00000011 | 0b0011 | Carb. heat is On       | PANEL ANTI ICE SWITCH      |
-| Event  | 0x2030 | 0b00000011 | 0b0000 | Carb. heat set to Off  | ANTI_ICE_OFF               |
-| Status | 0x2032 | 0b00000011 | 0b0010 | Carb. heat is Off      | PANEL ANTI ICE SWITCH      |
+| Event  | 0x2031 | 0b00000011 | 0b0001 | Carb. heat set to On   | ANTI_ICE_SET_ENG1          |
+| Status | 0x2033 | 0b00000011 | 0b0011 | Carb. heat is On       | GENERAL ENG ANTI ICE POSITION:index         |
+| Event  | 0x2030 | 0b00000011 | 0b0000 | Carb. heat set to Off  | ANTI_ICE_SET_ENG1          |
+| Status | 0x2032 | 0b00000011 | 0b0010 | Carb. heat is Off      | GENERAL ENG ANTI ICE POSITION:index         |
 | Event  | 0x2041 | 0b00000100 | 0b0001 | Anti Ice set to On     | ANTI_ICE_ON                |
-| Status | 0x2043 | 0b00000100 | 0b0011 | Anti Ice is On         | PANEL ANTI ICE SWITCH      |
+| Status | 0x2043 | 0b00000100 | 0b0011 | Anti Ice is On         | STRUCTURAL DEICE SWITCH    |
 | Event  | 0x2040 | 0b00000100 | 0b0000 | Anti Ice set to Off    | ANTI_ICE_OFF               |
-| Status | 0x2042 | 0b00000100 | 0b0010 | Anti Ice is Off        | PANEL ANTI ICE SWITCH      |
+| Status | 0x2042 | 0b00000100 | 0b0010 | Anti Ice is Off        | STRUCTURAL DEICE SWITCH    |
 
 
 ## List of Autopilot events
