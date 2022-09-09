@@ -153,70 +153,60 @@ void updateButtons()
   if (btn_lights_BCN.fell())
   { // Switch moved to OFF
     Serial.write(EVENT_BCN_OFF);
-    led_lights_BCN.off();
-    logger("BCN light set to OFF");
+    logger("BCN light button set to OFF");
   }
   else if (btn_lights_BCN.rose())
   { // Switch moved to ON
     Serial.write(EVENT_BCN_ON);
-    led_lights_BCN.on();
-    logger("BCN light set to ON");
+    logger("BCN light button set to ON");
   }
   // LAND
   btn_lights_LAND.update();
   if (btn_lights_LAND.fell())
   { // Switch moved to OFF
     Serial.write(EVENT_LAND_OFF);
-    led_lights_LAND.off();
-    logger("LAND light set to OFF");
+    logger("LAND light button set to OFF");
   }
   else if (btn_lights_LAND.rose())
   { // Switch moved to ON
     Serial.write(EVENT_LAND_ON);
-    led_lights_LAND.on();
-    logger("LAND light set to ON");
+    logger("LAND light button set to ON");
   }
   // TAXI
   btn_lights_TAXI.update();
   if (btn_lights_TAXI.fell())
   { // Switch moved to OFF
     Serial.write(EVENT_TAXI_OFF);
-    led_lights_TAXI.off();
-    logger("TAXI light set to OFF");
+    logger("TAXI light button set to OFF");
   }
   else if (btn_lights_TAXI.rose())
   { // Switch moved to ON
     Serial.write(EVENT_TAXI_ON);
-    led_lights_TAXI.on();
-    logger("TAXI light set to ON");
+    logger("TAXI light button set to ON");
   }
   // NAV
   btn_lights_NAV.update();
   if (btn_lights_NAV.fell())
   { // Switch moved to OFF
     Serial.write(EVENT_NAV_OFF);
-    led_lights_NAV.off();
-    logger("NAV light set to OFF");
+    logger("NAV light button set to OFF");
   }
   else if (btn_lights_NAV.rose())
   { // Switch moved to ON
     Serial.write(EVENT_NAV_ON);
-    led_lights_NAV.on();
-    logger("NAV light set to ON");
+    logger("NAV light button set to ON");
   }
   // Strobe
   btn_lights_STRB.update();
   if (btn_lights_STRB.fell())
   { // Switch moved to OFF
     Serial.write(EVENT_STRB_OFF);
-    led_lights_STRB.off();
-    logger("STRB light set to OFF");
+    logger("STRB light button set to OFF");
   }
   else if (btn_lights_STRB.rose())
   { // Switch moved to ON
     Serial.write(EVENT_STRB_ON);
-    led_lights_STRB.on();
-    logger("STRB light set to ON");
+    logger("STRB light button set to ON");
   }
 
   // Engines
@@ -225,56 +215,48 @@ void updateButtons()
   if (btn_engine_LPUMP.fell())
   { // Switch moved to OFF
     Serial.write(EVENT_LPUMP_OFF);
-    led_engine_LPUMP.off();
-    logger("Left pump set to OFF");
+    logger("Left pump button set to OFF");
   }
   else if (btn_engine_LPUMP.rose())
   { // Switch moved to ON
     Serial.write(EVENT_LPUMP_ON);
-    led_engine_LPUMP.on();
-    logger("Left pump set to ON");
+    logger("Left pump button set to ON");
   }
   // Right Pump
   btn_engine_RPUMP.update();
   if (btn_engine_RPUMP.fell())
   { // Switch moved to OFF
     Serial.write(EVENT_RPUMP_OFF);
-    led_engine_LPUMP.off();
-    logger("Right pump set to OFF");
+    logger("Right pump button set to OFF");
   }
   else if (btn_engine_RPUMP.rose())
   { // Switch moved to ON
     Serial.write(EVENT_RPUMP_ON);
-    led_engine_RPUMP.on();
-    logger("Right pump set to ON");
+    logger("Right pump button set to ON");
   }
   // Carb Head
   btn_engine_CARB.update();
   if (btn_engine_CARB.fell())
   { // Switch moved to OFF
     Serial.write(EVENT_CARB_OFF);
-    led_engine_CARB.off();
-    logger("Carb. heat set to OFF");
+    logger("Carb. heat button set to OFF");
   }
   else if (btn_engine_CARB.rose())
   { // Switch moved to ON
     Serial.write(EVENT_CARB_ON);
-    led_engine_CARB.on();
-    logger("Carb. heat set to ON");
+    logger("Carb. heat button set to ON");
   }
   // Pitot Head
   btn_engine_PITOT.update();
   if (btn_engine_PITOT.fell())
   { // Switch moved to OFF
     Serial.write(EVENT_PITOT_OFF);
-    led_engine_PITOT.off();
-    logger("Pitot heat set to OFF");
+    logger("Pitot heat button set to OFF");
   }
   else if (btn_engine_PITOT.rose())
   { // Switch moved to ON
     Serial.write(EVENT_PITOT_ON);
-    led_engine_PITOT.on();
-    logger("Pitot heat set to ON");
+    logger("Pitot heat button set to ON");
   }
 
   // Anti ice
@@ -282,14 +264,12 @@ void updateButtons()
   if (btn_engine_ANTI_ICE.fell())
   { // Switch moved to OFF
     Serial.write(EVENT_ANTI_ICE_OFF);
-    led_engine_ANTI_ICE.off();
-    logger("Anti-ice set to OFF");
+    logger("Anti-ice set button to OFF");
   }
   else if (btn_engine_ANTI_ICE.rose())
   { // Switch moved to ON
     Serial.write(EVENT_ANTI_ICE_ON);
-    led_engine_ANTI_ICE.on();
-    logger("Anti-ice set to ON");
+    logger("Anti-ice button set to ON");
   }
 
   // Landing gear
@@ -297,42 +277,27 @@ void updateButtons()
   if (btn_LDG_GEAR.fell())
   { // Switch moved to OFF
     Serial.write(EVENT_LDG_GEAR_DN);
-    led_engine_ANTI_ICE.off();
-    led_LDG_GEAR_GREEN_LEFT.on();
-    led_LDG_GEAR_GREEN_CENTER.on();
-    led_LDG_GEAR_GREEN_RIGHT.on();
-    logger("Landing gear set to DOWN");
+    logger("Landing gear button set to DOWN");
   }
   else if (btn_LDG_GEAR.rose())
   { // Switch moved to ON
     Serial.write(EVENT_LDG_GEAR_UP);
-    led_LDG_GEAR_RED.off();
-    led_LDG_GEAR_GREEN_LEFT.off();
-    led_LDG_GEAR_GREEN_CENTER.off();
-    led_LDG_GEAR_GREEN_RIGHT.off();
-    logger("Landing gear set to UP");
+    logger("Landing gear button set to UP");
   }
 
   // Flaps up
   btn_FLAPS_UP.update();
   if (btn_FLAPS_UP.rose() && current_flaps > 0)
   { // Switch moved to ON
-    led_FLAPS[current_flaps].off();
-    current_flaps--;
-    led_FLAPS[current_flaps].on();
     Serial.write(EVENT_FLAPS_DEC);
-    logger("FLAPS DECREMENTED");
+    logger("FLAPS button pushed to UP");
   }
 
   // Flaps down
   btn_FLAPS_DN.update();
   if (btn_FLAPS_DN.rose() && current_flaps < 3)
   { // Switch moved to ON
-    led_FLAPS[current_flaps].off();
-    current_flaps++;
-    led_FLAPS[current_flaps].on();
-    Serial.write(EVENT_FLAPS_INC);
-    logger("FLAPS INCREMENTED");
+    logger("FLAPS button pushed to DOWN");
   }
 }
 
@@ -343,125 +308,164 @@ void readSerialInputFromComputer()
     int high_byte = Serial.read();
     int low_byte = Serial.read();
     int command = high_byte << 8 + low_byte;
-
+    // TODO : Blink won't work this way
     switch(command) {
       case STATUS_BCN_OFF:
         led_lights_BCN.off();
+        logger("MSG RCV: BCN to OFF");
         break;
       case STATUS_BCN_ON:
         led_lights_BCN.on();
+        logger("MSG RCV: BCN to ON");
         break;
       case STATUS_BCN_ERROR:
         led_lights_BCN.blink(0, 1000);
+        logger("MSG RCV: BCN to ERROR");
         break;
       case STATUS_TAXI_OFF:
         led_lights_TAXI.off();
+        logger("MSG RCV: TAXI to OFF");
         break;
       case STATUS_TAXI_ON:
         led_lights_TAXI.on();
+        logger("MSG RCV: TAXI to ON");
         break;
       case STATUS_TAXI_ERROR:
         led_lights_TAXI.blink(0, 1000);
+        logger("MSG RCV: TAXI to ERROR");
         break;
       case STATUS_LAND_OFF:
         led_lights_LAND.off();
+        logger("MSG RCV: LAND to OFF");
         break;
       case STATUS_LAND_ON:
         led_lights_LAND.on();
+        logger("MSG RCV: LAND to ON");
         break;
       case STATUS_LAND_ERROR:
         led_lights_LAND.blink(0, 1000);
+        logger("MSG RCV: LAND to ERROR");
         break;
       case STATUS_NAV_OFF:
         led_lights_NAV.off();
+        logger("MSG RCV: NAV to OFF");
         break;
       case STATUS_NAV_ON:
         led_lights_NAV.on();
+        logger("MSG RCV: NAV to ON");
         break;
       case STATUS_NAV_ERROR:
         led_lights_NAV.blink(0, 1000);
+        logger("MSG RCV: NAV to ERROR");
         break;
       case STATUS_STRB_OFF:
         led_lights_STRB.off();
+        logger("MSG RCV: STRB to OFF");
         break;
       case STATUS_STRB_ON:
         led_lights_STRB.on();
+        logger("MSG RCV: STRB to ON");
         break;
       case STATUS_STRB_ERROR:
         led_lights_STRB.blink(0, 1000);
+        logger("MSG RCV: STRB to ERROR");
         break;
       case STATUS_LPUMP_OFF:
         led_engine_LPUMP.off();
+        logger("MSG RCV: LPUMP to OFF");
         break;
       case STATUS_LPUMP_ON:
         led_engine_LPUMP.on();
+        logger("MSG RCV: LPUMP to ON");
         break;
       case STATUS_LPUMP_ERROR:
         led_engine_LPUMP.blink(0, 1000);
+        logger("MSG RCV: LPUMP to ERROR");
         break;
       case STATUS_RPUMP_OFF:
         led_engine_RPUMP.off();
+        logger("MSG RCV: RPUMP to OFF");
         break;
       case STATUS_RPUMP_ON:
         led_engine_RPUMP.on();
+        logger("MSG RCV: RPUMP to ON");
         break;
       case STATUS_RPUMP_ERROR:
         led_engine_RPUMP.blink(0, 1000);
+        logger("MSG RCV: RPUMP to ERROR");
         break;
       case STATUS_CARB_OFF:
         led_engine_CARB.off();
+        logger("MSG RCV: CARB HEAT to OFF");
         break;
       case STATUS_CARB_ON:
         led_engine_CARB.on();
+        logger("MSG RCV: CARB HEAT to ON");
         break;
       case STATUS_CARB_ERROR:
         led_engine_ANTI_ICE.blink(0, 1000);
+        logger("MSG RCV: CARB HEAT to ERROR");
         break;
       case STATUS_ANTI_ICE_OFF:
         led_engine_ANTI_ICE.off();
+        logger("MSG RCV: ANTI ICE to OFF");
         break;
       case STATUS_ANTI_ICE_ON:
         led_engine_ANTI_ICE.on();
+        logger("MSG RCV: ANTI ICE to ON");
         break;
       case STATUS_ANTI_ICE_ERROR:
         led_engine_ANTI_ICE.blink(0, 1000);
+        logger("MSG RCV: ANTI ICE to ERROR");
         break;
       case STATUS_PITOT_OFF:
         led_engine_PITOT.off();
+        logger("MSG RCV: PITOT HEAT to OFF");
         break;
       case STATUS_PITOT_ON:
         led_engine_PITOT.on();
+        logger("MSG RCV: PITOT HEAT to ON");
         break;
       case STATUS_PITOT_ERROR:
         led_engine_PITOT.blink(0, 1000);
+        logger("MSG RCV: PITOT HEAT to ERROR");
         break;
       // TODO : define right behaviour for red. Will require internal states. Red when moving ?
       case STATUS_LDG_GEAR_CENTER_UP:
         led_LDG_GEAR_GREEN_CENTER.off();
+        logger("MSG RCV: CENTER LDG GEAR to UP");
         break;
       case STATUS_LDG_GEAR_CENTER_DOWN:
         led_LDG_GEAR_GREEN_CENTER.on();
+        logger("MSG RCV: CENTER LDG GEAR to DOWN");
         break;
       case STATUS_LDG_GEAR_CENTER_UNKNOWN:
         led_LDG_GEAR_GREEN_CENTER.off();
+        logger("MSG RCV: TCENTER LDG GEAR to UNKNOWN");
         break;
       case STATUS_LDG_GEAR_LEFT_UP:
         led_LDG_GEAR_GREEN_LEFT.off();
+        logger("MSG RCV: LEFT LDG GEAR to UP");
         break;
       case STATUS_LDG_GEAR_LEFT_DOWN:
         led_LDG_GEAR_GREEN_LEFT.on();
+        logger("MSG RCV: LEFT LDG GEAR to DOWN");
         break;
       case STATUS_LDG_GEAR_LEFT_UNKNOWN:
         led_LDG_GEAR_GREEN_LEFT.off();
+        logger("MSG RCV: LEFT LDG GEAR to UNKNOWN");
         break;
       case STATUS_LDG_GEAR_RIGHT_UP:
         led_LDG_GEAR_GREEN_RIGHT.off();
+        logger("MSG RCV: RIGHT LDG GEAR to UP");
         break;
       case STATUS_LDG_GEAR_RIGHT_DOWN:
         led_LDG_GEAR_GREEN_RIGHT.on();
+        logger("MSG RCV: RIGHT LDG GEAR to DOWN");
         break;
       case STATUS_LDG_GEAR_RIGHT_UNKNOWN:
         led_LDG_GEAR_GREEN_RIGHT.off();
+        logger("MSG RCV: RIGHT LDG GEAR to UNKNOWN");
         break;
       default:
         logger("Unknow command");
