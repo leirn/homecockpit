@@ -2,6 +2,7 @@
 
 pub mod enumerations;
 pub mod structures;
+pub mod events;
 
 use std::{thread, time};
 
