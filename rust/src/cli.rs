@@ -17,7 +17,7 @@ enum Commands {
 }
 
 /// Main CLI function
-pub fn cli(Sender<T> tx_to_arduino) {
+pub fn cli(tx_to_arduino: Sender<T>) {
     loop {
         let mut command = String::new();
         println!("Enter command :");

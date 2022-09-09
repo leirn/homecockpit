@@ -2,6 +2,8 @@
 
 use crate::channel_mgt::*;
 
+const SERIAL_PORT_SPEED = 9600;
+
 /// Message class
 /// This class represents messages used on the serial connection
 /// between the computer and the master Arduino module
@@ -56,7 +58,7 @@ impl fmt::Display for Message {
 }
 
 /// Function to handle all communication received from Arduino
-pub fn arduino_communication_handler(Receiver<T> rx_to_arduino, Sender<T> tx_to_simconnect) {
+pub fn arduino_communication_handler(rx_to_arduino: Receiver<T>, tx_to_simconnect: Sender<T>) {
     // TODO : List port, select port, start, stop listening with channels
     // https://doc.rust-lang.org/rust-by-example/std_misc/channels.html
     // https://doc.rust-lang.org/book/ch16-02-message-passing.html
@@ -64,7 +66,7 @@ pub fn arduino_communication_handler(Receiver<T> rx_to_arduino, Sender<T> tx_to_
 
     let mut started:bool = false;
     let mut port_id = "COM1";
-    let mut port = serialport::new(port_id, 9600)
+    let mut port = serialport::new(port_id, SERIAL_PORT_SPEED);
 
     loop {
         if started {
@@ -102,7 +104,7 @@ pub fn arduino_communication_handler(Receiver<T> rx_to_arduino, Sender<T> tx_to_
             match msg.message_type {
                 ListOfMessageTypes::SerialStart => {
                     started = true;
-                    port = serialport::new(port_id, 9600)
+                    port = serialport::new(port_id, SERIAL_PORT_SPEED);
                         .open()
                         .expect("Failed to open port");
                 }
