@@ -59,10 +59,6 @@ impl fmt::Display for Message {
 
 /// Function to handle all communication received from Arduino
 pub fn arduino_communication_handler(rx_to_arduino: Receiver<T>, tx_to_simconnect: Sender<T>) {
-    // TODO : List port, select port, start, stop listening with channels
-    // https://doc.rust-lang.org/rust-by-example/std_misc/channels.html
-    // https://doc.rust-lang.org/book/ch16-02-message-passing.html
-
 
     let mut started: bool = false;
     let mut port_id = "COM1";

@@ -2,8 +2,8 @@
 
 use serialport::*;
 use std::fmt;
-use std::thread;
 use std::sync::mpsc;
+use std::thread;
 
 mod protocol;
 use crate::protocol::*;
