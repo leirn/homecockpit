@@ -2,7 +2,7 @@
 
 use crate::channel_mgt::*;
 
-const SERIAL_PORT_SPEED = 9600;
+const SERIAL_PORT_SPEED: u32 = 9600;
 
 /// Message class
 /// This class represents messages used on the serial connection
@@ -104,7 +104,7 @@ pub fn arduino_communication_handler(rx_to_arduino: Receiver<T>, tx_to_simconnec
             match msg.message_type {
                 ListOfMessageTypes::SerialStart => {
                     started = true;
-                    port = serialport::new(port_id, SERIAL_PORT_SPEED);
+                    port = serialport::new(port_id, SERIAL_PORT_SPEED)
                         .open()
                         .expect("Failed to open port");
                 }
