@@ -1,5 +1,7 @@
 //! Functions to handle serial communications with Arduino
 
+use crate::channel_mgt::*;
+
 /// Message class
 /// This class represents messages used on the serial connection
 /// between the computer and the master Arduino module
@@ -54,42 +56,64 @@ impl fmt::Display for Message {
 }
 
 /// Function to handle all communication received from Arduino
-pub fn arduino_communication_handler() {
+pub fn arduino_communication_handler(Receiver<T> rx_to_arduino, Sender<T> tx_to_simconnect) {
     // TODO : List port, select port, start, stop listening with channels
     // https://doc.rust-lang.org/rust-by-example/std_misc/channels.html
     // https://doc.rust-lang.org/book/ch16-02-message-passing.html
-    let mut port = serialport::new("COM1", 9600)
-        .open()
-        .expect("Failed to open port");
+
+
+    let mut started:bool = false;
+    let mut port_id = "COM1";
+    let mut port = serialport::new(port_id, 9600)
 
     loop {
-        let mut buffer: [u8; 2] = [0, 0];
+        if started {
+            let mut buffer: [u8; 2] = [0, 0];
 
-        let bytes_to_read = port.bytes_to_read().unwrap();
-        if bytes_to_read > 1 {
-            port.read_exact(&mut buffer).unwrap();
+            let bytes_to_read = port.bytes_to_read().unwrap();
+            if bytes_to_read > 1 {
+                port.read_exact(&mut buffer).unwrap();
 
-            let message = Message::new(buffer);
+                let message = Message::new(buffer);
 
-            println!("Message received : {}", message);
+                println!("Message received : {}", message);
 
-            let reponses = match message.category {
-                CATEGORY_ELECTRICAL_EVENTS => electrical_events_handler(message),
-                CATEGORY_ENGINE_EVENTS => engine_events_handler(message),
-                CATEGORY_AUTOPILOT_EVENTS => autopilot_events_handler(message),
-                CATEGORY_G1000_PFD_EVENTS => g1000_events_handler(message),
-                CATEGORY_G1000_MFD_EVENTS => g1000_events_handler(message),
-                CATEGORY_MISC_EVENTS => misc_events_handler(message),
-                CATEGORY_RADIO_NAV_EVENTS => radio_nav_events_handler(message),
-                _ => {
-                    println!("Unrecognized category for message {}", message);
-                    Message::null()
+                let reponses = match message.category {
+                    CATEGORY_ELECTRICAL_EVENTS => electrical_events_handler(message),
+                    CATEGORY_ENGINE_EVENTS => engine_events_handler(message),
+                    CATEGORY_AUTOPILOT_EVENTS => autopilot_events_handler(message),
+                    CATEGORY_G1000_PFD_EVENTS => g1000_events_handler(message),
+                    CATEGORY_G1000_MFD_EVENTS => g1000_events_handler(message),
+                    CATEGORY_MISC_EVENTS => misc_events_handler(message),
+                    CATEGORY_RADIO_NAV_EVENTS => radio_nav_events_handler(message),
+                    _ => {
+                        println!("Unrecognized category for message {}", message);
+                        Message::null()
+                    }
+                };
+
+                for response in responses {
+                    port.write(&reponse.get_bytes_message()).unwrap();
                 }
-            };
-
-            for response in responses {
-                port.write(&reponse.get_bytes_message()).unwrap();
             }
+        }
+        // Check for message on inter-thread channel
+        for msg in rx_to_arduino.try_iter() {
+            match msg.message_type {
+                ListOfMessageTypes::SerialStart => {
+                    started = true;
+                    port = serialport::new(port_id, 9600)
+                        .open()
+                        .expect("Failed to open port");
+                }
+                ListOfMessageTypes::SerialStop => {
+                    started = false;
+                    port.close();
+                }
+                ListOfMessageTypes::SerialSend => port.write(msg.payload),
+                ListOfMessageTypes::SerialPort => port_id = msg.payload,
+            }
+            port.write(&buffer).unwrap();
         }
     }
 }

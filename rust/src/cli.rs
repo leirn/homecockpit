@@ -3,6 +3,8 @@
 use std::io::stdin;
 use std::process;
 
+use crate::channel_mgt::*;
+
 /// List of available commands
 enum Commands {
     Quit: String::from("quit"),
@@ -15,28 +17,48 @@ enum Commands {
 }
 
 /// Main CLI function
-pub fn cli() {
+pub fn cli(Sender<T> tx_to_arduino) {
     loop {
         let mut command = String::new();
         println!("Enter command :");
         stdin().read_line(&mut line).unwrap();
         match line {
-            Commands::Start => start(),
-            Commands::Stop => stop(),
+            Commands::Start => tx_to_arduino.send(ChannelMessage{
+                message_type: ListOfMessageTypes::SerialStart,
+                payload: 1,
+            }),
+            Commands::Stop => tx_to_arduino.send(ChannelMessage{
+                message_type: ListOfMessageTypes::SerialStop,
+                payload: 1,
+            }),
             Commands::SetPort => {
                 println!("What serial port do you want to use ?");
                 let mut port = String::new();
                 stdin().read_line(&mut port).unwrap();
-                set_port(port.trim());
+                tx_to_arduino.send(ChannelMessage{
+                    message_type: ListOfMessageTypes::SerialPort,
+                    payload: port.trim(),
+                })
             },
             Commands::SendMessage => {
                 println!("Enter the message you want to send in hexadecimal format : 0xabcd");
                 let mut msg_code = String::new();
                 stdin().read_line(&mut msg_code).unwrap();
                 trimmed = msg_code.trim();
-                match <T>::from_str_radix(trimmed.strip_prefix("0x").unwrap(), 16).ok() {
-                    Ok(i) => send_message(i),
-                    Err(..) => println!("The format wasn't respected: {}", trimmed),
+                let re = Regex::new(r"^\0x[0-9a-fA-F]{4}$").unwrap();
+                if re.is_match(trimmed) {
+                    match <T>::from_str_radix(trimmed.strip_prefix("0x").unwrap(), 16).ok() {
+                        Ok(i) => {
+                            let mut buffer: [u8;2];
+                            buffer[0] = (i >> 8) as u8;
+                            buffer[1] = (i & 0xff) as u8;
+                            tx_to_arduino.send(ChannelMessage{
+                                message_type: ListOfMessageTypes::SerialSend,
+                                payload: buffer,
+                            });
+                        }
+                        Err(..) => println!("The format wasn't respected: {}", trimmed),
+                    }
                 };
             },
             Commands::ListPorts => list_serial_ports(),
@@ -48,26 +70,6 @@ pub fn cli() {
             },
         }
     }
-}
-
-/// Start listening to serial port
-fn start() {
-    //! To be implemented
-}
-
-/// Start listening to serial port
-fn stop() {
-    //! To be implemented
-}
-
-/// Start listening to serial port
-fn set_port(&str _port) {
-    //! To be implemented
-}
-
-/// Start listening to serial port
-fn send_message(u16 message) {
-    //! To be implemented
 }
 
 /// List serial port
