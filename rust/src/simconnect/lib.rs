@@ -1,5 +1,8 @@
 //! Functions to handle simconnect interactions
 
+pub mod enumerations;
+pub mod structures;
+
 use std::{thread, time};
 
 struct SimConnectHandler {
