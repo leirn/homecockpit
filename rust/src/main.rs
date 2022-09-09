@@ -20,9 +20,9 @@ fn main() {
     let tx_to_arduino_from_cli = tx_to_arduino.clone();
     // Start thread to handle communication with arduino modules
     let _arduino_thread_handle = thread::spawn(|| {
-            let mut arduino_handler = ArduinoCommunicationHandler::new(rx_to_arduino, tx_to_simconnect);
-            arduino_handler.run();
-        });
+        let mut arduino_handler = ArduinoCommunicationHandler::new(rx_to_arduino, tx_to_simconnect);
+        arduino_handler.run();
+    });
 
     // Start thread to handle communication with MSFS via simconnect
     let _simconnect_thread_handle = thread::spawn(|| {

@@ -57,7 +57,6 @@ impl fmt::Display for Message {
     }
 }
 
-
 struct ArduinoCommunicationHandler {
     rx_to_arduino: Receiver<T>,
     tx_to_simconnect: Sender<T>,
@@ -67,7 +66,10 @@ struct ArduinoCommunicationHandler {
 }
 
 impl ArduinoCommunicationHandler {
-    pub fn new(rx_to_arduino: Receiver<T>, tx_to_simconnect: Sender<T>) -> ArduinoCommunicationHandler {
+    pub fn new(
+        rx_to_arduino: Receiver<T>,
+        tx_to_simconnect: Sender<T>
+    ) -> ArduinoCommunicationHandler {
         ArduinoCommunicationHandler {
             rx_to_arduino: rx_to_arduino,
             tx_to_simconnect: tx_to_simconnect,
