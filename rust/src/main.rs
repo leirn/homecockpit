@@ -1,8 +1,8 @@
 //! Homecockpit server entry file
 
+use serialport::*;
 use std::fmt;
 use std::thread;
-use serialport::*;
 
 mod protocol;
 use crate::protocol::*;
@@ -64,7 +64,6 @@ impl fmt::Display for Message {
 fn main() {
     println!("Hello, world!");
 
-
     let serial_thread_handle = thread::spawn(|| {
         // TODO : List port, select port, start, stop listening with channels
         // https://doc.rust-lang.org/rust-by-example/std_misc/channels.html
@@ -97,7 +96,6 @@ fn main() {
                         Message::null()
                     }
                 };
-
 
                 for response in responses {
                     port.write(&reponse.get_bytes_message()).unwrap();
@@ -167,7 +165,7 @@ fn misc_events_handler(message: Message) -> Vec<Message> {
                 },
             };
             responses.push(response);
-        },
+        }
         COMPONENT_LANDING_GEAR => {
             // Center Gear
             let response = Message {
@@ -202,7 +200,7 @@ fn misc_events_handler(message: Message) -> Vec<Message> {
                 },
             };
             responses.push(response);
-        },
+        }
         COMPONENT_FLAPS => {
             let response = Message {
                 category: CATEGORY_MISC_EVENTS,
@@ -210,8 +208,8 @@ fn misc_events_handler(message: Message) -> Vec<Message> {
                 action: message.action,
             };
             responses.push(response);
-        },
-        _ => println!("Unknown component {}", message.component)
+        }
+        _ => println!("Unknown component {}", message.component),
     }
     responses
 }
