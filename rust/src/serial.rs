@@ -64,7 +64,7 @@ pub fn arduino_communication_handler(rx_to_arduino: Receiver<T>, tx_to_simconnec
     // https://doc.rust-lang.org/book/ch16-02-message-passing.html
 
 
-    let mut started:bool = false;
+    let mut started: bool = false;
     let mut port_id = "COM1";
     let mut port = serialport::new(port_id, SERIAL_PORT_SPEED);
 
