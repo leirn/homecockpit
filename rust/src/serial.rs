@@ -59,7 +59,6 @@ impl fmt::Display for Message {
 
 /// Function to handle all communication received from Arduino
 pub fn arduino_communication_handler(rx_to_arduino: Receiver<T>, tx_to_simconnect: Sender<T>) {
-
     let mut started: bool = false;
     let mut port_id = "COM1";
     let mut port = serialport::new(port_id, SERIAL_PORT_SPEED);
