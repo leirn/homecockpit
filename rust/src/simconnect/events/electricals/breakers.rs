@@ -1,0 +1,34 @@
+#![allow(dead_code)]
+
+pub const BREAKER_AVNFAN_TOGGLE: &'static str = "BREAKER_AVNFAN_TOGGLE";
+pub const BREAKER_AUTOPILOT_TOGGLE: &'static str = "BREAKER_AUTOPILOT_TOGGLE";
+pub const BREAKER_GPS_TOGGLE: &'static str = "BREAKER_GPS_TOGGLE";
+pub const BREAKER_NAVCOM1_TOGGLE: &'static str = "BREAKER_NAVCOM1_TOGGLE";
+pub const BREAKER_NAVCOM2_TOGGLE: &'static str = "BREAKER_NAVCOM2_TOGGLE";
+pub const BREAKER_NAVCOM3_TOGGLE: &'static str = "BREAKER_NAVCOM3_TOGGLE";
+pub const BREAKER_ADF_TOGGLE: &'static str = "BREAKER_ADF_TOGGLE";
+pub const BREAKER_XPNDR_TOGGLE: &'static str = "BREAKER_XPNDR_TOGGLE";
+pub const BREAKER_FLAP_TOGGLE: &'static str = "BREAKER_FLAP_TOGGLE";
+pub const BREAKER_INST_TOGGLE: &'static str = "BREAKER_INST_TOGGLE";
+pub const BREAKER_AVNBUS1_TOGGLE: &'static str = "BREAKER_AVNBUS1_TOGGLE";
+pub const BREAKER_AVNBUS2_TOGGLE: &'static str = "BREAKER_AVNBUS2_TOGGLE";
+pub const BREAKER_TURNCOORD_TOGGLE: &'static str = "BREAKER_TURNCOORD_TOGGLE";
+pub const BREAKER_INSTLTS_TOGGLE: &'static str = "BREAKER_INSTLTS_TOGGLE";
+pub const BREAKER_ALTFLD_TOGGLE: &'static str = "BREAKER_ALTFLD_TOGGLE";
+pub const BREAKER_WARN_TOGGLE: &'static str = "BREAKER_WARN_TOGGLE";
+pub const BREAKER_AVNFAN_SET: &'static str = "BREAKER_AVNFAN_SET";
+pub const BREAKER_AUTOPILOT_SET: &'static str = "BREAKER_AUTOPILOT_SET";
+pub const BREAKER_GPS_SET: &'static str = "BREAKER_GPS_SET";
+pub const BREAKER_NAVCOM1_SET: &'static str = "BREAKER_NAVCOM1_SET";
+pub const BREAKER_NAVCOM2_SET: &'static str = "BREAKER_NAVCOM2_SET";
+pub const BREAKER_NAVCOM3_SET: &'static str = "BREAKER_NAVCOM3_SET";
+pub const BREAKER_ADF_SET: &'static str = "BREAKER_ADF_SET";
+pub const BREAKER_XPNDR_SET: &'static str = "BREAKER_XPNDR_SET";
+pub const BREAKER_FLAP_SET: &'static str = "BREAKER_FLAP_SET";
+pub const BREAKER_INST_SET: &'static str = "BREAKER_INST_SET";
+pub const BREAKER_AVNBUS1_SET: &'static str = "BREAKER_AVNBUS1_SET";
+pub const BREAKER_AVNBUS2_SET: &'static str = "BREAKER_AVNBUS2_SET";
+pub const BREAKER_TURNCOORD_SET: &'static str = "BREAKER_TURNCOORD_SET";
+pub const BREAKER_INSTLTS_SET: &'static str = "BREAKER_INSTLTS_SET";
+pub const BREAKER_ALTFLD_SET: &'static str = "BREAKER_ALTFLD_SET";
+pub const BREAKER_WARN_SET: &'static str = "BREAKER_WARN_SET";

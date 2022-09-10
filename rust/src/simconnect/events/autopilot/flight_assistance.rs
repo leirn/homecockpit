@@ -1,0 +1,30 @@
+#![allow(dead_code)]
+
+pub const AIRSPEED_BUG_SELECT: &'static str = "AIRSPEED_BUG_SELECT";
+pub const ALTITUDE_BUG_SELECT: &'static str = "ALTITUDE_BUG_SELECT";
+pub const AUTO_THROTTLE_ARM: &'static str = "AUTO_THROTTLE_ARM";
+pub const AUTO_THROTTLE_DISCONNECT: &'static str = "AUTO_THROTTLE_DISCONNECT";
+pub const AUTO_THROTTLE_TO_GA: &'static str = "AUTO_THROTTLE_TO_GA";
+pub const AUTOBRAKE_DISARM: &'static str = "AUTOBRAKE_DISARM";
+pub const AUTOBRAKE_HI_SET: &'static str = "AUTOBRAKE_HI_SET";
+pub const AUTOBRAKE_LO_SET: &'static str = "AUTOBRAKE_LO_SET";
+pub const AUTOBRAKE_MED_SET: &'static str = "AUTOBRAKE_MED_SET";
+pub const DECREASE_AUTOBRAKE_CONTROL: &'static str = "DECREASE_AUTOBRAKE_CONTROL";
+pub const FLY_BY_WIRE_ELAC_TOGGLE: &'static str = "FLY_BY_WIRE_ELAC_TOGGLE";
+pub const FLY_BY_WIRE_FAC_TOGGLE: &'static str = "FLY_BY_WIRE_FAC_TOGGLE";
+pub const FLY_BY_WIRE_SEC_TOGGLE: &'static str = "FLY_BY_WIRE_SEC_TOGGLE";
+pub const GPWS_SWITCH_TOGGLE: &'static str = "GPWS_SWITCH_TOGGLE";
+pub const HEADING_BUG_DEC: &'static str = "HEADING_BUG_DEC";
+pub const HEADING_BUG_INC: &'static str = "HEADING_BUG_INC";
+pub const HEADING_BUG_SELECT: &'static str = "HEADING_BUG_SELECT";
+pub const HEADING_BUG_SET: &'static str = "HEADING_BUG_SET";
+pub const HEADING_BUG_SET_EX1: &'static str = "HEADING_BUG_SET_EX1";
+pub const INCREASE_AUTOBRAKE_CONTROL: &'static str = "INCREASE_AUTOBRAKE_CONTROL";
+pub const SET_AUTOBRAKE_CONTROL: &'static str = "SET_AUTOBRAKE_CONTROL";
+pub const SYNC_FLIGHT_DIRECTOR_PITCH: &'static str = "SYNC_FLIGHT_DIRECTOR_PITCH";
+pub const TOGGLE_FLIGHT_DIRECTOR: &'static str = "TOGGLE_FLIGHT_DIRECTOR";
+pub const YAW_DAMPER_TOGGLE: &'static str = "YAW_DAMPER_TOGGLE";
+pub const YAW_DAMPER_ON: &'static str = "YAW_DAMPER_ON";
+pub const YAW_DAMPER_OFF: &'static str = "YAW_DAMPER_OFF";
+pub const YAW_DAMPER_SET: &'static str = "YAW_DAMPER_SET";
+pub const VSI_BUG_SELECT: &'static str = "VSI_BUG_SELECT";

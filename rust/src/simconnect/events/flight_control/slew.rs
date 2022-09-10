@@ -1,0 +1,35 @@
+#![allow(dead_code)]
+
+pub const AXIS_SLEW_AHEAD_SET: &'static str = "AXIS_SLEW_AHEAD_SET";
+pub const AXIS_SLEW_ALT_SET: &'static str = "AXIS_SLEW_ALT_SET";
+pub const AXIS_SLEW_BANK_SET: &'static str = "AXIS_SLEW_BANK_SET";
+pub const AXIS_SLEW_HEADING_SET: &'static str = "AXIS_SLEW_HEADING_SET";
+pub const AXIS_SLEW_PITCH_SET: &'static str = "AXIS_SLEW_PITCH_SET";
+pub const AXIS_SLEW_SIDEWAYS_SET: &'static str = "AXIS_SLEW_SIDEWAYS_SET";
+pub const SLEW_AHEAD_MINUS: &'static str = "SLEW_AHEAD_MINUS";
+pub const SLEW_AHEAD_PLUS: &'static str = "SLEW_AHEAD_PLUS";
+pub const SLEW_ALTIT_DN_FAST: &'static str = "SLEW_ALTIT_DN_FAST";
+pub const SLEW_ALTIT_DN_SLOW: &'static str = "SLEW_ALTIT_DN_SLOW";
+pub const SLEW_ALTIT_FREEZE: &'static str = "SLEW_ALTIT_FREEZE";
+pub const SLEW_ALTIT_MINUS: &'static str = "SLEW_ALTIT_MINUS";
+pub const SLEW_ALTIT_PLUS: &'static str = "SLEW_ALTIT_PLUS";
+pub const SLEW_ALTIT_UP_FAST: &'static str = "SLEW_ALTIT_UP_FAST";
+pub const SLEW_ALTIT_UP_SLOW: &'static str = "SLEW_ALTIT_UP_SLOW";
+pub const SLEW_BANK_MINUS: &'static str = "SLEW_BANK_MINUS";
+pub const SLEW_BANK_PLUS: &'static str = "SLEW_BANK_PLUS";
+pub const SLEW_FREEZE: &'static str = "SLEW_FREEZE";
+pub const SLEW_HEADING_MINUS: &'static str = "SLEW_HEADING_MINUS";
+pub const SLEW_HEADING_PLUS: &'static str = "SLEW_HEADING_PLUS";
+pub const SLEW_LEFT: &'static str = "SLEW_LEFT";
+pub const SLEW_OFF: &'static str = "SLEW_OFF";
+pub const SLEW_ON: &'static str = "SLEW_ON";
+pub const SLEW_PITCH_DN_FAST: &'static str = "SLEW_PITCH_DN_FAST";
+pub const SLEW_PITCH_DN_SLOW: &'static str = "SLEW_PITCH_DN_SLOW";
+pub const SLEW_PITCH_FREEZE: &'static str = "SLEW_PITCH_FREEZE";
+pub const SLEW_PITCH_MINUS: &'static str = "SLEW_PITCH_MINUS";
+pub const SLEW_PITCH_PLUS: &'static str = "SLEW_PITCH_PLUS";
+pub const SLEW_PITCH_UP_FAST: &'static str = "SLEW_PITCH_UP_FAST";
+pub const SLEW_PITCH_UP_SLOW: &'static str = "SLEW_PITCH_UP_SLOW";
+pub const SLEW_RESET: &'static str = "SLEW_RESET";
+pub const SLEW_RIGHT: &'static str = "SLEW_RIGHT";
+pub const SLEW_SET: &'static str = "SLEW_SET";

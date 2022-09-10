@@ -1,0 +1,8 @@
+#![allow(dead_code)]
+
+pub const SET_FUEL_TRANSFER_CUSTOM: &'static str = "SET_FUEL_TRANSFER_CUSTOM";
+pub const FUEL_TRANSFER_CUSTOM_INDEX_TOGGLE: &'static str = "FUEL_TRANSFER_CUSTOM_INDEX_TOGGLE";
+pub const SET_FUEL_TRANSFER_FORWARD: &'static str = "SET_FUEL_TRANSFER_FORWARD";
+pub const SET_FUEL_TRANSFER_AFT: &'static str = "SET_FUEL_TRANSFER_AFT";
+pub const SET_FUEL_TRANSFER_AUTO: &'static str = "SET_FUEL_TRANSFER_AUTO";
+pub const SET_FUEL_TRANSFER_OFF: &'static str = "SET_FUEL_TRANSFER_OFF";
