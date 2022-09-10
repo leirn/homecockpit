@@ -19,15 +19,6 @@ struct Message {
 }
 
 impl Message {
-    /// Creates an empty message with 0 as values
-    pub fn null() -> Message {
-        Message {
-            category: 0,
-            component: 0,
-            action: 0,
-        }
-    }
-
     /// Creates a message based on received bytes from serial port
     pub fn new(received_bytes: [u8; 2]) -> Message {
         let message: u16 = (received_bytes[0] as u16) << 8 + received_bytes[1] as u16;
@@ -64,7 +55,7 @@ impl fmt::Display for Message {
 
 pub struct ArduinoCommunicationHandler {
     rx_to_arduino: Receiver<ChannelMessage>,
-    tx_to_simconnect: Sender<ChannelMessage>,
+    _tx_to_simconnect: Sender<ChannelMessage>,
     port_id: String,
     port_speed: u32,
     started: bool,
@@ -77,7 +68,7 @@ impl ArduinoCommunicationHandler {
     ) -> ArduinoCommunicationHandler {
         ArduinoCommunicationHandler {
             rx_to_arduino: rx_to_arduino,
-            tx_to_simconnect: tx_to_simconnect,
+            _tx_to_simconnect: tx_to_simconnect,
             port_id: String::from("COM3"),
             port_speed: SERIAL_PORT_SPEED,
             started: false,
