@@ -1,14 +1,15 @@
 //! Homecockpit server entry file
 
-use serialport::*;
-use std::fmt;
 use std::sync::mpsc;
 use std::thread;
 
 mod protocol;
-use crate::protocol::*;
+mod channel_mgt;
 mod serial;
-use crate::serial::arduino_communication_handler;
+mod cli;
+mod simconnect;
+use serial::ArduinoCommunicationHandler;
+use simconnect::SimConnectHandler;
 
 /// Program main function
 fn main() {

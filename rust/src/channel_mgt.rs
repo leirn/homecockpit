@@ -1,10 +1,10 @@
 //! Inter thread protocol
 
 pub struct ChannelMessage {
-    message_type: ListOfMessageTypes,
-    payload: <T>,
+    pub message_type: ListOfMessageTypes,
+    pub payload: String,
+    pub payload_int: u32,
 }
-
 
 pub enum ListOfMessageTypes {
     SerialStart,

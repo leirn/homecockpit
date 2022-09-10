@@ -1,6 +1,11 @@
 //! Functions to handle serial communications with Arduino
 
+use serialport::*;
+use std::fmt;
+use std::sync::mpsc::{Sender, Receiver};
+
 use crate::channel_mgt::*;
+use crate::protocol::*;
 
 const SERIAL_PORT_SPEED: u32 = 9600;
 
@@ -57,9 +62,9 @@ impl fmt::Display for Message {
     }
 }
 
-struct ArduinoCommunicationHandler {
-    rx_to_arduino: Receiver<T>,
-    tx_to_simconnect: Sender<T>,
+pub struct ArduinoCommunicationHandler {
+    rx_to_arduino: Receiver<ChannelMessage>,
+    tx_to_simconnect: Sender<ChannelMessage>,
     port_id: String,
     port_speed: u32,
     started: bool,
@@ -67,13 +72,13 @@ struct ArduinoCommunicationHandler {
 
 impl ArduinoCommunicationHandler {
     pub fn new(
-        rx_to_arduino: Receiver<T>,
-        tx_to_simconnect: Sender<T>,
+        rx_to_arduino: Receiver<ChannelMessage>,
+        tx_to_simconnect: Sender<ChannelMessage>,
     ) -> ArduinoCommunicationHandler {
         ArduinoCommunicationHandler {
             rx_to_arduino: rx_to_arduino,
             tx_to_simconnect: tx_to_simconnect,
-            port_id: "COM1",
+            port_id: String::from("COM3"),
             port_speed: SERIAL_PORT_SPEED,
             started: false,
         }
@@ -81,21 +86,21 @@ impl ArduinoCommunicationHandler {
 
     /// Function to handle all communication received from Arduino
     pub fn run(&mut self) {
-        let mut port: SerialPort;
+        let mut port: Option<Box<dyn SerialPort>> = None;
 
         loop {
-            if started {
+            if self.started & port.as_ref().is_some() {
                 let mut buffer: [u8; 2] = [0, 0];
 
-                let bytes_to_read = port.bytes_to_read().unwrap();
+                let bytes_to_read = port.as_ref().unwrap().bytes_to_read().unwrap();
                 if bytes_to_read > 1 {
-                    port.read_exact(&mut buffer).unwrap();
+                    port.as_mut().unwrap().read_exact(&mut buffer).unwrap();
 
                     let message = Message::new(buffer);
 
                     println!("Message received : {}", message);
 
-                    let reponses = match message.category {
+                    let responses = match message.category {
                         CATEGORY_ELECTRICAL_EVENTS => self.electrical_events_handler(message),
                         CATEGORY_ENGINE_EVENTS => self.engine_events_handler(message),
                         CATEGORY_AUTOPILOT_EVENTS => self.autopilot_events_handler(message),
@@ -105,11 +110,14 @@ impl ArduinoCommunicationHandler {
                         CATEGORY_RADIO_NAV_EVENTS => self.radio_nav_events_handler(message),
                         _ => {
                             println!("Unrecognized category for message {}", message);
+                            let r: Vec<Message> = Vec::new();
+                            r
                         }
                     };
 
                     for response in responses {
-                        port.write(&reponse.get_bytes_message()).unwrap();
+                        let msg_bytes = &(response.get_bytes_message());
+                        port.as_mut().unwrap().write(msg_bytes).unwrap();
                     }
                 }
             }
@@ -118,18 +126,24 @@ impl ArduinoCommunicationHandler {
                 match msg.message_type {
                     ListOfMessageTypes::SerialStart => {
                         self.started = true;
-                        port = serialport::new(port_id, SERIAL_PORT_SPEED)
-                            .open()
-                            .expect("Failed to open port");
+                        port = Some(serialport::new(&self.port_id, self.port_speed).open().expect("Failed to open port"));
                     }
                     ListOfMessageTypes::SerialStop => {
                         self.started = false;
-                        port.close();
                     }
-                    ListOfMessageTypes::SerialSend => port.write(msg.payload),
+                    ListOfMessageTypes::SerialSend => {
+                        if self.started & port.as_ref().is_some() {
+                            let mut buffer: [u8; 2] = [0, 0];
+                            buffer[0] = ((msg.payload_int >> 8) & 0xff) as u8;
+                            buffer[1] = (msg.payload_int & 0xff) as u8;
+                            port.as_mut().unwrap().write(&buffer).unwrap();
+                        }
+                        else {
+                            println!("Serial communication has not started, cannot send message");
+                        }
+                    },
                     ListOfMessageTypes::SerialPort => self.port_id = msg.payload,
                 }
-                port.write(&buffer).unwrap();
             }
         }
     }
@@ -152,7 +166,7 @@ impl ArduinoCommunicationHandler {
 
     /// Manage messages from the serial port where category is CATEGORY_ENGINE_EVENTS
     fn engine_events_handler(&self, message: Message) -> Vec<Message> {
-        let responses: Vec<Message> = Vec::new();
+        let mut responses: Vec<Message> = Vec::new();
         let response = Message {
             category: CATEGORY_ENGINE_EVENTS,
             component: message.component,
@@ -162,17 +176,18 @@ impl ArduinoCommunicationHandler {
                 _ => STATUS_GENERAL_ERROR,
             },
         };
+        responses.push(response);
         responses
     }
 
     /// Manage messages from the serial port where category is CATEGORY_AUTOPILOT_EVENTS
-    fn autopilot_events_handler(&self, message: Message) -> Vec<Message> {
+    fn autopilot_events_handler(&self, _message: Message) -> Vec<Message> {
         let responses: Vec<Message> = Vec::new();
         responses
     }
 
     /// Manage messages from the serial port where category is CATEGORY_G1000_PFD_EVENTS or CATEGORY_G1000_MFD_EVENTS
-    fn g1000_events_handler(&self, message: Message) -> Vec<Message> {
+    fn g1000_events_handler(&self, _message: Message) -> Vec<Message> {
         let responses: Vec<Message> = Vec::new();
         responses
     }
@@ -242,7 +257,8 @@ impl ArduinoCommunicationHandler {
     }
 
     /// Manage messages from the serial port where category is CATEGORY_RADIO_NAV_EVENTS
-    fn radio_nav_events_handler(&self, message: Message) -> Vec<Message> {
+    fn radio_nav_events_handler(&self, _message: Message) -> Vec<Message> {
         let responses: Vec<Message> = Vec::new();
+        responses
     }
 }

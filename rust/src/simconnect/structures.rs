@@ -1,4 +1,4 @@
-use crate::enumerations::SIMCONNECT_SIMOBJECT_TYPE;
+use super::enumerations::SIMCONNECT_SIMOBJECT_TYPE;
 
 /// The SIMCONNECT_DATA_FACILITY_AIRPORT pub structure is used to return information
 /// on a single airport in the facilities cache.
