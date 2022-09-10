@@ -1,5 +1,7 @@
 //! Protocol between Computer and Arduino
 
+#![allow(dead_code)]
+
 pub const MASK_CATEGORY: u16 = 0b1111000000000000;
 pub const MASK_COMPONENT: u16 = 0b0000111111110000;
 pub const MASK_ACTION: u16 = 0b0000000000001111;

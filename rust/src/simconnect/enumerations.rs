@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 /// The SIMCONNECT_CLIENT_DATA_PERIOD pub enumeration type is used with the SimConnect_RequestClientData
 ///  call to specify how often data is to be sent to the client.
 #[allow(non_camel_case_types)]
