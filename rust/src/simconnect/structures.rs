@@ -223,12 +223,12 @@ pub struct SIMCONNECT_RECV_EVENT_FRAME {
 #[repr(C)]
 #[allow(non_snake_case)]
 pub struct SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE {
-    dwSize: u32,                                              // DWORD
-    dwVersion: u32,                                           // DWORD
-    dwID: u32,                                                // DWORD
-    uGroupID: u32,                                            // DWORD
-    uEventID: u32,                                            // DWORD
-    dwData: u32,                                              // DWORD
+    dwSize: u32,                         // DWORD
+    dwVersion: u32,                      // DWORD
+    dwID: u32,                           // DWORD
+    uGroupID: u32,                       // DWORD
+    uEventID: u32,                       // DWORD
+    dwData: u32,                         // DWORD
     eObjType: SIMCONNECT_SIMOBJECT_TYPE, // SIMCONNECT_SIMOBJECT_TYPE
 }
 

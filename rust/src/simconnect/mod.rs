@@ -1,11 +1,11 @@
 //! Functions to handle simconnect interactions
 
 pub mod enumerations;
-pub mod structures;
 pub mod events;
+pub mod structures;
 
+use std::sync::mpsc::{Receiver, Sender};
 use std::{thread, time};
-use std::sync::mpsc::{Sender, Receiver};
 
 use crate::channel_mgt::ChannelMessage;
 
@@ -16,7 +16,10 @@ pub struct SimConnectHandler {
 
 impl SimConnectHandler {
     /// Constructor
-    pub fn new(rx_to_simconnect: Receiver<ChannelMessage>, tx_to_arduino: Sender<ChannelMessage>) -> SimConnectHandler {
+    pub fn new(
+        rx_to_simconnect: Receiver<ChannelMessage>,
+        tx_to_arduino: Sender<ChannelMessage>,
+    ) -> SimConnectHandler {
         SimConnectHandler {
             _rx_to_simconnect: rx_to_simconnect,
             _tx_to_arduino: tx_to_arduino,

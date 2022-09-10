@@ -2,7 +2,7 @@
 
 use serialport::*;
 use std::fmt;
-use std::sync::mpsc::{Sender, Receiver};
+use std::sync::mpsc::{Receiver, Sender};
 
 use crate::channel_mgt::*;
 use crate::protocol::*;
@@ -126,7 +126,11 @@ impl ArduinoCommunicationHandler {
                 match msg.message_type {
                     ListOfMessageTypes::SerialStart => {
                         self.started = true;
-                        port = Some(serialport::new(&self.port_id, self.port_speed).open().expect("Failed to open port"));
+                        port = Some(
+                            serialport::new(&self.port_id, self.port_speed)
+                                .open()
+                                .expect("Failed to open port"),
+                        );
                     }
                     ListOfMessageTypes::SerialStop => {
                         self.started = false;
@@ -137,11 +141,10 @@ impl ArduinoCommunicationHandler {
                             buffer[0] = ((msg.payload_int >> 8) & 0xff) as u8;
                             buffer[1] = (msg.payload_int & 0xff) as u8;
                             port.as_mut().unwrap().write(&buffer).unwrap();
-                        }
-                        else {
+                        } else {
                             println!("Serial communication has not started, cannot send message");
                         }
-                    },
+                    }
                     ListOfMessageTypes::SerialPort => self.port_id = msg.payload,
                 }
             }

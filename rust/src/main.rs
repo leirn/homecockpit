@@ -3,10 +3,10 @@
 use std::sync::mpsc;
 use std::thread;
 
-mod protocol;
 mod channel_mgt;
-mod serial;
 mod cli;
+mod protocol;
+mod serial;
 mod simconnect;
 use serial::ArduinoCommunicationHandler;
 use simconnect::SimConnectHandler;

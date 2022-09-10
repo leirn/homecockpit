@@ -4,8 +4,8 @@ use std::io::stdin;
 use std::process;
 
 use crate::channel_mgt::*;
-use std::sync::mpsc::Sender;
 use regex::Regex;
+use std::sync::mpsc::Sender;
 
 /// List of available commands
 const COMMAND_QUIT: &str = "quit";
@@ -24,30 +24,33 @@ pub fn cli(tx_to_arduino: Sender<ChannelMessage>) {
         stdin().read_line(&mut raw_command).unwrap();
         let command = raw_command.trim();
         if command.eq(COMMAND_START) {
-            tx_to_arduino.send(ChannelMessage{
-                message_type: ListOfMessageTypes::SerialStart,
-                payload: String::new(),
-                payload_int: 1,
-            }).unwrap();
-        }
-        else if command.eq(COMMAND_STOP) {
-            tx_to_arduino.send(ChannelMessage{
-                message_type: ListOfMessageTypes::SerialStop,
-                payload: String::new(),
-                payload_int: 1,
-            }).unwrap();
-        }
-        else if command.eq(COMMAND_SET_PORT) {
+            tx_to_arduino
+                .send(ChannelMessage {
+                    message_type: ListOfMessageTypes::SerialStart,
+                    payload: String::new(),
+                    payload_int: 1,
+                })
+                .unwrap();
+        } else if command.eq(COMMAND_STOP) {
+            tx_to_arduino
+                .send(ChannelMessage {
+                    message_type: ListOfMessageTypes::SerialStop,
+                    payload: String::new(),
+                    payload_int: 1,
+                })
+                .unwrap();
+        } else if command.eq(COMMAND_SET_PORT) {
             println!("What serial port do you want to use ?");
             let mut port = String::new();
             stdin().read_line(&mut port).unwrap();
-            tx_to_arduino.send(ChannelMessage {
-                message_type: ListOfMessageTypes::SerialPort,
-                payload: String::from(port.trim()),
-                payload_int: 0,
-            }).unwrap();
-        }
-        else if command.eq(COMMAND_SEND_MESSAGE) {
+            tx_to_arduino
+                .send(ChannelMessage {
+                    message_type: ListOfMessageTypes::SerialPort,
+                    payload: String::from(port.trim()),
+                    payload_int: 0,
+                })
+                .unwrap();
+        } else if command.eq(COMMAND_SEND_MESSAGE) {
             println!("Enter the message you want to send in hexadecimal format : 0xabcd");
             let mut msg_code = String::new();
             stdin().read_line(&mut msg_code).unwrap();
@@ -56,29 +59,27 @@ pub fn cli(tx_to_arduino: Sender<ChannelMessage>) {
             if re.is_match(trimmed) {
                 match <u32>::from_str_radix(trimmed.strip_prefix("0x").unwrap(), 16) {
                     Ok(i) => {
-                        let mut buffer: [u8;2] = [0, 0];
+                        let mut buffer: [u8; 2] = [0, 0];
                         buffer[0] = (i >> 8) as u8;
                         buffer[1] = (i & 0xff) as u8;
-                        tx_to_arduino.send(ChannelMessage {
-                            message_type: ListOfMessageTypes::SerialSend,
-                            payload: String::new(),
-                            payload_int: i,
-                        }).unwrap();
+                        tx_to_arduino
+                            .send(ChannelMessage {
+                                message_type: ListOfMessageTypes::SerialSend,
+                                payload: String::new(),
+                                payload_int: i,
+                            })
+                            .unwrap();
                     }
                     Err(..) => println!("The format wasn't respected: {}", trimmed),
                 }
             };
-        }
-        else if command.eq(COMMAND_LIST_SERIAL_PORTS) {
+        } else if command.eq(COMMAND_LIST_SERIAL_PORTS) {
             list_serial_ports();
-        }
-        else if command.eq(COMMAND_HELP) {
+        } else if command.eq(COMMAND_HELP) {
             print_help();
-        }
-        else if command.eq(COMMAND_QUIT) {
+        } else if command.eq(COMMAND_QUIT) {
             quit_app();
-        }
-        else {
+        } else {
             println!("Unknow command {}", command);
             print_help();
         }
