@@ -11,4 +11,6 @@ pub enum ListOfMessageTypes {
     SerialStop,
     SerialSend,
     SerialPort,
+    SimStart,
+    SimStop,
 }

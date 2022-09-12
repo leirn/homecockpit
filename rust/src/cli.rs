@@ -9,21 +9,43 @@ use std::sync::mpsc::Sender;
 
 /// List of available commands
 const COMMAND_QUIT: &str = "quit";
-const COMMAND_START: &str = "start";
-const COMMAND_STOP: &str = "stop";
+const COMMAND_START_SERIAL: &str = "start_serial";
+const COMMAND_STOP_SERIAL: &str = "stop_serial";
 const COMMAND_LIST_SERIAL_PORTS: &str = "list_serial_ports";
 const COMMAND_SET_PORT: &str = "set_port";
 const COMMAND_SEND_MESSAGE: &str = "send_message";
 const COMMAND_HELP: &str = "help";
+const COMMAND_START_SIM: &str = "start_sim";
+const COMMAND_STOP_SIM: &str = "stop_sim";
 
 /// Main CLI function
-pub fn cli(tx_to_arduino: Sender<ChannelMessage>) {
+pub fn cli(tx_to_arduino: Sender<ChannelMessage>, tx_to_simconnect: Sender<ChannelMessage>) {
     loop {
         let mut raw_command = String::new();
         println!("Enter command :");
         stdin().read_line(&mut raw_command).unwrap();
         let command = raw_command.trim();
-        if command.eq(COMMAND_START) {
+        if command.eq(COMMAND_START_SIM) {
+            tx_to_simconnect
+            .send(ChannelMessage {
+                message_type: ListOfMessageTypes::SimStart,
+                payload: String::new(),
+                payload_int: i,
+            })
+            .unwrap();
+            println!("Not implemented yet");
+        }
+        else if command.eq(COMMAND_STOP_SIM) {
+            tx_to_simconnect
+            .send(ChannelMessage {
+                message_type: ListOfMessageTypes::SimStop,
+                payload: String::new(),
+                payload_int: i,
+            })
+            .unwrap();
+            println!("Not implemented yet");
+        }
+        else if command.eq(COMMAND_START_SERIAL) {
             tx_to_arduino
                 .send(ChannelMessage {
                     message_type: ListOfMessageTypes::SerialStart,
@@ -31,7 +53,8 @@ pub fn cli(tx_to_arduino: Sender<ChannelMessage>) {
                     payload_int: 1,
                 })
                 .unwrap();
-        } else if command.eq(COMMAND_STOP) {
+                println!("Started to listen to serial port");
+        } else if command.eq(COMMAND_STOP_SERIAL) {
             tx_to_arduino
                 .send(ChannelMessage {
                     message_type: ListOfMessageTypes::SerialStop,
@@ -39,6 +62,7 @@ pub fn cli(tx_to_arduino: Sender<ChannelMessage>) {
                     payload_int: 1,
                 })
                 .unwrap();
+                println!("Stopped to listen to serial port");
         } else if command.eq(COMMAND_SET_PORT) {
             println!("What serial port do you want to use ?");
             let mut port = String::new();
@@ -69,16 +93,21 @@ pub fn cli(tx_to_arduino: Sender<ChannelMessage>) {
                                 payload_int: i,
                             })
                             .unwrap();
+                            println!("Message sent");
                     }
                     Err(..) => println!("The format wasn't respected: {}", trimmed),
                 }
+            }
+            else {
+                println!("The format wasn't respected: {}", trimmed)
             };
         } else if command.eq(COMMAND_LIST_SERIAL_PORTS) {
             list_serial_ports();
         } else if command.eq(COMMAND_HELP) {
             print_help();
         } else if command.eq(COMMAND_QUIT) {
-            quit_app();
+            println!("Bye bye");
+            process::exit(0);
         } else {
             println!("Unknow command {}", command);
             print_help();
@@ -99,17 +128,16 @@ fn list_serial_ports() {
 /// Display CLI help
 fn print_help() {
     println!("Available commands:");
-    println!("    help : print this help text");
-    println!("    start : start listening to serial port");
-    println!("    stop : stop listening to serial port");
-    println!("    list_serial_ports : display a list of serial ports on this computer");
-    println!("    set_port : ask for the serial port to use");
-    println!("    send_message : ask for a specific command to send. For debugging only");
-    println!("    quit : quit application");
-}
-
-/// Exit application
-fn quit_app() {
-    println!("Bye bye");
-    process::exit(0);
+    println!("GLOBALS:");
+    println!("    help                print this help text");
+    println!("    quit                quit application");
+    println!("");
+    println!("    list_serial_ports   display a list of serial ports on this computer");
+    println!("    start_serial        start listening to serial port");
+    println!("    stop_serial         stop listening to serial port");
+    println!("    set_port            ask for the serial port to use");
+    println!("    send_message        ask for a specific command to send. For debugging only");
+    println!("SIMCONNECT:");
+    println!("    start_sim           connect to Flight Simulator");
+    println!("    stop_sim            disconnect from Flight Simulator");
 }

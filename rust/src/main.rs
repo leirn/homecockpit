@@ -19,6 +19,7 @@ fn main() {
     let (tx_to_simconnect, rx_to_simconnect) = mpsc::channel();
 
     let tx_to_arduino_from_cli = tx_to_arduino.clone();
+    let tx_to_simconnect_from_cli = tx_to_simconnect.clone();
     // Start thread to handle communication with arduino modules
     let _arduino_thread_handle = thread::spawn(|| {
         let mut arduino_handler = ArduinoCommunicationHandler::new(rx_to_arduino, tx_to_simconnect);
@@ -32,5 +33,5 @@ fn main() {
     });
 
     // Start CLI
-    cli::cli(tx_to_arduino_from_cli);
+    cli::cli(tx_to_arduino_from_cli, tx_to_simconnect_from_cli);
 }
