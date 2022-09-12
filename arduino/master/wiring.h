@@ -12,20 +12,20 @@
 
 // Engine and systems
 // Left Pump
-#define LED_LPUMP_PIN 22
-#define BTN_LPUMP_PIN 23
+#define LED_LPUMP_PIN 23
+#define BTN_LPUMP_PIN 22
 // Right Pump
-#define LED_RPUMP_PIN 24
-#define BTN_RPUMP_PIN 25
+#define LED_RPUMP_PIN 25
+#define BTN_RPUMP_PIN 24
 // Carb. heat
 #define LED_CARB_PIN 26
 #define BTN_CARB_PIN 27
 // Pitot heat
-#define LED_PITOT_PIN 28
-#define BTN_PITOT_PIN 29
+#define LED_PITOT_PIN 29
+#define BTN_PITOT_PIN 28
 // Anti-ice
-#define LED_ANTI_ICE_PIN 30
-#define BTN_ANTI_ICE_PIN 31
+#define LED_ANTI_ICE_PIN 31
+#define BTN_ANTI_ICE_PIN 30
 
 // Lights
 // BCN
