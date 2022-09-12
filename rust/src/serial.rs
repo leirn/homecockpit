@@ -21,7 +21,7 @@ struct Message {
 impl Message {
     /// Creates a message based on received bytes from serial port
     pub fn new(received_bytes: [u8; 2]) -> Message {
-        let message: u16 = (received_bytes[0] as u16) << 8 + received_bytes[1] as u16;
+        let message: u16 = (received_bytes[0] as u16) << 8 | received_bytes[1] as u16;
         let category = ((message & MASK_CATEGORY) >> 12) as u8;
         let component = ((message & MASK_COMPONENT) >> 4) as u8;
         let action = (message & MASK_ACTION) as u8;
@@ -43,13 +43,13 @@ impl Message {
 
     /// Retrieve the message as u16 value
     pub fn get_message(&self) -> u16 {
-        (self.category as u16) << 12 + (self.component as u16) << 4 + self.action as u16
+        (self.category as u16) << 12 | (self.component as u16) << 4 | self.action as u16
     }
 }
 
 impl fmt::Display for Message {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.get_message())
+        write!(f, "0x{:04x}", self.get_message())
     }
 }
 
@@ -86,6 +86,11 @@ impl ArduinoCommunicationHandler {
                 let bytes_to_read = port.as_ref().unwrap().bytes_to_read().unwrap();
                 if bytes_to_read > 1 {
                     port.as_mut().unwrap().read_exact(&mut buffer).unwrap();
+
+                    println!(
+                        "Serial raw data received: 0x{:02x}, 0x{:02x}",
+                        buffer[0], buffer[1]
+                    );
 
                     let message = Message::new(buffer);
 
@@ -137,6 +142,7 @@ impl ArduinoCommunicationHandler {
                         }
                     }
                     ListOfMessageTypes::SerialPort => self.port_id = msg.payload,
+                    _ => {}
                 }
             }
         }
