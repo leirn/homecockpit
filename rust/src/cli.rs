@@ -27,25 +27,21 @@ pub fn cli(tx_to_arduino: Sender<ChannelMessage>, tx_to_simconnect: Sender<Chann
         let command = raw_command.trim();
         if command.eq(COMMAND_START_SIM) {
             tx_to_simconnect
-            .send(ChannelMessage {
-                message_type: ListOfMessageTypes::SimStart,
-                payload: String::new(),
-                payload_int: i,
-            })
-            .unwrap();
-            println!("Not implemented yet");
-        }
-        else if command.eq(COMMAND_STOP_SIM) {
+                .send(ChannelMessage {
+                    message_type: ListOfMessageTypes::SimStart,
+                    payload: String::new(),
+                    payload_int: 0,
+                })
+                .unwrap();
+        } else if command.eq(COMMAND_STOP_SIM) {
             tx_to_simconnect
-            .send(ChannelMessage {
-                message_type: ListOfMessageTypes::SimStop,
-                payload: String::new(),
-                payload_int: i,
-            })
-            .unwrap();
-            println!("Not implemented yet");
-        }
-        else if command.eq(COMMAND_START_SERIAL) {
+                .send(ChannelMessage {
+                    message_type: ListOfMessageTypes::SimStop,
+                    payload: String::new(),
+                    payload_int: 0,
+                })
+                .unwrap();
+        } else if command.eq(COMMAND_START_SERIAL) {
             tx_to_arduino
                 .send(ChannelMessage {
                     message_type: ListOfMessageTypes::SerialStart,
@@ -53,7 +49,7 @@ pub fn cli(tx_to_arduino: Sender<ChannelMessage>, tx_to_simconnect: Sender<Chann
                     payload_int: 1,
                 })
                 .unwrap();
-                println!("Started to listen to serial port");
+            println!("Started to listen to serial port");
         } else if command.eq(COMMAND_STOP_SERIAL) {
             tx_to_arduino
                 .send(ChannelMessage {
@@ -62,7 +58,7 @@ pub fn cli(tx_to_arduino: Sender<ChannelMessage>, tx_to_simconnect: Sender<Chann
                     payload_int: 1,
                 })
                 .unwrap();
-                println!("Stopped to listen to serial port");
+            println!("Stopped to listen to serial port");
         } else if command.eq(COMMAND_SET_PORT) {
             println!("What serial port do you want to use ?");
             let mut port = String::new();
@@ -93,12 +89,11 @@ pub fn cli(tx_to_arduino: Sender<ChannelMessage>, tx_to_simconnect: Sender<Chann
                                 payload_int: i,
                             })
                             .unwrap();
-                            println!("Message sent");
+                        println!("Message sent");
                     }
                     Err(..) => println!("The format wasn't respected: {}", trimmed),
                 }
-            }
-            else {
+            } else {
                 println!("The format wasn't respected: {}", trimmed)
             };
         } else if command.eq(COMMAND_LIST_SERIAL_PORTS) {

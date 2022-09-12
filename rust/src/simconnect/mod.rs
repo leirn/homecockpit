@@ -7,7 +7,7 @@ pub mod structures;
 use std::sync::mpsc::{Receiver, Sender};
 use std::{thread, time};
 
-use crate::channel_mgt::ChannelMessage;
+use crate::channel_mgt::{ChannelMessage, ListOfMessageTypes};
 
 pub struct SimConnectHandler {
     rx_to_simconnect: Receiver<ChannelMessage>,
@@ -37,6 +37,7 @@ impl SimConnectHandler {
                     ListOfMessageTypes::SimStop => {
                         println!("Not implemented yet !");
                     }
+                    _ => {}
                 }
             }
             let one_sec = time::Duration::from_millis(1000);
