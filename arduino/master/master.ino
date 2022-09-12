@@ -9,6 +9,8 @@
 #include "wiring.h" // Pins and wiring definition
 #include "protocol.h" // Protocol message codes
 
+#define BUTTON_INTERVAL 25
+
 U8G2_SSD1309_128X64_NONAME0_F_4W_SW_SPI u8g2(U8G2_R0, /* clock=*/ SCREEN_CLOCK, /* data=*/ SCREEN_DATA, /* cs=*/ SCREEN_CS, /* dc=*/ SCREEN_DC, /* reset=*/ SCREEN_RESET);
 
 // Lights
@@ -95,46 +97,46 @@ void setup()
   // Initiate lights
   // BCN
   btn_lights_BCN.attach(BTN_BCN_PIN, INPUT_PULLUP);
-  btn_lights_BCN.interval(25);
+  btn_lights_BCN.interval(BUTTON_INTERVAL);
   // LAND
   btn_lights_LAND.attach(BTN_LAND_PIN, INPUT_PULLUP);
-  btn_lights_LAND.interval(25);
+  btn_lights_LAND.interval(BUTTON_INTERVAL);
   // TAXI
   btn_lights_TAXI.attach(BTN_TAXI_PIN, INPUT_PULLUP);
-  btn_lights_TAXI.interval(25);
+  btn_lights_TAXI.interval(BUTTON_INTERVAL);
   // NAV
   btn_lights_NAV.attach(BTN_NAV_PIN, INPUT_PULLUP);
-  btn_lights_NAV.interval(25);
+  btn_lights_NAV.interval(BUTTON_INTERVAL);
   // Strobe
   btn_lights_STRB.attach(BTN_STRB_PIN, INPUT_PULLUP);
-  btn_lights_STRB.interval(25);
+  btn_lights_STRB.interval(BUTTON_INTERVAL);
 
   // Engine and systems
   // Left Pump
   btn_engine_LPUMP.attach(BTN_LPUMP_PIN, INPUT_PULLUP);
-  btn_engine_LPUMP.interval(25);
+  btn_engine_LPUMP.interval(BUTTON_INTERVAL);
   // Right Pump
   btn_engine_RPUMP.attach(BTN_RPUMP_PIN, INPUT_PULLUP);
-  btn_engine_RPUMP.interval(25);
+  btn_engine_RPUMP.interval(BUTTON_INTERVAL);
   // Carb Heat
   btn_engine_CARB.attach(BTN_CARB_PIN, INPUT_PULLUP);
-  btn_engine_CARB.interval(25);
+  btn_engine_CARB.interval(BUTTON_INTERVAL);
   // Pitot Heat
   btn_engine_PITOT.attach(BTN_PITOT_PIN, INPUT_PULLUP);
-  btn_engine_PITOT.interval(25);
+  btn_engine_PITOT.interval(BUTTON_INTERVAL);
   // Anti-ice
   btn_engine_ANTI_ICE.attach(BTN_ANTI_ICE_PIN, INPUT_PULLUP);
-  btn_engine_ANTI_ICE.interval(25);
+  btn_engine_ANTI_ICE.interval(BUTTON_INTERVAL);
 
   // Landing Gear
   btn_LDG_GEAR.attach(BTN_LDG_GEAR_PIN, INPUT_PULLUP);
-  btn_LDG_GEAR.interval(25);
+  btn_LDG_GEAR.interval(BUTTON_INTERVAL);
 
   // Flaps
   btn_FLAPS_UP.attach(BTN_FLAPS_UP_PIN, INPUT_PULLUP);
-  btn_FLAPS_UP.interval(25);
+  btn_FLAPS_UP.interval(BUTTON_INTERVAL);
   btn_FLAPS_DN.attach(BTN_FLAPS_DN_PIN, INPUT_PULLUP);
-  btn_FLAPS_DN.interval(25);
+  btn_FLAPS_DN.interval(BUTTON_INTERVAL);
 
   logger("Arduino initialized");
 }
