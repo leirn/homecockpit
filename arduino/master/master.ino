@@ -137,6 +137,8 @@ void setup()
   btn_FLAPS_DN.attach(BTN_FLAPS_DN_PIN, INPUT_PULLUP);
   btn_FLAPS_DN.interval(BUTTON_INTERVAL);
 
+  led_FLAPS[0].on();
+
   logger("Arduino initialized");
 }
 
@@ -264,12 +266,12 @@ void updateButtons()
 
   // Anti ice
   btn_engine_ANTI_ICE.update();
-  if (btn_engine_ANTI_ICE.rose())
+  if (btn_engine_ANTI_ICE.fell())
   { // Switch moved to OFF
     writeSerialOutputToComputer(EVENT_ANTI_ICE_OFF);
     logger("Anti-ice set button to OFF");
   }
-  else if (btn_engine_ANTI_ICE.fell())
+  else if (btn_engine_ANTI_ICE.rose())
   { // Switch moved to ON
     writeSerialOutputToComputer(EVENT_ANTI_ICE_ON);
     logger("Anti-ice button set to ON");
@@ -300,6 +302,7 @@ void updateButtons()
   btn_FLAPS_DN.update();
   if (btn_FLAPS_DN.rose() && current_flaps < 3)
   { // Switch moved to ON
+    writeSerialOutputToComputer(EVENT_FLAPS_INC);
     logger("FLAPS button pushed to DOWN");
   }
 }
@@ -312,16 +315,19 @@ void writeSerialOutputToComputer(int data)
   Serial.write(buffer);
 }
 
+#define STRANGE_MESSAGE 0x21f4
 void readSerialInputFromComputer()
 {
   if (Serial.available() > 1)
   {
     int high_byte = Serial.read();
     int low_byte = Serial.read();
-    int command = high_byte << 8 + low_byte;
+    int command = (high_byte << 8) | low_byte;
     // TODO : Blink won't work this way
     switch (command)
     {
+    case STRANGE_MESSAGE:
+      break;
     case STATUS_BCN_OFF:
       led_lights_BCN.off();
       logger("MSG RCV: BCN to OFF");
@@ -415,7 +421,7 @@ void readSerialInputFromComputer()
       logger("MSG RCV: CARB HEAT to ON");
       break;
     case STATUS_CARB_ERROR:
-      led_engine_ANTI_ICE.blink(0, 1000);
+      led_engine_CARB.blink(0, 1000);
       logger("MSG RCV: CARB HEAT to ERROR");
       break;
     case STATUS_ANTI_ICE_OFF:
@@ -479,9 +485,33 @@ void readSerialInputFromComputer()
       led_LDG_GEAR_GREEN_RIGHT.off();
       logger("MSG RCV: RIGHT LDG GEAR to UNKNOWN");
       break;
+    case STATUS_LDG_GEAR_RED_BLINK_OFF:
+      led_LDG_GEAR_RED.off();
+      logger("MSG RCV: RED LDG GEAR to OFF");
+      break;
+    case STATUS_LDG_GEAR_RED_BLINK_ON:
+      led_LDG_GEAR_RED.on();
+      logger("MSG RCV: RED LDG GEAR to BLINK");
+      break;
+    case EVENT_FLAPS_INC:
+      if (current_flaps < 3)
+      {
+        led_FLAPS[current_flaps].off();
+        current_flaps++;
+        led_FLAPS[current_flaps].on();
+      }
+      break;
+    case EVENT_FLAPS_DEC:
+      if (current_flaps > 0)
+      {
+        led_FLAPS[current_flaps].off();
+        current_flaps--;
+        led_FLAPS[current_flaps].on();
+      }
+      break;
     default:
       char buffer[26];
-      sprintf_P(buffer, PSTR("Unknow command : 0x%02x"), command);
+      sprintf_P(buffer, PSTR("Unknow command : 0x%04x"), command);
       logger(buffer);
       break;
     }

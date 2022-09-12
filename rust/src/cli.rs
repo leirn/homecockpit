@@ -75,7 +75,7 @@ pub fn cli(tx_to_arduino: Sender<ChannelMessage>, tx_to_simconnect: Sender<Chann
             let mut msg_code = String::new();
             stdin().read_line(&mut msg_code).unwrap();
             let trimmed = msg_code.trim();
-            let re = Regex::new(r"^\0x[0-9a-fA-F]{4}$").unwrap();
+            let re = Regex::new(r"^0x[0-9a-fA-F]{4}$").unwrap();
             if re.is_match(trimmed) {
                 match <u32>::from_str_radix(trimmed.strip_prefix("0x").unwrap(), 16) {
                     Ok(i) => {

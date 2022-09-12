@@ -196,6 +196,8 @@ These actions should be implement in most case, except when not relevant
 | Status | 0x6052 | 0b00000101 | 0b0010 | Right Gear is Down     | GEAR POSITION:index |
 | Status | 0x6051 | 0b00000101 | 0b0001 | Right Gear is Up       | GEAR POSITION:index |
 | Status | 0x6053 | 0b00000101 | 0b0011 | Right Gear is Unkw     | GEAR POSITION:index |
+| Status | 0x6083 | 0b00001000 | 0b0011 | Red Gear blink on      | ?                   |
+| Status | 0x6082 | 0b00001000 | 0b0010 | Red Gear blink off     | ?                   |
 | Event  | 0x6061 | 0b00000110 | 0b0001 | Increment Flaps Pos.   | FLAPS_INCR          |
 | Status | 0x606x | 0b00000110 | 0b1xxx | Flaps Handle Pos.      | FLAPS HANDLE INDEX  |
 | Event  | 0x6060 | 0b00000110 | 0b0000 | Decrement Flaps Pos.   | FLAPS_DECR          |

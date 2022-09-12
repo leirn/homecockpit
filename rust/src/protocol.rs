@@ -90,14 +90,15 @@ pub const COMPONENT_LANDING_GEAR: u8 = 0x2;
 pub const COMPONENT_LANDING_GEAR_CENTER: u8 = 0x3;
 pub const COMPONENT_LANDING_GEAR_LEFT: u8 = 0x4;
 pub const COMPONENT_LANDING_GEAR_RIGHT: u8 = 0x5;
+pub const COMPONENT_LANDING_GEAR_RED: u8 = 0x8;
 pub const COMPONENT_FLAPS: u8 = 0x6;
 pub const COMPONENT_KOHLSMAN: u8 = 0x7;
 
 pub const ACTION_LDG_GEAR_UP: u8 = 0x0;
 pub const ACTION_LDG_GEAR_DOWN: u8 = 0x1;
-pub const STATUS_LDG_GEAR_UP: u8 = 0x0;
-pub const STATUS_LDG_GEAR_DOWN: u8 = 0x1;
-pub const STATUS_LDG_GEAR_UNKNOWN: u8 = 0x1;
+pub const STATUS_LDG_GEAR_UP: u8 = 0x1;
+pub const STATUS_LDG_GEAR_DOWN: u8 = 0x2;
+pub const STATUS_LDG_GEAR_UNKNOWN: u8 = 0x3;
 
 // NAV / Radio
 pub const COMPONENT_SWAP_COM: u8 = 0x1;

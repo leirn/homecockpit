@@ -113,6 +113,10 @@ impl ArduinoCommunicationHandler {
 
                     for response in responses {
                         let msg_bytes = &(response.get_bytes_message());
+                        println!(
+                            "Response raw data : 0x{:02x}, 0x{:02x}",
+                            buffer[0], buffer[1]
+                        );
                         port.as_mut().unwrap().write(msg_bytes).unwrap();
                     }
                 }
@@ -160,6 +164,7 @@ impl ArduinoCommunicationHandler {
                 _ => STATUS_GENERAL_ERROR,
             },
         };
+        println!("Created message : {}", response);
         responses.push(response);
         responses
     }
@@ -234,7 +239,7 @@ impl ArduinoCommunicationHandler {
                 // Right Gear
                 let response = Message {
                     category: CATEGORY_MISC_EVENTS,
-                    component: COMPONENT_LANDING_GEAR_LEFT,
+                    component: COMPONENT_LANDING_GEAR_RIGHT,
                     action: match message.action {
                         ACTION_LDG_GEAR_UP => STATUS_LDG_GEAR_UP,
                         ACTION_LDG_GEAR_DOWN => STATUS_LDG_GEAR_DOWN,
