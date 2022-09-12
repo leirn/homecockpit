@@ -58,10 +58,10 @@
 #define STATUS_CARB_ERROR 0x2034
 // Anti-ice
 #define EVENT_ANTI_ICE_ON 0xffff
-#define EVENT_ANTI_ICE_OFF 0xffff
-#define STATUS_ANTI_ICE_OFF 0xffff
-#define STATUS_ANTI_ICE_ON 0xffff
-#define STATUS_ANTI_ICE_ERROR 0xffff
+#define EVENT_ANTI_ICE_OFF 0xfffe
+#define STATUS_ANTI_ICE_OFF 0xfffd
+#define STATUS_ANTI_ICE_ON 0xfffc
+#define STATUS_ANTI_ICE_ERROR 0xfffb
 
 // Autopilots
 #define EVENT_TOGGLE_AP_MASTER 0x3011
