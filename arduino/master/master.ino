@@ -135,6 +135,8 @@ void setup()
   btn_FLAPS_UP.interval(25);
   btn_FLAPS_DN.attach(BTN_FLAPS_DN_PIN, INPUT_PULLUP);
   btn_FLAPS_DN.interval(25);
+
+  logger("Arduino initialized");
 }
 
 void loop()
@@ -468,7 +470,9 @@ void readSerialInputFromComputer()
         logger("MSG RCV: RIGHT LDG GEAR to UNKNOWN");
         break;
       default:
-        logger("Unknow command");
+        char buffer[26];
+        sprintf_P(buffer,PSTR("Unknow command : 0x%02x"), command);
+        logger(buffer);
         break;
     }
   }
