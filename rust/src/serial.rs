@@ -124,7 +124,7 @@ impl ArduinoCommunicationHandler {
             // Check for message on inter-thread channel
             for msg in self.rx_to_arduino.try_iter() {
                 match msg.message_type {
-                    ListOfMessageTypes::SerialStart => {
+                    MessageTypes::SerialStart => {
                         self.started = true;
                         port = Some(
                             serialport::new(&self.port_id, self.port_speed)
@@ -132,10 +132,10 @@ impl ArduinoCommunicationHandler {
                                 .expect("Failed to open port"),
                         );
                     }
-                    ListOfMessageTypes::SerialStop => {
+                    MessageTypes::SerialStop => {
                         self.started = false;
                     }
-                    ListOfMessageTypes::SerialSend => {
+                    MessageTypes::SerialSend => {
                         if self.started & port.as_ref().is_some() {
                             let mut buffer: [u8; 2] = [0, 0];
                             buffer[0] = ((msg.payload_int >> 8) & 0xff) as u8;
@@ -145,7 +145,7 @@ impl ArduinoCommunicationHandler {
                             println!("Serial communication has not started, cannot send message");
                         }
                     }
-                    ListOfMessageTypes::SerialPort => self.port_id = msg.payload,
+                    MessageTypes::SerialPort => self.port_id = msg.payload,
                     _ => {}
                 }
             }

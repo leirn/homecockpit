@@ -28,7 +28,7 @@ pub fn cli(tx_to_arduino: Sender<ChannelMessage>, tx_to_simconnect: Sender<Chann
         if command.eq(COMMAND_START_SIM) {
             tx_to_simconnect
                 .send(ChannelMessage {
-                    message_type: ListOfMessageTypes::SimStart,
+                    message_type: MessageTypes::SimStart,
                     payload: String::new(),
                     payload_int: 0,
                 })
@@ -36,7 +36,7 @@ pub fn cli(tx_to_arduino: Sender<ChannelMessage>, tx_to_simconnect: Sender<Chann
         } else if command.eq(COMMAND_STOP_SIM) {
             tx_to_simconnect
                 .send(ChannelMessage {
-                    message_type: ListOfMessageTypes::SimStop,
+                    message_type: MessageTypes::SimStop,
                     payload: String::new(),
                     payload_int: 0,
                 })
@@ -44,7 +44,7 @@ pub fn cli(tx_to_arduino: Sender<ChannelMessage>, tx_to_simconnect: Sender<Chann
         } else if command.eq(COMMAND_START_SERIAL) {
             tx_to_arduino
                 .send(ChannelMessage {
-                    message_type: ListOfMessageTypes::SerialStart,
+                    message_type: MessageTypes::SerialStart,
                     payload: String::new(),
                     payload_int: 1,
                 })
@@ -53,7 +53,7 @@ pub fn cli(tx_to_arduino: Sender<ChannelMessage>, tx_to_simconnect: Sender<Chann
         } else if command.eq(COMMAND_STOP_SERIAL) {
             tx_to_arduino
                 .send(ChannelMessage {
-                    message_type: ListOfMessageTypes::SerialStop,
+                    message_type: MessageTypes::SerialStop,
                     payload: String::new(),
                     payload_int: 1,
                 })
@@ -65,7 +65,7 @@ pub fn cli(tx_to_arduino: Sender<ChannelMessage>, tx_to_simconnect: Sender<Chann
             stdin().read_line(&mut port).unwrap();
             tx_to_arduino
                 .send(ChannelMessage {
-                    message_type: ListOfMessageTypes::SerialPort,
+                    message_type: MessageTypes::SerialPort,
                     payload: String::from(port.trim()),
                     payload_int: 0,
                 })
@@ -84,7 +84,7 @@ pub fn cli(tx_to_arduino: Sender<ChannelMessage>, tx_to_simconnect: Sender<Chann
                         buffer[1] = (i & 0xff) as u8;
                         tx_to_arduino
                             .send(ChannelMessage {
-                                message_type: ListOfMessageTypes::SerialSend,
+                                message_type: MessageTypes::SerialSend,
                                 payload: String::new(),
                                 payload_int: i,
                             })

@@ -9,7 +9,7 @@ mod protocol;
 mod serial;
 mod simconnect;
 use serial::ArduinoCommunicationHandler;
-use simconnect::SimConnectHandler;
+use simconnect;
 
 /// Program main function
 fn main() {
@@ -28,8 +28,7 @@ fn main() {
 
     // Start thread to handle communication with MSFS via simconnect
     let _simconnect_thread_handle = thread::spawn(|| {
-        let mut simconnect_handler = SimConnectHandler::new(rx_to_simconnect, tx_to_arduino);
-        simconnect_handler.run();
+        simconnect::run(rx_to_simconnect, tx_to_arduino);
     });
 
     // Start CLI

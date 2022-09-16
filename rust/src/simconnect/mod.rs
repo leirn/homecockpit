@@ -7,41 +7,55 @@ pub mod structures;
 use std::sync::mpsc::{Receiver, Sender};
 use std::{thread, time};
 
-use crate::channel_mgt::{ChannelMessage, ListOfMessageTypes};
+use crate::channel_mgt::{ChannelMessage, MessageTypes};
 
-pub struct SimConnectHandler {
-    rx_to_simconnect: Receiver<ChannelMessage>,
-    _tx_to_arduino: Sender<ChannelMessage>,
+/// Main thread function
+pub fn run(rx_to_simconnect: Receiver<ChannelMessage>, tx_to_arduino: Sender<ChannelMessage>,) {
+    let simconnect_handler = SimConnectHandler::new(tx_to_arduino.clone());
+
+    loop {
+        for msg in rx_to_simconnect.try_iter() {
+            match msg.message_type {
+                MessageTypes::SimStart => {
+                    simconnect_handler.start();
+                }
+                MessageTypes::SimStop => {
+                    simconnect_handler.stop();
+                }
+                MessageTypes::SimSendEvent => {
+                    simconnect_handler.SimSendEvent();
+                }
+                _ => {}
+            }
+        }
+        let one_sec = time::Duration::from_millis(1000);
+        thread::sleep(one_sec);
+    }
+}
+
+struct SimConnectHandler {
+    tx_to_arduino: Sender<ChannelMessage>,
 }
 
 impl SimConnectHandler {
     /// Constructor
-    pub fn new(
-        rx_to_simconnect: Receiver<ChannelMessage>,
+    fn new(
         tx_to_arduino: Sender<ChannelMessage>,
     ) -> SimConnectHandler {
         SimConnectHandler {
-            rx_to_simconnect: rx_to_simconnect,
             _tx_to_arduino: tx_to_arduino,
         }
     }
 
-    /// Main thread function
-    pub fn run(&mut self) {
-        loop {
-            for msg in self.rx_to_simconnect.try_iter() {
-                match msg.message_type {
-                    ListOfMessageTypes::SimStart => {
-                        println!("Not implemented yet !");
-                    }
-                    ListOfMessageTypes::SimStop => {
-                        println!("Not implemented yet !");
-                    }
-                    _ => {}
-                }
-            }
-            let one_sec = time::Duration::from_millis(1000);
-            thread::sleep(one_sec);
-        }
+    pub fn start(&mut self) {
+        println!("Not implemented yet !");
+    }
+
+    pub fn stop(&mut self) {
+        println!("Not implemented yet !");
+    }
+
+    pub fn send_event(&mut self) {
+        println!("Not implemented yet !");
     }
 }
