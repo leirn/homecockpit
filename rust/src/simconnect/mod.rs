@@ -10,7 +10,7 @@ use std::{thread, time};
 use crate::channel_mgt::{ChannelMessage, MessageTypes};
 
 /// Main thread function
-pub fn run(rx_to_simconnect: Receiver<ChannelMessage>, tx_to_arduino: Sender<ChannelMessage>,) {
+pub fn run(rx_to_simconnect: Receiver<ChannelMessage>, tx_to_arduino: Sender<ChannelMessage>) {
     let simconnect_handler = SimConnectHandler::new(tx_to_arduino.clone());
 
     loop {
@@ -39,11 +39,9 @@ struct SimConnectHandler {
 
 impl SimConnectHandler {
     /// Constructor
-    fn new(
-        tx_to_arduino: Sender<ChannelMessage>,
-    ) -> SimConnectHandler {
+    fn new(tx_to_arduino: Sender<ChannelMessage>) -> SimConnectHandler {
         SimConnectHandler {
-            _tx_to_arduino: tx_to_arduino,
+            tx_to_arduino: tx_to_arduino,
         }
     }
 

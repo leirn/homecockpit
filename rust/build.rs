@@ -6,10 +6,16 @@ use std::path::PathBuf;
 fn main() {
     // Tell cargo to look for shared libraries in the specified directory
     println!("cargo:rustc-link-search=Simconnect SDK/lib");
+    println!(
+        "cargo:rustc-link-search=C:/Program Files (x86)/Windows Kits/10/Lib/10.0.22621.0/um/x86"
+    );
 
     // Tell cargo to tell rustc to link the simconnect lib
     // shared library.
     println!("cargo:rustc-link-lib=simconnect");
+    println!(
+        "cargo:rustc-link-lib=C:/Program Files (x86)/Windows Kits/10/Lib/10.0.22621.0/um/x86/gdi32"
+    );
 
     // Tell cargo to invalidate the built crate whenever the wrapper changes
     println!("cargo:rerun-if-changed=wrapper.h");
@@ -21,6 +27,8 @@ fn main() {
         // The input header we would like to generate
         // bindings for.
         .header("wrapper.h")
+        .clang_arg("-x c++")
+        .clang_arg("-std=c++11")
         // Tell cargo to invalidate the built crate whenever any of the
         // included header files changed.
         .parse_callbacks(Box::new(bindgen::CargoCallbacks))
