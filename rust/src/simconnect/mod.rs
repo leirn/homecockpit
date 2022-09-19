@@ -1,5 +1,6 @@
 //! Functions to handle simconnect interactions
 
+mod bindings;
 pub mod enumerations;
 pub mod events;
 pub mod structures;
@@ -23,7 +24,7 @@ pub fn run(rx_to_simconnect: Receiver<ChannelMessage>, tx_to_arduino: Sender<Cha
                     simconnect_handler.stop();
                 }
                 MessageTypes::SimSendEvent => {
-                    simconnect_handler.SimSendEvent();
+                    simconnect_handler.send_event();
                 }
                 _ => {}
             }
@@ -46,7 +47,10 @@ impl SimConnectHandler {
     }
 
     pub fn start(&mut self) {
-        println!("Not implemented yet !");
+        let mut h: bindings::HANDLE = 0;
+        unsafe {
+            let hr = bindings::SimConnect_Open(*h, 0, 0, 0, 0, 0);
+        }
     }
 
     pub fn stop(&mut self) {

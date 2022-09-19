@@ -19,18 +19,10 @@
 #define DWORD_MAX 0xFFFFFFFF
 #endif
 
-#define FLT_MAX 3.402823466e+38F
-#define MAX_PATH 256
+#include <float.h>
+#include <windows.h>
 
-typedef unsigned long DWORD;
 typedef DWORD SIMCONNECT_OBJECT_ID;
-
-typedef struct _GUID {
-  unsigned long  Data1;
-  unsigned short Data2;
-  unsigned short Data3;
-  unsigned char  Data4[8];
-} GUID;
 
 //----------------------------------------------------------------------------
 //        Constants

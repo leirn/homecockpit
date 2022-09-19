@@ -4,18 +4,14 @@ use std::env;
 use std::path::PathBuf;
 
 fn main() {
+    env::set_var("RUST_BACKTRACE", "1");
+
     // Tell cargo to look for shared libraries in the specified directory
     println!("cargo:rustc-link-search=Simconnect SDK/lib");
-    println!(
-        "cargo:rustc-link-search=C:/Program Files (x86)/Windows Kits/10/Lib/10.0.22621.0/um/x86"
-    );
 
     // Tell cargo to tell rustc to link the simconnect lib
     // shared library.
     println!("cargo:rustc-link-lib=simconnect");
-    println!(
-        "cargo:rustc-link-lib=C:/Program Files (x86)/Windows Kits/10/Lib/10.0.22621.0/um/x86/gdi32"
-    );
 
     // Tell cargo to invalidate the built crate whenever the wrapper changes
     println!("cargo:rerun-if-changed=wrapper.h");
@@ -27,7 +23,8 @@ fn main() {
         // The input header we would like to generate
         // bindings for.
         .header("wrapper.h")
-        .clang_arg("-x c++")
+        .clang_arg(r#"-IC:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/VC/Tools/MSVC/14.29.30133/include"#)
+        .clang_arg("-xc++")
         .clang_arg("-std=c++11")
         // Tell cargo to invalidate the built crate whenever any of the
         // included header files changed.
@@ -40,6 +37,7 @@ fn main() {
     // Write the bindings to the $OUT_DIR/bindings.rs file.
     let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
     bindings
-        .write_to_file(out_path.join("bindings.rs"))
+        .write_to_file("bindings.rs")
+        //.write_to_file(out_path.join("bindings.rs"))
         .expect("Couldn't write bindings!");
 }

@@ -9,7 +9,6 @@ mod protocol;
 mod serial;
 mod simconnect;
 use serial::ArduinoCommunicationHandler;
-use simconnect;
 
 /// Program main function
 fn main() {
