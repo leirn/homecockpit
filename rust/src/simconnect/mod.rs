@@ -5,14 +5,18 @@ pub mod enumerations;
 pub mod events;
 pub mod structures;
 
+use std::ptr::null_mut;
 use std::sync::mpsc::{Receiver, Sender};
 use std::{thread, time};
 
+use std::ffi::CString;
+
 use crate::channel_mgt::{ChannelMessage, MessageTypes};
+use bindings::*;
 
 /// Main thread function
 pub fn run(rx_to_simconnect: Receiver<ChannelMessage>, tx_to_arduino: Sender<ChannelMessage>) {
-    let simconnect_handler = SimConnectHandler::new(tx_to_arduino.clone());
+    let mut simconnect_handler = SimConnectHandler::new(tx_to_arduino.clone());
 
     loop {
         for msg in rx_to_simconnect.try_iter() {
@@ -36,6 +40,7 @@ pub fn run(rx_to_simconnect: Receiver<ChannelMessage>, tx_to_arduino: Sender<Cha
 
 struct SimConnectHandler {
     tx_to_arduino: Sender<ChannelMessage>,
+    running: bool,
 }
 
 impl SimConnectHandler {
@@ -43,18 +48,125 @@ impl SimConnectHandler {
     fn new(tx_to_arduino: Sender<ChannelMessage>) -> SimConnectHandler {
         SimConnectHandler {
             tx_to_arduino: tx_to_arduino,
+            running: false,
         }
     }
 
     pub fn start(&mut self) {
-        let mut h: bindings::HANDLE = 0;
-        unsafe {
-            let hr = bindings::SimConnect_Open(*h, 0, 0, 0, 0, 0);
+        if self.running {
+            println!("Already running");
+            return;
+        }
+        let mut sim_connect_ptr: HANDLE = null_mut();
+        let name1 = CString::new("test").unwrap();
+        let name: LPCSTR = name1.as_ptr();
+
+        match unsafe { SimConnect_Open(&mut sim_connect_ptr, name, null_mut(), 0, null_mut(), 0) } {
+            0 => {
+                println!("Connection success");
+                self.running = true;
+            }
+            hr => println!("Connection failed due to error 0x{:08x}", hr),
+        }
+        let brake = CString::new("brakes").unwrap().as_ptr();
+        match unsafe { SimConnect_MapClientEventToSimEvent(sim_connect_ptr, 0, brake) } {
+            0 => {
+                println!("SimConnect_MapClientEventToSimEvent success");
+                self.running = true;
+            }
+            hr => println!(
+                "SimConnect_MapClientEventToSimEvent failed due to error 0x{:08x}",
+                hr
+            ),
+        }
+
+        match unsafe { SimConnect_AddClientEventToNotificationGroup(sim_connect_ptr, 0, 0, 0) } {
+            0 => {
+                println!("SimConnect_AddClientEventToNotificationGroup success");
+                self.running = true;
+            }
+            hr => println!(
+                "SimConnect_AddClientEventToNotificationGroup failed due to error 0x{:08x}",
+                hr
+            ),
+        }
+
+        match unsafe {
+            SimConnect_SetNotificationGroupPriority(
+                sim_connect_ptr,
+                0,
+                SIMCONNECT_GROUP_PRIORITY_HIGHEST,
+            )
+        } {
+            0 => {
+                println!("SimConnect_SetNotificationGroupPriority success");
+                self.running = true;
+            }
+            hr => println!(
+                "SimConnect_SetNotificationGroupPriority failed due to error 0x{:08x}",
+                hr
+            ),
+        }
+
+        // Request information
+        let name1 = CString::new("AircraftLoaded").unwrap();
+        let name: bindings::LPCSTR = name1.as_ptr();
+        match unsafe { SimConnect_RequestSystemState(sim_connect_ptr, 0, name) } {
+            0 => {
+                println!("SimConnect_RequestSystemState success");
+                self.running = true;
+            }
+            hr => println!(
+                "SimConnect_RequestSystemState failed due to error 0x{:08x}",
+                hr
+            ),
+        }
+        while self.running {
+            let mut pp_data = null_mut();
+            let mut pcb_data = 0_u32;
+
+            let hr =
+                unsafe { SimConnect_GetNextDispatch(sim_connect_ptr, &mut pp_data, &mut pcb_data) };
+            if hr == 0 {
+                unsafe {
+                    let id = (*pp_data).dwID as i32;
+                    /*
+                    match id {
+                        SIMCONNECT_RECV_ID_SIMCONNECT_RECV_ID_OPEN => {
+                            let open_data: &SIMCONNECT_RECV_OPEN = &*(pp_data.cast());
+                            let v_major = open_data.dwApplicationVersionMajor;
+                            let v_minor = open_data.dwApplicationVersionMinor;
+                            println!("Open to version {} {}", v_major, v_minor,)
+                        }
+                        SIMCONNECT_RECV_ID_SIMCONNECT_RECV_ID_EVENT => {
+                            let evt: &bindings::SIMCONNECT_RECV_EVENT = &*(pp_data.cast());
+                            // ...use evt
+                        }
+                        // ...
+                        _ => println!("Unknown type {}", id),
+                    }*/
+                }
+            } else {
+                println!(
+                    "Error while calling SimConnect_GetNextDispatch : 0x{:08x}",
+                    hr
+                );
+                self.running = false;
+            }
+            thread::sleep(time::Duration::from_millis(10));
+        }
+        println!("Deconnecting from sim");
+        let hr = unsafe { bindings::SimConnect_Close(sim_connect_ptr) };
+        match hr {
+            0 => {
+                println!("Deconnection success");
+            }
+            _ => println!("Deconnection failed, status undefined"),
         }
     }
 
     pub fn stop(&mut self) {
-        println!("Not implemented yet !");
+        self.running = false;
     }
 
     pub fn send_event(&mut self) {

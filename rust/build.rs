@@ -14,7 +14,7 @@ fn main() {
     println!("cargo:rustc-link-lib=simconnect");
 
     // Tell cargo to invalidate the built crate whenever the wrapper changes
-    println!("cargo:rerun-if-changed=wrapper.h");
+    //println!("cargo:rerun-if-changed=wrapper.h");
 
     // The bindgen::Builder is the main entry point
     // to bindgen, and lets you build up options for
@@ -40,4 +40,8 @@ fn main() {
         .write_to_file("bindings.rs")
         //.write_to_file(out_path.join("bindings.rs"))
         .expect("Couldn't write bindings!");
+    println!(
+        "Outpath is {}",
+        out_path.into_os_string().into_string().unwrap()
+    );
 }
