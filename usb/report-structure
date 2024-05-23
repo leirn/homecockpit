@@ -1,0 +1,107 @@
+REPORT ID 1 # ELECTRICAL
+  BYTE
+    BCN_LIGHT_ON : 1 bit
+    BCN_LIGHT_OFF : 1 bit
+    TAXI_LIGHT_ON : 1 bit
+    TAXI_LIGHT_OFF : 1 bit
+    NAV_LIGHT_ON : 1 bit
+    NAV_LIGHT_OFF : 1 bit
+    LANDING_LIGHT_ON : 1 bit
+    LANDING_LIGHT_OFF : 1 bit
+  BYTE
+    STRB_LIGHT_ON : 1 bit
+    STRB_LIGHT_OFF : 1 bit
+REPORT ID 2 # ENGINE
+  BYTE
+    LEFT_PUMP_ON : 1 bit
+    LEFT_PUMP_OFF : 1 bit
+    RIGHT_PUMP_ON : 1 bit
+    RIGHT_PUMP_OFF : 1 bit
+    CARB_HEAT_ON : 1 bit
+    CARB_HEAT_OFF : 1 bit
+    ANTI_ICE_ON : 1 bit
+    ANTI_ICE_OFF : 1 bit
+REPORT ID 3 # G1000 PDF
+  BYTE
+    SOFT_KEY_1 : 1 bit
+    SOFT_KEY_2 : 1 bit
+    SOFT_KEY_3 : 1 bit
+    SOFT_KEY_4 : 1 bit
+    SOFT_KEY_5 : 1 bit
+    SOFT_KEY_6 : 1 bit
+    SOFT_KEY_7 : 1 bit
+    SOFT_KEY_8 : 1 bit
+  BYTE
+    SOFT_KEY_9 : 1 bit
+    SOFT_KEY_10 : 1 bit
+    SOFT_KEY_11 : 1 bit
+    SOFT_KEY_12 : 1 bit
+    GROUP_KNOB_INC : 1 bit
+    GROUP_KNOB_DEC : 1 bit
+    PAGE_KNOB_INC : 1 bit
+    PAGE_KNOB_DEC : 1 bit
+  BYTE
+    CLEAR : 1 bit
+    DIRECT_TO : 1 bit
+    ENTER : 1 bit
+    FPL : 1 bit
+    MENU : 1 bit
+    PROC : 1 bit
+    ZOOM_IN : 1 bit
+    ZOOM_OUT : 1 bit
+  BYTE
+    CURSOR : 8 bit
+REPORT ID 4 # G1000 MDF, même structure que PFD
+REPORT ID 5 # NAV/RADIO
+  BYTE
+    SWAP_COM : 1 bit
+    SWAP_COM_ACTVE_FREQUENCY : 1 bit
+    COM_25K_INC : 1 bit
+    COM_25K_DEC : 1 bit
+    COM_1M_INC : 1 bit
+    COM_1M_DEC : 1 bit
+  BYTE
+    SWAP_NAV : 1 bit
+    SWAP_NAV_ACTVE_FREQUENCY : 1 bit
+    NAV_25K_INC : 1 bit
+    NAV_25K_DEC : 1 bit
+    NAV_1M_INC : 1 bit
+    NAV_1M_DEC : 1 bit
+REPORT ID 6 # AUTOPILOT
+  BYTE
+    AP_MASTER_TOGGLE : 1 bit
+    FLIGHT_DIRECTOR_TOGGLE : 1 bit
+    YAM_DAMPLER_TOGGLE : 1 bit
+    IAS_TOGGLE : 1 bit
+    HDG_TOGGLE : 1 bit
+    NAV_TOGGLE : 1 bit
+    VNV_TOGGLE : 1 bit
+  BYTE
+    APPROACH_TOGGLE : 1 bit
+    BACK_COURSE_TOGGLE : 1 bit
+    VS_MODE_TOGGLE : 1 bit
+    VS_UP : 1 bit
+    VS_DOWN : 1 bit
+    FLC_TOGGLE : 1 bit
+  BYTE
+    HDG_INC : 1 bit
+    HDG_DEC : 1 bit
+    HDG_SET : 1 bit
+    CRS_INC : 1 bit
+    CRS_DEC : 1 bit
+    CRS_SET : 1 bit
+  BYTE
+    ALT_100_INC : 1 bit
+    ALT_100_DEC : 1 bit
+    ALT_1000_INC : 1 bit
+    ALT_1000_DEC : 1 bit
+REPORT ID 7 # MISC
+  BYTE
+    PITOT_HEAT_ON : 1 bit
+    PITOT_HEAT_OFF : 1 bit
+    GEAR_UP : 1 bit
+    GEAR_DOWN : 1 bit
+    FLAPS_INC : 1 bit
+    FLAPS_DEC : 1 bit
+    KOHLSMAN_INC : 1 bit
+    KOHLSMAN_DEC : 1 bit
