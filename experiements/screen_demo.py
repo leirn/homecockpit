@@ -1,19 +1,34 @@
 import pygame
 from pygame.locals import *
 
+
+def rgb565_to_rgb888(color):
+    r = int(color[0] * 255/31)
+    g = int(color[1] * 255/63)
+    b = int(color[2] * 255/31)
+    return (r, g, b)
+
+def rgb888_to_rgb565(color):
+    r = color[0] >> 3
+    g = color[1] >> 2
+    b = color[2] >> 3
+    return (r, g, b)
+
 # Define some colors
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-LIGHT_GREY = (220, 220, 220)
-MAGENTA = (255, 0, 255)
-CYAN = (0, 255, 255)
-GREEN = (0, 255, 0)
+BLACK = rgb565_to_rgb888((0, 0, 0))
+WHITE = rgb565_to_rgb888((31, 63, 31))
+LIGHT_GREY = rgb565_to_rgb888((23, 47, 23))
+MAGENTA = rgb565_to_rgb888((31, 0, 31))
+CYAN = rgb565_to_rgb888((0, 63, 31))
+GREEN = rgb565_to_rgb888((0, 63, 0))
 FONT = "fonts/B612Mono-Regular.ttf"
 SMALL_FONT_SIZE = 14
 MEDIUM_FONT_SIZE = 20
 
 LEFT_PADDING = 4
 RIGHT_PADDING = 156
+
+
 
 class CommNavData:
     def __init__(self, name, activ_freq, stby_freq, id, bearing, distance, selected):
@@ -42,12 +57,12 @@ def display_block_nav(data: CommNavData):
     # Add a text to the screen
     font = pygame.font.Font(FONT, SMALL_FONT_SIZE)
     text = font.render(data.name, 1, MAGENTA)
-    rectangle.blit(text, (LEFT_PADDING, 10))
+    rectangle.blit(text, (LEFT_PADDING, 7))
 
     font = pygame.font.Font(FONT, MEDIUM_FONT_SIZE)
     text = font.render(f"{data.activ_freq}", 1, GREEN)
     rectangle.blit(text, (RIGHT_PADDING-text.get_width(), 5))
-    text = font.render(f"⇔ {data.stby_freq}", 1, WHITE)
+    text = font.render(f"⇔ {data.stby_freq}", 1, LIGHT_GREY)
     rectangle.blit(text, (RIGHT_PADDING-text.get_width(), 32))
     if data.selected:
         pygame.draw.rect(rectangle, GREEN , (72, 28, 84, 30), 1, 0)
@@ -74,12 +89,12 @@ def display_block_com(data: CommNavData):
     # Add a text to the screen
     font = pygame.font.Font(FONT, SMALL_FONT_SIZE)
     text = font.render(data.name, 1, MAGENTA)
-    rectangle.blit(text, (RIGHT_PADDING-text.get_width(), 10))
+    rectangle.blit(text, (RIGHT_PADDING-text.get_width(), 7))
 
     font = pygame.font.Font(FONT, MEDIUM_FONT_SIZE)
     text = font.render(f"{data.activ_freq}", 1, WHITE)
     rectangle.blit(text, (LEFT_PADDING, 5))
-    text = font.render(f"{data.stby_freq} ⇔", 1, WHITE)
+    text = font.render(f"{data.stby_freq} ⇔", 1, LIGHT_GREY)
     rectangle.blit(text, (LEFT_PADDING, 32))
     if data.selected:
         pygame.draw.rect(rectangle, GREEN , (3, 28, 95, 30), 1, 0)
