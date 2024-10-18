@@ -21,7 +21,7 @@ LIGHT_GREY = rgb565_to_rgb888((23, 47, 23))
 MAGENTA = rgb565_to_rgb888((31, 0, 31))
 CYAN = rgb565_to_rgb888((0, 63, 31))
 GREEN = rgb565_to_rgb888((0, 63, 0))
-FONT = "fonts/B612Mono-Regular.ttf"
+FONT = "B612Mono-Regular.ttf"
 SMALL_FONT_SIZE = 14
 MEDIUM_FONT_SIZE = 20
 

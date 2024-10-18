@@ -8,7 +8,7 @@ def rgb565_to_rgb888(color):
     return (r, g, b)
 
 WHITE = rgb565_to_rgb888((31, 63, 31))
-FONT = "../../experiements/fonts/B612Mono-Regular.ttf"
+FONT = "B612Mono-Regular.ttf"
 SMALL_FONT_SIZE = 14
 MEDIUM_FONT_SIZE = 20
 
