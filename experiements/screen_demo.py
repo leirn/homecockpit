@@ -107,11 +107,12 @@ def display_block_com(data: CommNavData):
     text = font.render(f"{data.bearing}° {data.distance}NM", 1, MAGENTA)
     rectangle.blit(text, (RIGHT_PADDING-text.get_width(), 60))
 
-    # Add rounded squre to the screen
+    # Add rounded square to the screen
     pygame.draw.rect(rectangle, GREEN if data.selected else LIGHT_GREY, (1, 1, 158, 83), 1, 5)
 
     return rectangle
 
+# Initialize the game engine
 pygame.init()
 
 # Set up the screen
@@ -127,8 +128,6 @@ rectangle = display_block_com(comms[2])
 screen.blit(rectangle, (160, 0))
 rectangle = display_block_com(comms[3])
 screen.blit(rectangle, (160, 85))
-
-
 
 continuer = True
 while continuer:
