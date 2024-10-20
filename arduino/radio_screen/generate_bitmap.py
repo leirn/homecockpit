@@ -22,8 +22,8 @@ def surface_to_bitmap(surface):
     bitmap = []
     for j in range(surface.get_height()):
         for i in range(surface.get_width()):
-            # bitmap.append(surface.get_at((i, j))[3])
-            bitmap.append(1 if surface.get_at((i, j))[3] > THRESHOLD else 0)
+            bitmap.append(surface.get_at((i, j))[3])
+            # bitmap.append(1 if surface.get_at((i, j))[3] > THRESHOLD else 0)
     return array_to_chunk_array(bitmap, surface.get_width())
 
 def create_bitmap_table(font, alphabet, color):
