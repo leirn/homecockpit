@@ -34,13 +34,11 @@ def create_bitmap_table(font, alphabet, color):
 
 def generate_c_code():
     alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.°⇔"
-    font = pygame.font.Font(FONT, SMALL_FONT_SIZE)
-    table = create_bitmap_table(font, alphabet, WHITE)
-    for i in table:
-        print(f"CHAR_SMALL_{i} = {table[i]};")
-    font = pygame.font.Font(FONT, MEDIUM_FONT_SIZE)
-    table = create_bitmap_table(font, alphabet, WHITE)
-    for i in table:
-        print(f"CHAR_MEDIUM_{i} = {table[i]};")
+    fonts = [SMALL_FONT_SIZE, MEDIUM_FONT_SIZE]
+    for font_size in fonts:
+        font = pygame.font.Font(FONT, font_size)
+        table = create_bitmap_table(font, alphabet, WHITE)
+        for i in table:
+            print(f"const uint8_t CHAR_{font_size}_{i}[{len(table[i])}][{len(table[i][0])}] = {table[i]};")
 
 generate_c_code()
