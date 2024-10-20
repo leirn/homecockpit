@@ -22,8 +22,8 @@ def surface_to_bitmap(surface):
     bitmap = []
     for j in range(surface.get_height()):
         for i in range(surface.get_width()):
-            # bitmap.append(surface.get_at((i, j))[3])
-            bitmap.append(1 if surface.get_at((i, j))[3] > THRESHOLD else 0)
+            bitmap.append(surface.get_at((i, j))[3])
+            # bitmap.append(1 if surface.get_at((i, j))[3] > THRESHOLD else 0)
     return array_to_chunk_array(bitmap, surface.get_width())
 
 def create_bitmap_table(font, alphabet, color):
@@ -34,13 +34,11 @@ def create_bitmap_table(font, alphabet, color):
 
 def generate_c_code():
     alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.°⇔"
-    font = pygame.font.Font(FONT, SMALL_FONT_SIZE)
-    table = create_bitmap_table(font, alphabet, WHITE)
-    for i in table:
-        print(f"CHAR_SMALL_{i} = {table[i]};")
-    font = pygame.font.Font(FONT, MEDIUM_FONT_SIZE)
-    table = create_bitmap_table(font, alphabet, WHITE)
-    for i in table:
-        print(f"CHAR_MEDIUM_{i} = {table[i]};")
+    fonts = [SMALL_FONT_SIZE, MEDIUM_FONT_SIZE]
+    for font_size in fonts:
+        font = pygame.font.Font(FONT, font_size)
+        table = create_bitmap_table(font, alphabet, WHITE)
+        for i in table:
+            print(f"const uint8_t CHAR_{font_size}_{i}[{len(table[i])}][{len(table[i][0])}] = {table[i]};")
 
 generate_c_code()
