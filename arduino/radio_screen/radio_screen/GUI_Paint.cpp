@@ -322,6 +322,25 @@ void Paint_DrawRectangle( UWORD Xstart, UWORD Ystart, UWORD Xend, UWORD Yend,
     }
 }
 
+
+/******************************************************************************
+function:	Draw a rectangle
+parameter:
+    Xstart ：Rectangular  Starting Xpoint point coordinates
+    Ystart ：Rectangular  Starting Xpoint point coordinates
+    Xend   ：Rectangular  End point Xpoint coordinate
+    Yend   ：Rectangular  End point Ypoint coordinate
+    Color  ：The color of the Rectangular segment
+    Filled : Whether it is filled--- 1 solid 0：empty
+    Raduis : Radius of rounded edges
+******************************************************************************/
+void Paint_DrawRoundRectangle( UWORD Xstart, UWORD Ystart, UWORD Xend, UWORD Yend, 
+                          UWORD Color, DOT_PIXEL Line_width, DRAW_FILL Filled, UWORD Radius )
+{
+  // TODO : implement the rounded edges
+  Paint_DrawRectangle(Xstart, Ystart, Xend, Yend, Color, Line_width, Filled);
+}
+
 /******************************************************************************
 function:	Use the 8-point method to draw a circle of the
             specified size at the specified position->
