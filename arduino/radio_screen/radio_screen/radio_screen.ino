@@ -1,29 +1,8 @@
-// https://github.com/adafruit/Adafruit-ST7735-Library/blob/master/examples/graphicstest_st7789/graphicstest_st7789.ino
-
-#include <Adafruit_GFX.h>     // Core graphics library
-#include <Adafruit_ST7789.h>  // Hardware-specific library for ST7789
 #include <SPI.h>
+#include "LCD_Driver.h"
+#include "GUI_Paint.h"
 
 #include "letters.h"
-
-#if defined(ARDUINO_FEATHER_ESP32)  // Feather Huzzah32
-#define TFT_CS 14
-#define TFT_RST 15
-#define TFT_DC 32
-
-#elif defined(ESP8266)
-#define TFT_CS 4
-#define TFT_RST 16
-#define TFT_DC 5
-
-#else
-// For the breakout board, you can use any 2 or 3 pins.
-// These pins will also work for the 1.8" TFT shield.
-#define TFT_CS 10
-#define TFT_RST 9  // Or set to -1 and connect to Arduino RESET pin
-#define TFT_DC 8
-#endif
-
 #define LEFT_PADDING 4
 #define RIGHT_PADDING 156
 
@@ -40,8 +19,6 @@
 #define LIGHT_GREY ((23 << 11) |  (47 << 5) | 23)
 
 #define FRAME_RADIUS 5
-
-Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_RST);
 
 struct CommNavData {
   String name;
@@ -63,17 +40,12 @@ void setup() {
   Serial.begin(9600);
   Serial.print(F("Hello! ST77xx TFT Test"));
 
+  Config_Init();
+  LCD_Init();
 
-  tft.init(170, 320);  // Init ST7789 170x320
-  tft.setRotation(1); // Set screen in landscape mode
+  LCD_SetBacklight(100);
 
-
-  Serial.println(F("Initialized"));
-
-
-  tft.fillScreen(ST77XX_BLACK); // initialize screen with black background
-
-  init_display(); // Compute the display
+  LCD_Clear(MAGENTA);
 }
 
 void loop() {
