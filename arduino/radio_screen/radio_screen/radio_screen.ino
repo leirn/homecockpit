@@ -37,7 +37,7 @@
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 170
 
-#define LIGHT_GREY ((23 << 11) |  (47 << 5) | 23)
+#define LIGHT_GREY ((23 << 11) | (47 << 5) | 23)
 
 #define FRAME_RADIUS 5
 
@@ -53,10 +53,10 @@ struct CommNavData {
   bool selected;
 };
 
-CommNavData com1 = { "COM1", "", "", "", "", "", false };
-CommNavData com2 = { "COM2", "", "", "", "", "", true };
-CommNavData nav1 = { "NAV1", "", "", "", "", "", true };
-CommNavData nav2 = { "NAV1", "", "", "", "", "", true };
+CommNavData com1 = { "COM1", "123.505", "131.501", "LFPN TWR", "182", "20", false };
+CommNavData com2 = { "COM2", "120.750", "128.480", "LFPN ATIS", "150", "24", true };
+CommNavData nav1 = { "NAV1", "114.70", "115.65", "RBT", "127", "10", false };
+CommNavData nav2 = { "NAV2", "110.54", "116.52", "EPR", "321", "6.2", true };
 
 void setup() {
   // put your setup code here, to run once:
@@ -65,20 +65,20 @@ void setup() {
 
 
   tft.init(170, 320);  // Init ST7789 170x320
-  tft.setRotation(1); // Set screen in landscape mode
+  tft.setRotation(1);  // Set screen in landscape mode
 
 
   Serial.println(F("Initialized"));
 
+  tft.fillScreen(ST77XX_BLACK);  // initialize screen with black background
 
-  tft.fillScreen(ST77XX_BLACK); // initialize screen with black background
-
-  init_display(); // Compute the display
+  init_display();  // Compute the display
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
   delay(500);
+  Serial.println(F("Loop"));
 }
 
 void init_display() {
@@ -95,20 +95,19 @@ void init_display() {
 
 void setNav1ActiveFreq(String freq) {
   int i = 0;
-  for(i = 0; i < freq.length(); ++i) {
+  for (i = 0; i < freq.length(); ++i) {
     if (i < nav1.activ_freq.length()) {
       if (freq.charAt(i) != nav1.activ_freq.charAt(i)) {
         const uint8_t **var = (const uint8_t **)get_20_letter(freq.charAt(i));
-        display_letter(RIGHT_PADDING - (7- i) *  LETTER_20_WIDTH, 60, var, LETTER_20_WIDTH, LETTER_20_HEIGHT, ST77XX_GREEN);
+        display_letter(RIGHT_PADDING - (7 - i) * LETTER_20_WIDTH, 60, var, LETTER_20_WIDTH, LETTER_20_HEIGHT, ST77XX_GREEN);
       }
-    } 
-    else {
+    } else {
       const uint8_t **var = (const uint8_t **)get_20_letter(freq.charAt(i));
-      display_letter(RIGHT_PADDING - (7- i) *  LETTER_20_WIDTH, 60, var, LETTER_20_WIDTH, LETTER_20_HEIGHT, ST77XX_GREEN);
+      display_letter(RIGHT_PADDING - (7 - i) * LETTER_20_WIDTH, 60, var, LETTER_20_WIDTH, LETTER_20_HEIGHT, ST77XX_GREEN);
     }
   }
-  for(i; i< 7; ++i) {
-    remove_letter(RIGHT_PADDING - (7- i) *  LETTER_20_WIDTH, 60,LETTER_20_WIDTH, LETTER_20_HEIGHT);
+  for (i; i < 7; ++i) {
+    remove_letter(RIGHT_PADDING - (7 - i) * LETTER_20_WIDTH, 60, LETTER_20_WIDTH, LETTER_20_HEIGHT);
   }
 }
 
@@ -136,34 +135,32 @@ void display_border(int x, int y, bool selected) {
   tft.drawRoundRect(x + 1, y + 1, x + 158, x + 83, FRAME_RADIUS, color);
 }
 
-void update_nav1_name(){
+void update_nav1_name() {
   update_comm_name(nav1.name, LEFT_PADDING, 7);
 }
 
-void update_nav2_name(){
+void update_nav2_name() {
   update_comm_name(nav2.name, LEFT_PADDING, HALF_HEIGHT + 7);
 }
 
-void update_com1_name(){
+void update_com1_name() {
   update_comm_name(com1.name, SCREEN_WIDTH - (LETTER_14_WIDTH * com1.name.length()), 7);
 }
 
-void update_com2_name(){
-  update_comm_name(com2.name,  SCREEN_WIDTH - (LETTER_14_WIDTH * com2.name.length()), HALF_HEIGHT + 7);
+void update_com2_name() {
+  update_comm_name(com2.name, SCREEN_WIDTH - (LETTER_14_WIDTH * com2.name.length()), HALF_HEIGHT + 7);
 }
 
 void update_comm_name(String name, int x, int y) {
-  for(auto c : name)
-    {
-      const uint8_t **var = (const uint8_t **)get_14_letter(c);
-      display_letter(x, y, var, LETTER_14_WIDTH, LETTER_14_HEIGHT, ST77XX_MAGENTA);
-    }
-
+  for (auto c : name) {
+    const uint8_t **var = (const uint8_t **)get_14_letter(c);
+    display_letter(x, y, var, LETTER_14_WIDTH, LETTER_14_HEIGHT, ST77XX_MAGENTA);
+  }
 }
 
-void display_letter(int x, int y, const uint8_t ** bitmap, int bitmap_width, int bitmap_height, uint16_t color) {
-  for(int w = 0; w < bitmap_width; w++) {
-    for(int h = 0; h < bitmap_width; h++) {
+void display_letter(int x, int y, const uint8_t **bitmap, int bitmap_width, int bitmap_height, uint16_t color) {
+  for (int w = 0; w < bitmap_width; w++) {
+    for (int h = 0; h < bitmap_width; h++) {
       uint16_t blended_color = compute_color(bitmap[h][w], color);
       tft.writePixel(x + w, y + h, blended_color);
     }
@@ -173,5 +170,3 @@ void display_letter(int x, int y, const uint8_t ** bitmap, int bitmap_width, int
 void remove_letter(int x, int y, int h, int w) {
   tft.fillRect(x, y, w, h, ST77XX_BLACK);
 }
-
-
