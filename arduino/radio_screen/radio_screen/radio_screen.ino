@@ -1,29 +1,8 @@
-// https://github.com/adafruit/Adafruit-ST7735-Library/blob/master/examples/graphicstest_st7789/graphicstest_st7789.ino
-
-#include <Adafruit_GFX.h>     // Core graphics library
-#include <Adafruit_ST7789.h>  // Hardware-specific library for ST7789
 #include <SPI.h>
+#include "LCD_Driver.h"
+#include "GUI_Paint.h"
 
 #include "letters.h"
-
-#if defined(ARDUINO_FEATHER_ESP32)  // Feather Huzzah32
-#define TFT_CS 14
-#define TFT_RST 15
-#define TFT_DC 32
-
-#elif defined(ESP8266)
-#define TFT_CS 4
-#define TFT_RST 16
-#define TFT_DC 5
-
-#else
-// For the breakout board, you can use any 2 or 3 pins.
-// These pins will also work for the 1.8" TFT shield.
-#define TFT_CS 10
-#define TFT_RST 9  // Or set to -1 and connect to Arduino RESET pin
-#define TFT_DC 8
-#endif
-
 #define LEFT_PADDING 4
 #define RIGHT_PADDING 156
 
@@ -40,8 +19,6 @@
 #define LIGHT_GREY ((23 << 11) | (47 << 5) | 23)
 
 #define FRAME_RADIUS 5
-
-Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_RST);
 
 struct CommNavData {
   String name;
@@ -60,25 +37,26 @@ CommNavData nav2 = { "NAV2", "110.54", "116.52", "EPR", "321", "6.2", true };
 
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin(9600);
-  Serial.print(F("Hello! ST77xx TFT Test"));
+  Serial.begin(115200);
 
+  Serial.println("Start configuration");
 
-  tft.init(170, 320);  // Init ST7789 170x320
-  tft.setRotation(1);  // Set screen in landscape mode
+  Config_Init();
+  LCD_Init();
 
+  LCD_SetBacklight(100);
 
-  Serial.println(F("Initialized"));
-
-  tft.fillScreen(ST77XX_BLACK);  // initialize screen with black background
-
-  init_display();  // Compute the display
+  Paint_NewImage(LCD_WIDTH, LCD_HEIGHT, ROTATE_90, WHITE);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  delay(500);
-  Serial.println(F("Loop"));
+  delay(5000);
+  
+  Paint_NewImage(LCD_WIDTH, LCD_HEIGHT, ROTATE_90, WHITE);
+  Paint_Clear(BLACK);
+  init_display();
+  Serial.println("Loop");
 }
 
 void init_display() {
@@ -87,9 +65,9 @@ void init_display() {
   display_com1_border();
   display_com2_border();
   update_nav1_name();
-  update_nav2_name();
-  update_com1_name();
-  update_com2_name();
+  // update_nav2_name();
+  // update_com1_name();
+  // update_com2_name();
 }
 
 
@@ -99,11 +77,11 @@ void setNav1ActiveFreq(String freq) {
     if (i < nav1.activ_freq.length()) {
       if (freq.charAt(i) != nav1.activ_freq.charAt(i)) {
         const uint8_t **var = (const uint8_t **)get_20_letter(freq.charAt(i));
-        display_letter(RIGHT_PADDING - (7 - i) * LETTER_20_WIDTH, 60, var, LETTER_20_WIDTH, LETTER_20_HEIGHT, ST77XX_GREEN);
+        display_letter(RIGHT_PADDING - (7 - i) * LETTER_20_WIDTH, 60, var, LETTER_20_WIDTH, LETTER_20_HEIGHT, GREEN);
       }
     } else {
       const uint8_t **var = (const uint8_t **)get_20_letter(freq.charAt(i));
-      display_letter(RIGHT_PADDING - (7 - i) * LETTER_20_WIDTH, 60, var, LETTER_20_WIDTH, LETTER_20_HEIGHT, ST77XX_GREEN);
+      display_letter(RIGHT_PADDING - (7 - i) * LETTER_20_WIDTH, 60, var, LETTER_20_WIDTH, LETTER_20_HEIGHT, GREEN);
     }
   }
   for (i; i < 7; ++i) {
@@ -130,9 +108,10 @@ void display_com2_border() {
 void display_border(int x, int y, bool selected) {
   int color = LIGHT_GREY;
   if (selected) {
-    color = ST77XX_GREEN;
+    color = GREEN;
   }
-  tft.drawRoundRect(x + 1, y + 1, x + 158, x + 83, FRAME_RADIUS, color);
+  //Paint_DrawRoundRectangle(x + 1, y + 1, x + 158, x + 83, color, DOT_PIXEL_2X2, DRAW_FILL_EMPTY, FRAME_RADIUS);
+  Paint_DrawRectangle(x + 1, y + 1, x + 158, y + 83, color, DOT_PIXEL_2X2, DRAW_FILL_EMPTY);
 }
 
 void update_nav1_name() {
@@ -154,7 +133,8 @@ void update_com2_name() {
 void update_comm_name(String name, int x, int y) {
   for (auto c : name) {
     const uint8_t **var = (const uint8_t **)get_14_letter(c);
-    display_letter(x, y, var, LETTER_14_WIDTH, LETTER_14_HEIGHT, ST77XX_MAGENTA);
+    Serial.println("Try to print letter")
+    display_letter(x, y, var, LETTER_14_WIDTH, LETTER_14_HEIGHT, MAGENTA);
   }
 }
 
@@ -162,11 +142,11 @@ void display_letter(int x, int y, const uint8_t **bitmap, int bitmap_width, int 
   for (int w = 0; w < bitmap_width; w++) {
     for (int h = 0; h < bitmap_width; h++) {
       uint16_t blended_color = compute_color(bitmap[h][w], color);
-      tft.writePixel(x + w, y + h, blended_color);
+      Paint_SetPixel(x + w, y + h, blended_color);
     }
   }
 }
 
 void remove_letter(int x, int y, int h, int w) {
-  tft.fillRect(x, y, w, h, ST77XX_BLACK);
+  Paint_DrawRectangle(x, y, w, h, BLACK, DOT_PIXEL_1X1, DRAW_FILL_FULL);
 }
