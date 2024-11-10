@@ -5,6 +5,7 @@ gdu_unit::gdu_unit() {
 
 
 void gdu_unit::begin(int cs_pin, int a_code) {
+	debounceTime = 0;
 
   if (!mcp.begin_SPI(cs_pin, &SPI, a_code)) {
     Serial.println("Error.");
@@ -14,7 +15,18 @@ void gdu_unit::begin(int cs_pin, int a_code) {
   // Set all buttons as inputs
   for(int i = 0; i < BUTTON_COUNT; i++) {
     mcp.pinMode(BUTTON_PINS[i], INPUT_PULLUP);
-    countMode[i] = COUNT_BOTH;
+	  
+    count[i] = 0;
+    countMode[i] = COUNT_FALLING;
+
+    pressedState[i] = LOW;
+    unpressedState[i] = HIGH;
+
+    previousSteadyState[i] = mcp.digitalRead(BUTTON_PINS[i]);
+    lastSteadyState[i] = previousSteadyState[i];
+    lastFlickerableState[i] = previousSteadyState[i];
+ 
+  	lastDebounceTime[i] = 0;
   }
 }
 
@@ -60,6 +72,11 @@ void gdu_unit::resetCount(int button_id) {
 void gdu_unit::loop(void) {
 	// read the state of the switch/button:
   uint16_t mcp_state = mcp.readGPIOAB();
+#ifdef DEBUG
+  Serial.print("GPIO AB value :");
+  Serial.print(mcp_state);
+  Serial.println("");
+#endif
 
   for(int button_id = 0; button_id < BUTTON_COUNT; button_id++) {
     int currentState = (mcp_state >> BUTTON_PINS[button_id]) & 1;
