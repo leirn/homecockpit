@@ -5,9 +5,11 @@
 
 #define PFD_CS_PIN 53
 #define MFD_CS_PIN 53
+#define AP_CS_PIN 53
 
 #define PFD_A_CODE 0
 #define MFD_A_CODE 1
+#define AP_A_CODE 0b100
 
 #define DEBOUNCE_TIME 10
 
@@ -16,6 +18,9 @@ gdu_unit pfd;
 #endif
 #ifdef MFD
 gdu_unit mfd;
+#endif
+#ifdef AP_UNIT
+ap_unit ap;
 #endif
 
 void setup() {
@@ -37,6 +42,12 @@ void setup() {
 
   Serial.println("MFD Started");
 #endif
+#ifdef AP_UNIT
+  ap.begin(AP_CS_PIN, MFD_A_CODE);
+  ap.setDebounceTime(DEBOUNCE_TIME);
+
+  Serial.println("MFD Started");
+#endif
 
 }
 
@@ -55,6 +66,15 @@ void loop() {
 
   for(int i = 0; i < BUTTON_COUNT; ++i) {
     if (mfd.isPressed(i)) {
+      Serial.println(SIMCONNECT_MFD[i]);
+    }
+  }
+#endif
+#ifdef AP_UNIT
+  ap.loop();
+
+  for(int i = 0; i < AP_BUTTON_COUNT; ++i) {
+    if (ap.isPressed(i)) {
       Serial.println(SIMCONNECT_MFD[i]);
     }
   }

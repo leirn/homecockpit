@@ -20,7 +20,7 @@
 
 #define BUTTON_COUNT 12
 
-const int BUTTON_PINS[12] = {
+const int BUTTON_PINS[BUTTON_COUNT] = {
   0,
   1,
   2,
