@@ -1,3 +1,6 @@
+/**
+ * This class allows to interact with a PFD/MFD input module
+ */
 
 #ifndef pmfd_unit_h
 #define pmfd_unit_h
@@ -52,9 +55,9 @@ enum PINS
 
 };
 
-#define AP_BUTTON_COUNT 49
+#define PMFD_BUTTON_COUNT 18
 
-ap_pin_data PIN_DATA[AP_BUTTON_COUNT] = {
+ap_pin_data PIN_DATA[PMFD_BUTTON_COUNT] = {
     {MCP00, 8, "G1000_PFD_GROUP_LEFT", "G1000_MFD_GROUP_LEFT"},
     {MCP00, 9, "G1000_PFD_GROUP_RIGHT", "G1000_PFD_GROUP_RIGHT"},
     {MCP00, 10, "G1000_PFD_PAGE_LEFT", "G1000_PFD_PAGE_LEFT"},

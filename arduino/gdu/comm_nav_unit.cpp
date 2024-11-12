@@ -1,14 +1,14 @@
-#include "gdu_unit.h"
+#include "comm_nav_unit.h"
 
-gdu_unit::gdu_unit()
+comm_nav_unit::comm_nav_unit()
 {
 }
 
-void gdu_unit::begin(int cs_pin, int a_code)
+void comm_nav_unit::begin(int cs_pin, int a_code)
 {
   debounceTime = 0;
 
-  if (!mcp.begin_SPI(cs_pin, &SPI, a_code))
+  if (!mcp.begin_SPI(cs_pin, &SPI, (a_code & 0b100) | MCP00))
   {
     Serial.println("Error.");
     while (1)
@@ -18,7 +18,9 @@ void gdu_unit::begin(int cs_pin, int a_code)
   // Set all buttons as inputs
   for (int i = 0; i < BUTTON_COUNT; i++)
   {
-    mcp.pinMode(BUTTON_PINS[i], INPUT_PULLUP);
+
+    mcp.pinMode(PIN_DATA[i].pin, INPUT_PULLUP);
+    previousSteadyState[i] = mcp00.digitalRead(PIN_DATA[i].pin);
 
     count[i] = 0;
     countMode[i] = COUNT_FALLING;
@@ -26,7 +28,6 @@ void gdu_unit::begin(int cs_pin, int a_code)
     pressedState[i] = LOW;
     unpressedState[i] = HIGH;
 
-    previousSteadyState[i] = mcp.digitalRead(BUTTON_PINS[i]);
     lastSteadyState[i] = previousSteadyState[i];
     lastFlickerableState[i] = previousSteadyState[i];
 
@@ -34,22 +35,22 @@ void gdu_unit::begin(int cs_pin, int a_code)
   }
 }
 
-void gdu_unit::setDebounceTime(unsigned long time)
+void comm_nav_unit::setDebounceTime(unsigned long time)
 {
   debounceTime = time;
 }
 
-int gdu_unit::getState(int button_id)
+int comm_nav_unit::getState(int button_id)
 {
   return lastSteadyState[button_id];
 }
 
-int gdu_unit::getStateRaw(int button_id)
+int comm_nav_unit::getStateRaw(int button_id)
 {
   return mcp.digitalRead(BUTTON_PINS[button_id]);
 }
 
-bool gdu_unit::isPressed(int button_id)
+bool comm_nav_unit::isPressed(int button_id)
 {
   if (previousSteadyState[button_id] == unpressedState[button_id] && lastSteadyState[button_id] == pressedState[button_id])
     return true;
@@ -57,7 +58,7 @@ bool gdu_unit::isPressed(int button_id)
     return false;
 }
 
-bool gdu_unit::isReleased(int button_id)
+bool comm_nav_unit::isReleased(int button_id)
 {
   if (previousSteadyState[button_id] == pressedState[button_id] && lastSteadyState[button_id] == unpressedState[button_id])
     return true;
@@ -65,38 +66,30 @@ bool gdu_unit::isReleased(int button_id)
     return false;
 }
 
-String getSimconnectEvent(GDU_TYPE gdu, int button_id)
+String getSimconnectEvent(int button_id)
 {
-  if (gdu == PFD)
-    return SIMCONNECT_PFD[button_id];
-  else
-    return SIMCONNECT_MFD[button_id];
+  return SIMCONNECT_COMM_NAV[button_id];
 }
 
-void gdu_unit::setCountMode(int button_id, int mode)
+void comm_nav_unit::setCountMode(int button_id, int mode)
 {
   countMode[button_id] = mode;
 }
 
-unsigned long gdu_unit::getCount(int button_id)
+unsigned long comm_nav_unit::getCount(int button_id)
 {
   return count[button_id];
 }
 
-void gdu_unit::resetCount(int button_id)
+void comm_nav_unit::resetCount(int button_id)
 {
   count[button_id] = 0;
 }
 
-void gdu_unit::loop(void)
+void comm_nav_unit::loop(void)
 {
   // read the state of the switch/button:
   uint16_t mcp_state = mcp.readGPIOAB();
-#ifdef DEBUG
-  Serial.print("GPIO AB value :");
-  Serial.print(mcp_state);
-  Serial.println("");
-#endif
 
   for (int button_id = 0; button_id < BUTTON_COUNT; button_id++)
   {

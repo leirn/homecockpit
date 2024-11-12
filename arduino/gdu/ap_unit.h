@@ -1,3 +1,6 @@
+/**
+ * This class allows to interact with a AUTO PILOT module
+ */
 
 #ifndef ap_unit_h
 #define ap_unit_h
