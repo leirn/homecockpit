@@ -1,7 +1,9 @@
 #include "gdu_unit.h"
+#include "pmfd_unit.h"
+#include "ap_unit.h"
 
 #define PFD 1
-//#define MFD 1
+// #define MFD 1
 
 #define PFD_CS_PIN 53
 #define MFD_CS_PIN 53
@@ -23,9 +25,11 @@ gdu_unit mfd;
 ap_unit ap;
 #endif
 
-void setup() {
+void setup()
+{
   Serial.begin(9600);
-  while (!Serial);
+  while (!Serial)
+    ;
 
   Serial.println("Starting");
 
@@ -48,15 +52,17 @@ void setup() {
 
   Serial.println("MFD Started");
 #endif
-
 }
 
-void loop() {
+void loop()
+{
 #ifdef PFD
   pfd.loop();
 
-  for(int i = 0; i < BUTTON_COUNT; ++i) {
-    if (pfd.isPressed(i)) {
+  for (int i = 0; i < BUTTON_COUNT; ++i)
+  {
+    if (pfd.isPressed(i))
+    {
       Serial.println(SIMCONNECT_PFD[i]);
     }
   }
@@ -64,8 +70,10 @@ void loop() {
 #ifdef MFD
   mfd.loop();
 
-  for(int i = 0; i < BUTTON_COUNT; ++i) {
-    if (mfd.isPressed(i)) {
+  for (int i = 0; i < BUTTON_COUNT; ++i)
+  {
+    if (mfd.isPressed(i))
+    {
       Serial.println(SIMCONNECT_MFD[i]);
     }
   }
@@ -73,8 +81,10 @@ void loop() {
 #ifdef AP_UNIT
   ap.loop();
 
-  for(int i = 0; i < AP_BUTTON_COUNT; ++i) {
-    if (ap.isPressed(i)) {
+  for (int i = 0; i < AP_BUTTON_COUNT; ++i)
+  {
+    if (ap.isPressed(i))
+    {
       Serial.println(SIMCONNECT_MFD[i]);
     }
   }

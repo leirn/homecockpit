@@ -1,10 +1,10 @@
-#include "ap_unit.h"
+#include "pmfd_unit.h"
 
-ap_unit::ap_unit()
+pmfd_unit::pmfd_unit()
 {
 }
 
-void ap_unit::begin(int cs_pin, int a_code)
+void pmfd_unit::begin(int cs_pin, int a_code)
 {
   debounceTime = 0;
 
@@ -22,19 +22,7 @@ void ap_unit::begin(int cs_pin, int a_code)
       ;
   }
 
-  if (!mcp10.begin_SPI(cs_pin, &SPI, (a_code & 0b100) | MCP10))
-  {
-    Serial.println("Error.");
-    while (1)
-      ;
-  }
-
-  if (!mcp11.begin_SPI(cs_pin, &SPI, (a_code & 0b100) | MCP11))
-  {
-    Serial.println("Error.");
-    while (1)
-      ;
-  }
+  active_gdu = PFD;
 
   // Set all buttons as inputs
   for (int i = 0; i < BUTTON_COUNT; i++)
@@ -73,17 +61,31 @@ void ap_unit::begin(int cs_pin, int a_code)
   }
 }
 
-void ap_unit::setDebounceTime(unsigned long time)
+void set_pfd(void)
+{
+  active_gdu = PFD;
+  mcp00.digitalWrite(PFD_LED_PIN, LOW);
+  mcp00.digitalWrite(MFD_LED_PIN, HIGH);
+}
+
+void set_mfd(void)
+{
+  active_gdu = MFD;
+  mcp00.digitalWrite(PFD_LED_PIN, HIGH);
+  mcp00.digitalWrite(MFD_LED_PIN, LOW);
+}
+
+void pmfd_unit::setDebounceTime(unsigned long time)
 {
   debounceTime = time;
 }
 
-int ap_unit::getState(int button_id)
+int pmfd_unit::getState(int button_id)
 {
   return lastSteadyState[button_id];
 }
 
-int ap_unit::getStateRaw(int button_id)
+int pmfd_unit::getStateRaw(int button_id)
 {
   switch (PIN_DATA[button_id].mcp_id)
   {
@@ -99,7 +101,7 @@ int ap_unit::getStateRaw(int button_id)
   return -1;
 }
 
-bool ap_unit::isPressed(int button_id)
+bool pmfd_unit::isPressed(int button_id)
 {
   if (previousSteadyState[button_id] == unpressedState[button_id] && lastSteadyState[button_id] == pressedState[button_id])
     return true;
@@ -107,7 +109,7 @@ bool ap_unit::isPressed(int button_id)
     return false;
 }
 
-bool ap_unit::isReleased(int button_id)
+bool pmfd_unit::isReleased(int button_id)
 {
   if (previousSteadyState[button_id] == pressedState[button_id] && lastSteadyState[button_id] == unpressedState[button_id])
     return true;
@@ -117,26 +119,36 @@ bool ap_unit::isReleased(int button_id)
 
 String getSimconnectEvent(int button_id)
 {
-  return PIN_DATA[button_id].simconnect_event;
+  if (active_gdu == PFD)
+    return PIN_DATA[button_id].simconnect_event_pfd;
+  else
+    return PIN_DATA[button_id].simconnect_event_Mfd;
 }
 
-void ap_unit::setCountMode(int button_id, int mode)
+void pmfd_unit::setCountMode(int button_id, int mode)
 {
   countMode[button_id] = mode;
 }
 
-unsigned long ap_unit::getCount(int button_id)
+unsigned long pmfd_unit::getCount(int button_id)
 {
   return count[button_id];
 }
 
-void ap_unit::resetCount(int button_id)
+void pmfd_unit::resetCount(int button_id)
 {
   count[button_id] = 0;
 }
 
-void ap_unit::loop(void)
+void pmfd_unit::loop(void)
 {
+
+  // Check first is change in PFD/MFD mode
+  int pfd_state = mcp00.digitalRead(PFD_BUTTON_PIN);
+  if (pfd_state == LOW)
+  {
+    set_pfd();
+  }
   // read the state of the switch/button:
   uint16_t mcp_state = mcp00.readGPIOAB();
 #ifdef DEBUG
@@ -152,27 +164,17 @@ void ap_unit::loop(void)
   Serial.print(mcp_state);
   Serial.println("");
 #endif
-  loop_state(MCP00, mcp_state);
-
-  uint16_t mcp_state = mcp10.readGPIOAB();
-#ifdef DEBUG
-  Serial.print("MCP 10 GPIO AB value :");
-  Serial.print(mcp_state);
-  Serial.println("");
-#endif
-  loop_state(MCP10, mcp_state);
-
-  uint16_t mcp_state = mcp11.readGPIOAB();
-#ifdef DEBUG
-  Serial.print("MCP 11 GPIO AB value :");
-  Serial.print(mcp_state);
-  Serial.println("");
-#endif
-  loop_state(MCP11, mcp_state);
+  loop_state(MCP01, mcp_state);
 }
 
-void ap_unit::loop_state(int mcp, uint16_t mcp_state)
+void pmfd_unit::loop_state(int mcp, uint16_t mcp_state)
 {
+
+  int mfd_state = mcp00.digitalRead(MFD_BUTTON_PIN);
+  if (mfd_state == LOW)
+  {
+    set_mfd();
+  }
 
   for (int button_id = 0; button_id < BUTTON_COUNT; button_id++)
   {
