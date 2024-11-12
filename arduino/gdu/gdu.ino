@@ -4,10 +4,10 @@
 #include "comm_nav_unit.h"
 
 #define PFD 1
-// #define MFD 1
-// #define AP_UNIT 1
-// #define PMFD_UNIT 1
-// #define COMM_NAV_UNIT 1
+#define MFD 1
+#define AP_UNIT 1
+#define PMFD_UNIT 1
+#define COMM_NAV_UNIT 1
 
 #define PFD_CS_PIN 53
 #define MFD_CS_PIN 53
@@ -15,11 +15,11 @@
 #define PMFD_CS_PIN 53
 #define COMM_NAV_CS_PIN 53
 
-#define PFD_A_CODE 0
-#define MFD_A_CODE 1
-#define AP_A_CODE 0b100
-#define PMFD_A_CODE 1
-#define COMM_NAV_A_CODE 1
+#define PFD_A_CODE 0         // 1 SPI address
+#define MFD_A_CODE 1         // 1 SPI address
+#define AP_A_CODE 0b100      // 4 SPI addresses
+#define PMFD_A_CODE 1        // 2 SPI address
+#define COMM_NAV_A_CODE 0b10 // 1 SPI address
 
 #define DEBOUNCE_TIME 10
 

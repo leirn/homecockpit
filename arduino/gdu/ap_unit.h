@@ -1,5 +1,9 @@
 /**
  * This class allows to interact with a AUTO PILOT module
+ *
+ * An AP uses 4 MCP23S17, which addresses are: x00, x01, x10, x11.
+ * Therefore, the .begin() method muse take a parameter that must be 0b1xx or 0b0xx (the last two digits are ignored).
+ *
  */
 
 #ifndef ap_unit_h
@@ -85,55 +89,55 @@ enum PINS
 #define AP_BUTTON_COUNT 49
 
 ap_pin_data PIN_DATA[AP_BUTTON_COUNT] = {
-    {MCP00, 0, INPUT, "HDG"},
-    {MCP00, 1, INPUT, "HDG_LED"},
-    {MCP00, 2, INPUT, "APPR"},
-    {MCP00, 3, INPUT, "APPR_LED"},
-    {MCP00, 4, INPUT, "NAV"},
-    {MCP00, 5, INPUT, "NAV_LED"},
-    {MCP00, 8, INPUT, "HDG_BUG_PUSH"},
-    {MCP00, 9, INPUT, "HDG_BUG_LEFT"},
-    {MCP00, 10, INPUT, "HDG_BUG_RIGHT"},
-    {MCP00, 11, INPUT, "BC"},
-    {MCP00, 12, INPUT, "BC_LED"},
-    {MCP00, 13, INPUT, "CRS1_BUG_PUSH"},
-    {MCP00, 14, INPUT, "CRS1_BUG_LEFT"},
-    {MCP00, 15, INPUT, "CRS1_BUG_RIGHT"},
-    {MCP01, 0, INPUT, "ALT_BUG_PUSH"},
-    {MCP01, 1, INPUT, "ALT_BUG_INNER_LEFT"},
-    {MCP01, 2, INPUT, "ALT_BUG_INNER_RIGHT"},
-    {MCP01, 3, INPUT, "ALT_BUG_OUTTER_LEFT"},
-    {MCP01, 4, INPUT, "ALT_BUG_OUTTER_RIGHT"},
-    {MCP01, 6, INPUT, "ALT"},
-    {MCP01, 7, INPUT, "ALT_LED"},
-    {MCP01, 8, INPUT, "VS"},
-    {MCP01, 9, INPUT, "VS_LED"},
-    {MCP01, 10, INPUT, "VNV"},
-    {MCP01, 11, INPUT, "VNV_LED"},
-    {MCP01, 12, INPUT, "NOSE_UP"},
-    {MCP01, 13, INPUT, "NOSE_DOWN"},
-    {MCP10, 0, INPUT, "AP"},
-    {MCP10, 1, INPUT, "A¨P_LED"},
-    {MCP10, 2, INPUT, "BANK"},
-    {MCP10, 3, INPUT, "BANK_LED"},
-    {MCP10, 4, INPUT, "FD"},
-    {MCP10, 5, INPUT, "FD_LED"},
+    {MCP00, 0, INPUT, "AP_HDG_HOLD"},
+    {MCP00, 1, INPUT, "AP_HDG_HOLD_LED"},
+    {MCP00, 2, INPUT, "AP_APR_HOLD"},
+    {MCP00, 3, INPUT, "AP_APR_HOLD_LED"},
+    {MCP00, 4, INPUT, "AP_NAV1_HOLD"},
+    {MCP00, 5, INPUT, "AP_NAV1_HOLD_LED"},
+    {MCP00, 8, INPUT, "HEADING_BUG_SET"}, // Must take current heading as parameter
+    {MCP00, 9, INPUT, "HEADING_BUG_INC"},
+    {MCP00, 10, INPUT, "HEADING_BUG_DEC"},
+    {MCP00, 11, INPUT, "AP_BC_HOLD"},
+    {MCP00, 12, INPUT, "AP_BC_HOLD_LED"},
+    {MCP00, 13, INPUT, "VOR1_SET"}, // Will take current VOR bearing as a parameter
+    {MCP00, 14, INPUT, "VOR1_OBI_INC"},
+    {MCP00, 15, INPUT, "VOR1_OBI_DEC"},
+    {MCP01, 0, INPUT, "ALT_BUG_PUSH"}, // Undefined yet
+    {MCP01, 1, INPUT, "AP_ALT_VAR_DEC"},
+    {MCP01, 2, INPUT, "AP_ALT_VAR_INC"},
+    {MCP01, 3, INPUT, "ALT_BUG_OUTTER_LEFT"},  // Undefined yet
+    {MCP01, 4, INPUT, "ALT_BUG_OUTTER_RIGHT"}, // Undefined yet
+    {MCP01, 6, INPUT, "AP_ALT_HOLD"},
+    {MCP01, 7, INPUT, "AP_ALT_HOLD_LED"},
+    {MCP01, 8, INPUT, "AP_PANEL_VS_HOLD"},
+    {MCP01, 9, INPUT, "AP_PANEL_VS_HOLD_LED"},
+    {MCP01, 10, INPUT, "VNV"},       // Undefined yet
+    {MCP01, 11, INPUT, "VNV_LED"},   // Undefined yet
+    {MCP01, 12, INPUT, "NOSE_UP"},   // Undefined yet
+    {MCP01, 13, INPUT, "NOSE_DOWN"}, // Undefined yet
+    {MCP10, 0, INPUT, "AP_MASTER"},
+    {MCP10, 1, INPUT, "AP_MASTER_LED"},
+    {MCP10, 2, INPUT, "AP_BANK_HOLD"},
+    {MCP10, 3, INPUT, "AP_BANK_HOLD_LED"},
+    {MCP10, 4, INPUT, "TOGGLE_FLIGHT_DIRECTOR"},
+    {MCP10, 5, INPUT, "TOGGLE_FLIGHT_DIRECTOR_LED"},
     {MCP10, 6, INPUT, "AUTO_THROTTLE"},
     {MCP10, 7, INPUT, "AUTO_THROTTLE_LED"},
-    {MCP10, 8, INPUT, "YAW_DAMPER"},
-    {MCP10, 9, INPUT, "YAW_DAMPER_LED"},
-    {MCP10, 10, INPUT, "CRS2_BUG_PUSH"},
-    {MCP10, 11, INPUT, "CRS2_BUG_LEFT"},
-    {MCP10, 12, INPUT, "CRS2_BUG_RIGHT"},
-    {MCP10, 13, INPUT, "BARO_LEFT"},
-    {MCP10, 14, INPUT, "BARO_RIGHT"},
-    {MCP11, 0, INPUT, "IAS"},
-    {MCP11, 6, INPUT, "IAS_LED"},
-    {MCP11, 1, INPUT, "SPEED_BUG_PUSH"},
-    {MCP11, 2, INPUT, "SPEED_BUG_LEFT"},
-    {MCP11, 3, INPUT, "SPEED_BUG_RIGHT"},
-    {MCP11, 4, INPUT, "FLC"},
-    {MCP11, 5, INPUT, "FLC_LED"},
+    {MCP10, 8, INPUT, "YAW_DAMPER_TOGGLE"},
+    {MCP10, 9, INPUT, "YAW_DAMPER_TOGGLE_LED"},
+    {MCP10, 10, INPUT, "VOR2_SET"}, // Will take current VOR bearing as a parameter
+    {MCP10, 11, INPUT, "VOR2_OBI_INC"},
+    {MCP10, 12, INPUT, "VOR2_OBI_DEC"},
+    {MCP10, 13, INPUT, "BARO_LEFT"},  // Undefined yet
+    {MCP10, 14, INPUT, "BARO_RIGHT"}, // Undefined yet
+    {MCP11, 0, INPUT, "AP_AIRSPEED_ON"},
+    {MCP11, 6, INPUT, "AP_AIRSPEED_ON_LED"},
+    {MCP11, 1, INPUT, "SPEED_BUG_PUSH"}, // Undefined yet
+    {MCP11, 2, INPUT, "AP_SPD_VAR_INC"},
+    {MCP11, 3, INPUT, "AP_SPD_VAR_DEC"},
+    {MCP11, 4, INPUT, "FLIGHT_LEVEL_CHANGE"},
+    {MCP11, 5, INPUT, "FLIGHT_LEVEL_CHANGE_LED"},
 };
 
 class ap_unit

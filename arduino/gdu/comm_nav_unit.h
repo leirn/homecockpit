@@ -51,11 +51,35 @@ const String SIMCONNECT_COMM_NAV[12]{
     "COMM_KNOB_DEC_PUSH",
 };
 
-class gdu_unit
+enum COMM
+{
+  COMM1,
+  COMM2,
+  COMM3,
+}
+
+enum RADIO_NAV
+{
+  NAV1,
+  NAV2,
+  NAV3,
+  NAV4,
+  DME1,
+  DME2,
+  ADF,
+  TACAN1,
+  TACAN2,
+
+}
+
+class comm_nav_unit
 {
 private:
   // Connection to MCP23S17
   Adafruit_MCP23X17 mcp;
+
+  COMM active_comm, standby_comm;
+  RADIO_NAV active_radio_nav, standby_radio_nav;
 
   unsigned long debounceTime;
   unsigned long count[12];

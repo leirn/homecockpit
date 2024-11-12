@@ -1,9 +1,25 @@
 #include "gdu_unit.h"
 
+/**
+ * @brief Default constructor for the gdu_unit class.
+ *
+ * This constructor initializes a new instance of the gdu_unit class.
+ */
 gdu_unit::gdu_unit()
 {
 }
 
+/**
+ * @brief Initializes the GDU unit.
+ *
+ * This function sets up the GDU unit by initializing the MCP object with the
+ * specified chip select pin and address code. It also configures all buttons
+ * as input with pull-up resistors and initializes their states and debounce
+ * timers.
+ *
+ * @param cs_pin The chip select pin for the SPI communication.
+ * @param a_code The address code for the MCP object.
+ */
 void gdu_unit::begin(int cs_pin, int a_code)
 {
   debounceTime = 0;
@@ -34,6 +50,16 @@ void gdu_unit::begin(int cs_pin, int a_code)
   }
 }
 
+/**
+ * @brief Sets the debounce time for the unit.
+ *
+ * This function sets the debounce time, which is the minimum time interval
+ * that must pass before the unit can register another input. This helps to
+ * prevent false or multiple triggers from occurring due to noise or rapid
+ * switching.
+ *
+ * @param time The debounce time in milliseconds.
+ */
 void gdu_unit::setDebounceTime(unsigned long time)
 {
   debounceTime = time;
@@ -65,6 +91,13 @@ bool gdu_unit::isReleased(int button_id)
     return false;
 }
 
+/**
+ * @brief Retrieves the SimConnect event string based on the GDU type and button ID.
+ *
+ * @param gdu The type of GDU (Primary Flight Display or Multi-Function Display).
+ * @param button_id The ID of the button for which the SimConnect event is requested.
+ * @return String The SimConnect event string corresponding to the specified GDU type and button ID.
+ */
 String getSimconnectEvent(GDU_TYPE gdu, int button_id)
 {
   if (gdu == PFD)
@@ -88,6 +121,33 @@ void gdu_unit::resetCount(int button_id)
   count[button_id] = 0;
 }
 
+/**
+ * @brief Main loop function for the gdu_unit class.
+ *
+ * This function reads the state of the switches/buttons connected to the MCP23017 I/O expander,
+ * debounces the inputs, and counts the button presses based on the configured counting mode.
+ *
+ * The function performs the following steps:
+ * 1. Reads the state of the GPIO pins from the MCP23017.
+ * 2. Iterates through each button and checks its current state.
+ * 3. Debounces the button inputs by checking if the state has been stable for a specified debounce time.
+ * 4. Updates the steady state of each button.
+ * 5. Counts the button presses based on the configured counting mode (COUNT_BOTH, COUNT_FALLING, COUNT_RISING).
+ *
+ * The function uses the following member variables:
+ * - mcp: An instance of the MCP23017 class used to read the GPIO pins.
+ * - BUTTON_COUNT: The total number of buttons.
+ * - BUTTON_PINS: An array of pin numbers corresponding to each button.
+ * - lastFlickerableState: An array storing the last flickerable state of each button.
+ * - lastDebounceTime: An array storing the last debounce time of each button.
+ * - debounceTime: The debounce time in milliseconds.
+ * - previousSteadyState: An array storing the previous steady state of each button.
+ * - lastSteadyState: An array storing the last steady state of each button.
+ * - countMode: An array storing the counting mode for each button.
+ * - count: An array storing the count of button presses for each button.
+ *
+ * @note This function should be called repeatedly in the main loop of the Arduino sketch.
+ */
 void gdu_unit::loop(void)
 {
   // read the state of the switch/button:

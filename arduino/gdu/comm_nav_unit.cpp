@@ -2,6 +2,10 @@
 
 comm_nav_unit::comm_nav_unit()
 {
+  active_comm = COMM1;
+  standby_comm = COMM2;
+  active_radio_nav = NAV1;
+  standby_radio_nav = NAV2;
 }
 
 void comm_nav_unit::begin(int cs_pin, int a_code)
