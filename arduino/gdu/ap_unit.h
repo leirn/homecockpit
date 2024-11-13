@@ -129,8 +129,8 @@ ap_pin_data PIN_DATA[AP_BUTTON_COUNT] = {
     {MCP10, 10, INPUT, "VOR2_SET"}, // Will take current VOR bearing as a parameter
     {MCP10, 11, INPUT, "VOR2_OBI_INC"},
     {MCP10, 12, INPUT, "VOR2_OBI_DEC"},
-    {MCP10, 13, INPUT, "BARO_LEFT"},  // Undefined yet
-    {MCP10, 14, INPUT, "BARO_RIGHT"}, // Undefined yet
+    {MCP10, 13, INPUT, "KOHLSMAN_INC"},
+    {MCP10, 14, INPUT, "KOHLSMAN_DEC"},
     {MCP11, 0, INPUT, "AP_AIRSPEED_ON"},
     {MCP11, 6, INPUT, "AP_AIRSPEED_ON_LED"},
     {MCP11, 1, INPUT, "SPEED_BUG_PUSH"}, // Undefined yet

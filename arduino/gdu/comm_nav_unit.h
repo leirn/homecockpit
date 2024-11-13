@@ -19,14 +19,12 @@
 
 const int BUTTON_PINS[COMM_NAV_BUTTON_COUNT] = {
     0,
-    1,
     2,
     3,
     4,
     5,
     6,
     8,
-    9,
     10,
     11,
     12,
@@ -34,43 +32,39 @@ const int BUTTON_PINS[COMM_NAV_BUTTON_COUNT] = {
     14,
 };
 
-const String SIMCONNECT_COMM_NAV[12]{
-    "NAV_SWAP_ACTIVE",
-    "NAV_MENU",
-    "NAV_KNOB_INC_1MHZ",
-    "NAV_KNOB_DEC_1MHZ",
-    "NAV_KNOB_INC_FRAC",
-    "NAV_KNOB_DEC_FRAC",
-    "NAV_KNOB_DEC_PUSH",
-    "COMM_SWAP_ACTIVE",
-    "COMM_MENU",
-    "COMM_KNOB_INC_1MHZ",
-    "COMM_KNOB_DEC_1MHZ",
-    "COMM_KNOB_INC_FRAC",
-    "COMM_KNOB_DEC_FRAC",
-    "COMM_KNOB_DEC_PUSH",
+struct comm_pin_data
+{
+  int pin;
+  String simconnect_event[3];
 };
 
-enum COMM
+struct nav_pin_data
 {
-  COMM1,
-  COMM2,
-  COMM3,
-}
+  int pin;
+  String simconnect_event[4];
+};
 
-enum RADIO_NAV
-{
-  NAV1,
-  NAV2,
-  NAV3,
-  NAV4,
-  DME1,
-  DME2,
-  ADF,
-  TACAN1,
-  TACAN2,
+#define COMM_NAV_BUTTON_COUNT 12
 
-}
+const String SIMCONNECT_COMM_NAV[12] = {
+    {0, {"NAV1_RADIO_SWAP", "NAV2_RADIO_SWAP", "NAV3_RADIO_SWAP", "NAV4_RADIO_SWAP"}},
+    {2, {"NAV1_RADIO_WHOLE_INC", "NAV2_RADIO_WHOLE_INC", "NAV3_RADIO_WHOLE_INC", "NAV4_RADIO_WHOLE_INC"}},
+    {3, {"NAV1_RADIO_WHOLE_DEC", "NAV2_RADIO_WHOLE_DEC", "NAV3_RADIO_WHOLE_DEC", "NAV4_RADIO_WHOLE_DEC"}},
+    {4, {"NAV1_RADIO_FRACT_INC", "NAV2_RADIO_FRACT_INC", "NAV3_RADIO_FRACT_INC", "NAV4_RADIO_FRACT_INC"}},
+    {5, {"NAV1_RADIO_FRACT_DEC", "NAV2_RADIO_FRACT_DEC", "NAV3_RADIO_FRACT_DEC", "NAV4_RADIO_FRACT_DEC"}},
+    {6, {"NOT FOR USE", "NOT FOR USE", "NOT FOR USE", "NOT FOR USE"}},
+    {8, {"COM1_RADIO_SWAP", "COM2_RADIO_SWAP", "COM3_RADIO_SWAP"}},
+    {10, {"COM1_RADIO_WHOLE_INC", "COM2_RADIO_WHOLE_INC", "COM3_RADIO_WHOLE_INC"}},
+    {11, {"COM1_RADIO_WHOLE_DEC", "COM2_RADIO_WHOLE_DEC", "COM3_RADIO_WHOLE_DEC"}},
+    {12, {"COM1_RADIO_FRACT_INC", "COM2_RADIO_FRACT_INC", "COM3_RADIO_FRACT_INC"}},
+    {13, {"COM1_RADIO_FRACT_DEC", "COM2_RADIO_FRACT_DEC", "COM3_RADIO_FRACT_DEC"}},
+    {14, {"NOT FOR USE", "NOT FOR USE", "NOT FOR USE", "NOT FOR USE"}},
+};
+
+#define COMM_MENU_PIN 9
+#define NAV_MENU_PIN 1
+#define COMM_SELECT_PIN 14
+#define NAV_SELECT_PIN 6
 
 class comm_nav_unit
 {
@@ -78,8 +72,8 @@ private:
   // Connection to MCP23S17
   Adafruit_MCP23X17 mcp;
 
-  COMM active_comm, standby_comm;
-  RADIO_NAV active_radio_nav, standby_radio_nav;
+  int active_comm, standby_comm, total_comm_number;
+  int active_radio_nav, standby_radio_nav, total_nav_number;
 
   unsigned long debounceTime;
   unsigned long count[12];
@@ -92,6 +86,9 @@ private:
   int lastFlickerableState[12]; // the last flickerable state from the input pin
 
   unsigned long lastDebounceTime[12]; // the last time the output pin was toggled
+
+  void selectNextStbyComm(void);     // Select the next standby COMM
+  void selectNextStbyRadioNav(void); // Select the next standby RADIO NAV
 
 public:
   gdu_unit();
