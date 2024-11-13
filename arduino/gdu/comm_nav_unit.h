@@ -46,7 +46,7 @@ struct nav_pin_data
 
 #define COMM_NAV_BUTTON_COUNT 12
 
-const String SIMCONNECT_COMM_NAV[12] = {
+const String SIMCONNECT_COMM_NAV[COMM_NAV_BUTTON_COUNT] = {
     {0, {"NAV1_RADIO_SWAP", "NAV2_RADIO_SWAP", "NAV3_RADIO_SWAP", "NAV4_RADIO_SWAP"}},
     {2, {"NAV1_RADIO_WHOLE_INC", "NAV2_RADIO_WHOLE_INC", "NAV3_RADIO_WHOLE_INC", "NAV4_RADIO_WHOLE_INC"}},
     {3, {"NAV1_RADIO_WHOLE_DEC", "NAV2_RADIO_WHOLE_DEC", "NAV3_RADIO_WHOLE_DEC", "NAV4_RADIO_WHOLE_DEC"}},
@@ -76,16 +76,16 @@ private:
   int active_radio_nav, standby_radio_nav, total_nav_number;
 
   unsigned long debounceTime;
-  unsigned long count[12];
-  int countMode[12];
-  int pressedState[12];   // the state when the button is considered pressed
-  int unpressedState[12]; // the state when the button is considered unpressed
+  unsigned long count[COMM_NAV_BUTTON_COUNT];
+  int countMode[COMM_NAV_BUTTON_COUNT];
+  int pressedState[COMM_NAV_BUTTON_COUNT];   // the state when the button is considered pressed
+  int unpressedState[COMM_NAV_BUTTON_COUNT]; // the state when the button is considered unpressed
 
-  int previousSteadyState[12];  // the previous steady state from the input pin, used to detect pressed and released event
-  int lastSteadyState[12];      // the last steady state from the input pin
-  int lastFlickerableState[12]; // the last flickerable state from the input pin
+  int previousSteadyState[COMM_NAV_BUTTON_COUNT];  // the previous steady state from the input pin, used to detect pressed and released event
+  int lastSteadyState[COMM_NAV_BUTTON_COUNT];      // the last steady state from the input pin
+  int lastFlickerableState[COMM_NAV_BUTTON_COUNT]; // the last flickerable state from the input pin
 
-  unsigned long lastDebounceTime[12]; // the last time the output pin was toggled
+  unsigned long lastDebounceTime[COMM_NAV_BUTTON_COUNT]; // the last time the output pin was toggled
 
   void selectNextStbyComm(void);     // Select the next standby COMM
   void selectNextStbyRadioNav(void); // Select the next standby RADIO NAV

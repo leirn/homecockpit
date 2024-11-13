@@ -34,7 +34,7 @@ const int BUTTON_PINS[BUTTON_COUNT] = {
     12,
     13};
 
-const String SIMCONNECT_PFD[12]{
+const String SIMCONNECT_PFD[BUTTON_COUNT] = {
     "G1000_PFD_SOFTKEY1",
     "G1000_PFD_SOFTKEY2",
     "G1000_PFD_SOFTKEY3",
@@ -49,7 +49,7 @@ const String SIMCONNECT_PFD[12]{
     "G1000_PFD_SOFTKEY12",
 };
 
-const String SIMCONNECT_MFD[12]{
+const String SIMCONNECT_MFD[BUTTON_COUNT] = {
     "G1000_MFD_SOFTKEY1",
     "G1000_MFD_SOFTKEY2",
     "G1000_MFD_SOFTKEY3",
@@ -77,16 +77,16 @@ private:
   Adafruit_MCP23X17 mcp;
 
   unsigned long debounceTime;
-  unsigned long count[12];
-  int countMode[12];
-  int pressedState[12];   // the state when the button is considered pressed
-  int unpressedState[12]; // the state when the button is considered unpressed
+  unsigned long count[BUTTON_COUNT];
+  int countMode[BUTTON_COUNT];
+  int pressedState[BUTTON_COUNT];   // the state when the button is considered pressed
+  int unpressedState[BUTTON_COUNT]; // the state when the button is considered unpressed
 
-  int previousSteadyState[12];  // the previous steady state from the input pin, used to detect pressed and released event
-  int lastSteadyState[12];      // the last steady state from the input pin
-  int lastFlickerableState[12]; // the last flickerable state from the input pin
+  int previousSteadyState[BUTTON_COUNT];  // the previous steady state from the input pin, used to detect pressed and released event
+  int lastSteadyState[BUTTON_COUNT];      // the last steady state from the input pin
+  int lastFlickerableState[BUTTON_COUNT]; // the last flickerable state from the input pin
 
-  unsigned long lastDebounceTime[12]; // the last time the output pin was toggled
+  unsigned long lastDebounceTime[BUTTON_COUNT]; // the last time the output pin was toggled
 
 public:
   gdu_unit();

@@ -150,16 +150,16 @@ private:
   Adafruit_MCP23X17 mcp11;
 
   unsigned long debounceTime;
-  unsigned long count[12];
-  int countMode[12];
-  int pressedState[12];   // the state when the button is considered pressed
-  int unpressedState[12]; // the state when the button is considered unpressed
+  unsigned long count[AP_BUTTON_COUNT];
+  int countMode[AP_BUTTON_COUNT];
+  int pressedState[AP_BUTTON_COUNT];   // the state when the button is considered pressed
+  int unpressedState[AP_BUTTON_COUNT]; // the state when the button is considered unpressed
 
-  int previousSteadyState[12];  // the previous steady state from the input pin, used to detect pressed and released event
-  int lastSteadyState[12];      // the last steady state from the input pin
-  int lastFlickerableState[12]; // the last flickerable state from the input pin
+  int previousSteadyState[AP_BUTTON_COUNT];  // the previous steady state from the input pin, used to detect pressed and released event
+  int lastSteadyState[AP_BUTTON_COUNT];      // the last steady state from the input pin
+  int lastFlickerableState[AP_BUTTON_COUNT]; // the last flickerable state from the input pin
 
-  unsigned long lastDebounceTime[12]; // the last time the output pin was toggled
+  unsigned long lastDebounceTime[AP_BUTTON_COUNT]; // the last time the output pin was toggled
 
   void loop_state(int mcp, uint16_t mcp_state); // loop a particular MCP
 

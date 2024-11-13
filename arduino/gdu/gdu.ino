@@ -78,10 +78,16 @@ void setup()
 
   Serial.println("[DEBUG] MFD Started");
 #endif
+
+  Serial.setTimeout(100); // Avoid to wait to long for inputs
 }
 
 void loop()
 {
+
+  String receivedString = Serial.readStringUntil("\n");
+  parseReceivedString(receivedString);
+
 #ifdef PFD
   pfd.loop();
 
@@ -137,4 +143,64 @@ void loop()
     }
   }
 #endif
+}
+
+void parseReceivedString(String received)
+{
+  // https://docs.flightsimulator.com/html/Programming_Tools/SimVars/Aircraft_SimVars/Aircraft_RadioNavigation_Variables.htm#COM1%20STORED%20FREQUENCY
+  // COMM part
+  if (received.startsWith("COM ACTIVE BEARING:"))
+  {
+    // set COMx bearing
+  }
+  else if (received.startsWith("COM ACTIVE DISTANCE:"))
+  {
+    // set COMx distance
+  }
+  else if (received.startsWith("COM ACTIVE FREQUENCY:"))
+  {
+    // set COMx active freq
+  }
+  else if (received.startsWith("COM STANDBY FREQUENCY:"))
+  {
+    // set COMx standby freq
+  }
+  else if (received.startsWith("COM ACTIVE FREQ IDENT:"))
+  {
+    // set COMx active freq identity
+  }
+  else if (received.startsWith("COM ACTIVE FREQ TYPE:"))
+  {
+    // set COMx active freq type
+  }
+  else if (received.startsWith("COM STATUS:"))
+  {
+    // wether the com exists and works
+  }
+
+  // NAV part
+  else if (received.startsWith("NAV RADIAL"))
+  {
+    // set NAV radial
+  }
+  else if (received.startsWith("NAV VOR DISTANCE"))
+  {
+    // set NAV distance
+  }
+  else if (received.startsWith("NAV ACTIVE FREQUENCY:"))
+  {
+    // set NAVx active freq
+  }
+  else if (received.startsWith("NAV STANDBY FREQUENCY:"))
+  {
+    // set NAVx standby freq
+  }
+  else if (received.startsWith("NAV IDENT"))
+  {
+    // set NAV active freq identity
+  }
+  else if (received.startsWith("NAV AVAILABLE"))
+  {
+    // wether the nav exists
+  }
 }
