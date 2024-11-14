@@ -26,8 +26,8 @@ ap_pin AP_PIN_DATA[AP_BUTTON_COUNT] = {
     {MCP01, 9, INPUT, "AP_PANEL_VS_HOLD_LED"},
     {MCP01, 10, INPUT, "VNV"},       // Undefined yet
     {MCP01, 11, INPUT, "VNV_LED"},   // Undefined yet
-    {MCP01, 12, INPUT, "NOSE_UP"},   // Undefined yet
-    {MCP01, 13, INPUT, "NOSE_DOWN"}, // Undefined yet
+    {MCP01, 12, INPUT, "AP_VS_VAR_INC"},
+    {MCP01, 13, INPUT, "AP_VS_VAR_DEC"},
     {MCP10, 0, INPUT, "AP_MASTER"},
     {MCP10, 1, INPUT, "AP_MASTER_LED"},
     {MCP10, 2, INPUT, "AP_BANK_HOLD"},
@@ -45,7 +45,7 @@ ap_pin AP_PIN_DATA[AP_BUTTON_COUNT] = {
     {MCP10, 14, INPUT, "KOHLSMAN_DEC"},
     {MCP11, 0, INPUT, "AP_AIRSPEED_ON"},
     {MCP11, 6, INPUT, "AP_AIRSPEED_ON_LED"},
-    {MCP11, 1, INPUT, "SPEED_BUG_PUSH"}, // Undefined yet
+    {MCP11, 1, INPUT, "SPEED_BUG_PUSH"}, // Undefined yet. CHange from IAS to Mach ?
     {MCP11, 2, INPUT, "AP_SPD_VAR_INC"},
     {MCP11, 3, INPUT, "AP_SPD_VAR_DEC"},
     {MCP11, 4, INPUT, "FLIGHT_LEVEL_CHANGE"},
