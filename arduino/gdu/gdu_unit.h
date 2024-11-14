@@ -14,61 +14,13 @@
 
 #include <Adafruit_MCP23X17.h>
 
+#include "common.h"
+
 #define COUNT_FALLING 0
 #define COUNT_RISING 1
 #define COUNT_BOTH 2
 
-#define BUTTON_COUNT 12
-
-const int BUTTON_PINS[BUTTON_COUNT] = {
-    0,
-    1,
-    2,
-    3,
-    4,
-    5,
-    8,
-    9,
-    10,
-    11,
-    12,
-    13};
-
-const String SIMCONNECT_PFD[BUTTON_COUNT] = {
-    "G1000_PFD_SOFTKEY1",
-    "G1000_PFD_SOFTKEY2",
-    "G1000_PFD_SOFTKEY3",
-    "G1000_PFD_SOFTKEY4",
-    "G1000_PFD_SOFTKEY5",
-    "G1000_PFD_SOFTKEY6",
-    "G1000_PFD_SOFTKEY7",
-    "G1000_PFD_SOFTKEY8",
-    "G1000_PFD_SOFTKEY9",
-    "G1000_PFD_SOFTKEY10",
-    "G1000_PFD_SOFTKEY11",
-    "G1000_PFD_SOFTKEY12",
-};
-
-const String SIMCONNECT_MFD[BUTTON_COUNT] = {
-    "G1000_MFD_SOFTKEY1",
-    "G1000_MFD_SOFTKEY2",
-    "G1000_MFD_SOFTKEY3",
-    "G1000_MFD_SOFTKEY4",
-    "G1000_MFD_SOFTKEY5",
-    "G1000_MFD_SOFTKEY6",
-    "G1000_MFD_SOFTKEY7",
-    "G1000_MFD_SOFTKEY8",
-    "G1000_MFD_SOFTKEY9",
-    "G1000_MFD_SOFTKEY10",
-    "G1000_MFD_SOFTKEY11",
-    "G1000_MFD_SOFTKEY12",
-};
-
-enum GDU_TYPE
-{
-  PFD,
-  MFD,
-};
+#define GDU_BUTTON_COUNT 12
 
 class gdu_unit
 {
@@ -77,16 +29,16 @@ private:
   Adafruit_MCP23X17 mcp;
 
   unsigned long debounceTime;
-  unsigned long count[BUTTON_COUNT];
-  int countMode[BUTTON_COUNT];
-  int pressedState[BUTTON_COUNT];   // the state when the button is considered pressed
-  int unpressedState[BUTTON_COUNT]; // the state when the button is considered unpressed
+  unsigned long count[GDU_BUTTON_COUNT];
+  int countMode[GDU_BUTTON_COUNT];
+  int pressedState[GDU_BUTTON_COUNT];   // the state when the button is considered pressed
+  int unpressedState[GDU_BUTTON_COUNT]; // the state when the button is considered unpressed
 
-  int previousSteadyState[BUTTON_COUNT];  // the previous steady state from the input pin, used to detect pressed and released event
-  int lastSteadyState[BUTTON_COUNT];      // the last steady state from the input pin
-  int lastFlickerableState[BUTTON_COUNT]; // the last flickerable state from the input pin
+  int previousSteadyState[GDU_BUTTON_COUNT];  // the previous steady state from the input pin, used to detect pressed and released event
+  int lastSteadyState[GDU_BUTTON_COUNT];      // the last steady state from the input pin
+  int lastFlickerableState[GDU_BUTTON_COUNT]; // the last flickerable state from the input pin
 
-  unsigned long lastDebounceTime[BUTTON_COUNT]; // the last time the output pin was toggled
+  unsigned long lastDebounceTime[GDU_BUTTON_COUNT]; // the last time the output pin was toggled
 
 public:
   gdu_unit();

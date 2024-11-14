@@ -1,3 +1,4 @@
+#include "common.h"
 #include "gdu_unit.h"
 #include "pmfd_unit.h"
 #include "ap_unit.h"
@@ -23,10 +24,10 @@
 
 #define DEBOUNCE_TIME 10
 
-#ifdef PFD
+#ifdef PFD_UNIT
 gdu_unit pfd;
 #endif
-#ifdef MFD
+#ifdef MFD_UNIT
 gdu_unit mfd;
 #endif
 #ifdef AP_UNIT
@@ -47,14 +48,14 @@ void setup()
 
   Serial.println("[DEBUG] Starting");
 
-#ifdef PFD
+#ifdef PFD_UNIT
   pfd.begin(PFD_CS_PIN, PFD_A_CODE);
   pfd.setDebounceTime(DEBOUNCE_TIME);
 
   Serial.println("[DEBUG] PFD Started");
 
 #endif
-#ifdef MFD
+#ifdef MFD_UNIT
   mfd.begin(MFD_CS_PIN, MFD_A_CODE);
   mfd.setDebounceTime(DEBOUNCE_TIME);
 
@@ -88,10 +89,10 @@ void loop()
   String receivedString = Serial.readStringUntil("\n");
   parseReceivedString(receivedString);
 
-#ifdef PFD
+#ifdef PFD_UNIT
   pfd.loop();
 
-  for (int i = 0; i < BUTTON_COUNT; ++i)
+  for (int i = 0; i < GDU_BUTTON_COUNT; ++i)
   {
     if (pfd.isPressed(i))
     {
@@ -99,10 +100,10 @@ void loop()
     }
   }
 #endif
-#ifdef MFD
+#ifdef MFD_UNIT
   mfd.loop();
 
-  for (int i = 0; i < BUTTON_COUNT; ++i)
+  for (int i = 0; i < GDU_BUTTON_COUNT; ++i)
   {
     if (mfd.isPressed(i))
     {

@@ -1,5 +1,51 @@
 #include "gdu_unit.h"
 
+
+const int GDU_BUTTON_PINS[GDU_BUTTON_COUNT] = {
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13};
+
+const String SIMCONNECT_PFD[GDU_BUTTON_COUNT] = {
+    "G1000_PFD_SOFTKEY1",
+    "G1000_PFD_SOFTKEY2",
+    "G1000_PFD_SOFTKEY3",
+    "G1000_PFD_SOFTKEY4",
+    "G1000_PFD_SOFTKEY5",
+    "G1000_PFD_SOFTKEY6",
+    "G1000_PFD_SOFTKEY7",
+    "G1000_PFD_SOFTKEY8",
+    "G1000_PFD_SOFTKEY9",
+    "G1000_PFD_SOFTKEY10",
+    "G1000_PFD_SOFTKEY11",
+    "G1000_PFD_SOFTKEY12",
+};
+
+const String SIMCONNECT_MFD[GDU_BUTTON_COUNT] = {
+    "G1000_MFD_SOFTKEY1",
+    "G1000_MFD_SOFTKEY2",
+    "G1000_MFD_SOFTKEY3",
+    "G1000_MFD_SOFTKEY4",
+    "G1000_MFD_SOFTKEY5",
+    "G1000_MFD_SOFTKEY6",
+    "G1000_MFD_SOFTKEY7",
+    "G1000_MFD_SOFTKEY8",
+    "G1000_MFD_SOFTKEY9",
+    "G1000_MFD_SOFTKEY10",
+    "G1000_MFD_SOFTKEY11",
+    "G1000_MFD_SOFTKEY12",
+};
+
+
 /**
  * @brief Default constructor for the gdu_unit class.
  *
@@ -32,9 +78,9 @@ void gdu_unit::begin(int cs_pin, int a_code)
   }
 
   // Set all buttons as inputs
-  for (int i = 0; i < BUTTON_COUNT; i++)
+  for (int i = 0; i < GDU_BUTTON_COUNT; i++)
   {
-    mcp.pinMode(BUTTON_PINS[i], INPUT_PULLUP);
+    mcp.pinMode(GDU_BUTTON_PINS[i], INPUT_PULLUP);
 
     count[i] = 0;
     countMode[i] = COUNT_FALLING;
@@ -42,7 +88,7 @@ void gdu_unit::begin(int cs_pin, int a_code)
     pressedState[i] = LOW;
     unpressedState[i] = HIGH;
 
-    previousSteadyState[i] = mcp.digitalRead(BUTTON_PINS[i]);
+    previousSteadyState[i] = mcp.digitalRead(GDU_BUTTON_PINS[i]);
     lastSteadyState[i] = previousSteadyState[i];
     lastFlickerableState[i] = previousSteadyState[i];
 
@@ -72,7 +118,7 @@ int gdu_unit::getState(int button_id)
 
 int gdu_unit::getStateRaw(int button_id)
 {
-  return mcp.digitalRead(BUTTON_PINS[button_id]);
+  return mcp.digitalRead(GDU_BUTTON_PINS[button_id]);
 }
 
 bool gdu_unit::isPressed(int button_id)
@@ -98,7 +144,7 @@ bool gdu_unit::isReleased(int button_id)
  * @param button_id The ID of the button for which the SimConnect event is requested.
  * @return String The SimConnect event string corresponding to the specified GDU type and button ID.
  */
-String getSimconnectEvent(GDU_TYPE gdu, int button_id)
+String gdu_unit::getSimconnectEvent(GDU_TYPE gdu, int button_id)
 {
   if (gdu == PFD)
     return SIMCONNECT_PFD[button_id];
@@ -158,9 +204,9 @@ void gdu_unit::loop(void)
   Serial.println("");
 #endif
 
-  for (int button_id = 0; button_id < BUTTON_COUNT; button_id++)
+  for (int button_id = 0; button_id < GDU_BUTTON_COUNT; button_id++)
   {
-    int currentState = (mcp_state >> BUTTON_PINS[button_id]) & 1;
+    int currentState = (mcp_state >> GDU_BUTTON_PINS[button_id]) & 1;
 
     unsigned long currentTime = millis();
 

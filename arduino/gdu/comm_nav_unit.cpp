@@ -1,5 +1,20 @@
 #include "comm_nav_unit.h"
 
+const comm_nav_pin_data COMM_NAV_PIN_DATA[COMM_NAV_BUTTON_COUNT] = {
+    {0, {"NAV1_RADIO_SWAP", "NAV2_RADIO_SWAP", "NAV3_RADIO_SWAP", "NAV4_RADIO_SWAP"}},
+    {2, {"NAV1_RADIO_WHOLE_INC", "NAV2_RADIO_WHOLE_INC", "NAV3_RADIO_WHOLE_INC", "NAV4_RADIO_WHOLE_INC"}},
+    {3, {"NAV1_RADIO_WHOLE_DEC", "NAV2_RADIO_WHOLE_DEC", "NAV3_RADIO_WHOLE_DEC", "NAV4_RADIO_WHOLE_DEC"}},
+    {4, {"NAV1_RADIO_FRACT_INC", "NAV2_RADIO_FRACT_INC", "NAV3_RADIO_FRACT_INC", "NAV4_RADIO_FRACT_INC"}},
+    {5, {"NAV1_RADIO_FRACT_DEC", "NAV2_RADIO_FRACT_DEC", "NAV3_RADIO_FRACT_DEC", "NAV4_RADIO_FRACT_DEC"}},
+    {6, {"NOT FOR USE", "NOT FOR USE", "NOT FOR USE", "NOT FOR USE"}},
+    {8, {"COM1_RADIO_SWAP", "COM2_RADIO_SWAP", "COM3_RADIO_SWAP", ""}},
+    {10, {"COM1_RADIO_WHOLE_INC", "COM2_RADIO_WHOLE_INC", "COM3_RADIO_WHOLE_INC", ""}},
+    {11, {"COM1_RADIO_WHOLE_DEC", "COM2_RADIO_WHOLE_DEC", "COM3_RADIO_WHOLE_DEC", ""}},
+    {12, {"COM1_RADIO_FRACT_INC", "COM2_RADIO_FRACT_INC", "COM3_RADIO_FRACT_INC", ""}},
+    {13, {"COM1_RADIO_FRACT_DEC", "COM2_RADIO_FRACT_DEC", "COM3_RADIO_FRACT_DEC", ""}},
+    {14, {"NOT FOR USE", "NOT FOR USE", "NOT FOR USE", "NOT FOR USE"}},
+};
+
 comm_nav_unit::comm_nav_unit()
 {
   active_comm = 0;
@@ -14,7 +29,7 @@ void comm_nav_unit::begin(int cs_pin, int a_code)
 {
   debounceTime = 0;
 
-  if (!mcp.begin_SPI(cs_pin, &SPI, (a_code & 0b100) | MCP00))
+  if (!mcp.begin_SPI(cs_pin, &SPI, a_code))
   {
     Serial.println("Error.");
     while (1)
@@ -22,11 +37,11 @@ void comm_nav_unit::begin(int cs_pin, int a_code)
   }
 
   // Set all buttons as inputs
-  for (int i = 0; i < BUTTON_COUNT; i++)
+  for (int i = 0; i < COMM_NAV_BUTTON_COUNT; i++)
   {
 
-    mcp.pinMode(PIN_DATA[i].pin, INPUT_PULLUP);
-    previousSteadyState[i] = mcp00.digitalRead(PIN_DATA[i].pin);
+    mcp.pinMode(COMM_NAV_PIN_DATA[i].pin, INPUT_PULLUP);
+    previousSteadyState[i] = mcp.digitalRead(COMM_NAV_PIN_DATA[i].pin);
 
     count[i] = 0;
     countMode[i] = COUNT_FALLING;
@@ -53,7 +68,7 @@ int comm_nav_unit::getState(int button_id)
 
 int comm_nav_unit::getStateRaw(int button_id)
 {
-  return mcp.digitalRead(BUTTON_PINS[button_id]);
+  return mcp.digitalRead(COMM_NAV_PIN_DATA[button_id].pin);
 }
 
 bool comm_nav_unit::isPressed(int button_id)
@@ -72,7 +87,7 @@ bool comm_nav_unit::isReleased(int button_id)
     return false;
 }
 
-String getSimconnectEvent(int button_id)
+String comm_nav_unit::getSimconnectEvent(int button_id)
 {
   if (button_id == COMM_SELECT_PIN)
   {
@@ -82,7 +97,9 @@ String getSimconnectEvent(int button_id)
   {
     return "NAV_RADIO SELECT_" + (active_radio_nav + 1);
   }
-  return SIMCONNECT_COMM_NAV[button_id];
+  if (button_id < 8) 
+    return COMM_NAV_PIN_DATA[button_id].simconnect_event[active_radio_nav + 1];
+  return COMM_NAV_PIN_DATA[button_id].simconnect_event[active_comm + 1];
 }
 
 void comm_nav_unit::setCountMode(int button_id, int mode)
@@ -163,14 +180,14 @@ void comm_nav_unit::loop(void)
   }
 
   // Check if COM select button has been pressed
-  int comm_menu_state = (mcp_state >> COMM_SELECT_PIN) & 1;
+  comm_menu_state = (mcp_state >> COMM_SELECT_PIN) & 1;
   if (comm_menu_state == LOW)
   {
     selectNextStbyComm();
   }
 
   // Check if NAV select button has been pressed
-  int nav_menu_state = (mcp_state >> NAV_SELECT_PIN) & 1;
+  nav_menu_state = (mcp_state >> NAV_SELECT_PIN) & 1;
   if (nav_menu_state == LOW)
   {
     selectNextStbyRadioNav();
@@ -179,7 +196,7 @@ void comm_nav_unit::loop(void)
   for (int button_id = 0; button_id < COMM_NAV_BUTTON_COUNT; button_id++)
   {
 
-    int currentState = (mcp_state >> COMM_NAV_BUTTON_COUNT[button_id].pin) & 1;
+    int currentState = (mcp_state >> COMM_NAV_PIN_DATA[button_id].pin) & 1;
 
     unsigned long currentTime = millis();
 

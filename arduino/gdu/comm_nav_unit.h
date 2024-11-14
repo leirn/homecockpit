@@ -15,51 +15,13 @@
 #define COUNT_RISING 1
 #define COUNT_BOTH 2
 
-#define COMM_NAV_BUTTON_COUNT 14
-
-const int BUTTON_PINS[COMM_NAV_BUTTON_COUNT] = {
-    0,
-    2,
-    3,
-    4,
-    5,
-    6,
-    8,
-    10,
-    11,
-    12,
-    13,
-    14,
-};
-
-struct comm_pin_data
-{
-  int pin;
-  String simconnect_event[3];
-};
-
-struct nav_pin_data
+struct comm_nav_pin_data
 {
   int pin;
   String simconnect_event[4];
 };
 
 #define COMM_NAV_BUTTON_COUNT 12
-
-const String SIMCONNECT_COMM_NAV[COMM_NAV_BUTTON_COUNT] = {
-    {0, {"NAV1_RADIO_SWAP", "NAV2_RADIO_SWAP", "NAV3_RADIO_SWAP", "NAV4_RADIO_SWAP"}},
-    {2, {"NAV1_RADIO_WHOLE_INC", "NAV2_RADIO_WHOLE_INC", "NAV3_RADIO_WHOLE_INC", "NAV4_RADIO_WHOLE_INC"}},
-    {3, {"NAV1_RADIO_WHOLE_DEC", "NAV2_RADIO_WHOLE_DEC", "NAV3_RADIO_WHOLE_DEC", "NAV4_RADIO_WHOLE_DEC"}},
-    {4, {"NAV1_RADIO_FRACT_INC", "NAV2_RADIO_FRACT_INC", "NAV3_RADIO_FRACT_INC", "NAV4_RADIO_FRACT_INC"}},
-    {5, {"NAV1_RADIO_FRACT_DEC", "NAV2_RADIO_FRACT_DEC", "NAV3_RADIO_FRACT_DEC", "NAV4_RADIO_FRACT_DEC"}},
-    {6, {"NOT FOR USE", "NOT FOR USE", "NOT FOR USE", "NOT FOR USE"}},
-    {8, {"COM1_RADIO_SWAP", "COM2_RADIO_SWAP", "COM3_RADIO_SWAP"}},
-    {10, {"COM1_RADIO_WHOLE_INC", "COM2_RADIO_WHOLE_INC", "COM3_RADIO_WHOLE_INC"}},
-    {11, {"COM1_RADIO_WHOLE_DEC", "COM2_RADIO_WHOLE_DEC", "COM3_RADIO_WHOLE_DEC"}},
-    {12, {"COM1_RADIO_FRACT_INC", "COM2_RADIO_FRACT_INC", "COM3_RADIO_FRACT_INC"}},
-    {13, {"COM1_RADIO_FRACT_DEC", "COM2_RADIO_FRACT_DEC", "COM3_RADIO_FRACT_DEC"}},
-    {14, {"NOT FOR USE", "NOT FOR USE", "NOT FOR USE", "NOT FOR USE"}},
-};
 
 #define COMM_MENU_PIN 9
 #define NAV_MENU_PIN 1
@@ -91,13 +53,14 @@ private:
   void selectNextStbyRadioNav(void); // Select the next standby RADIO NAV
 
 public:
-  gdu_unit();
+  comm_nav_unit();
   void begin(int cs_pin, int a_code);
   void setDebounceTime(unsigned long time);
   int getState(int button_id);
   int getStateRaw(int button_id);
   bool isPressed(int button_id);
   bool isReleased(int button_id);
+  String comm_nav_unit::getSimconnectEvent(int button_id);
   void setCountMode(int button_id, int mode);
   unsigned long getCount(int button_id);
   void resetCount(int button_id);
