@@ -9,8 +9,9 @@ Synthèse :
 | P/MFD input|  Small_PFD_MFD | A vérifier | ? | ? |
 | Radio | Module_radio_comm_nav | En cours | ? | ? |
 | Mix son |     | A faire | ? | ? |
-| Systèmes | 4_23S17 ou 3_23S17 | En cours | ? | ? |
-| Lumières | 4_23S17 ou 3_23S17 | En cours | ? | ? |
+| Systèmes | Systems_light | A vérifier | ? | ? |
+| Lumières | Systems_light | A vérifier | ? | ? |
+| Arduino Mega | ? | ? | ? | ? | ? |
 
 ## GDU
 
@@ -75,9 +76,9 @@ Status : non démarré
 
 ### PCB
 
-4_23S17 ou 3_23S17 :
+Systems_light :
 
-Status : en cours
+Status : à vérifier avant commande
 
 ### 3d print
 
@@ -85,8 +86,7 @@ Status : en cours
 
 ### PCB
 
-4_23S17 ou 3_23S17 :
+Systems_light :
 
-Status : en cours
-
+Status : à vérifier avant commande
 ### 3d print
