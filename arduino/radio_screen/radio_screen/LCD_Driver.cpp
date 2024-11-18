@@ -6,7 +6,7 @@
 *----------------
 * | This version:   V1.0
 * | Date        :   2022-11-02
-* | Info        :   
+* | Info        :
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documnetation files (the "Software"), to deal
@@ -28,6 +28,7 @@
 #
 ******************************************************************************/
 #include "LCD_Driver.h"
+#include "ST7789.h"
 
 /*******************************************************************************
 function:
@@ -35,11 +36,11 @@ function:
 *******************************************************************************/
 static void LCD_Reset(void)
 {
-    DEV_Digital_Write(DEV_CS_PIN,0);
+    DEV_Digital_Write(DEV_CS_PIN, 0);
     DEV_Delay_ms(20);
-    DEV_Digital_Write(DEV_RST_PIN,0);
+    DEV_Digital_Write(DEV_RST_PIN, 0);
     DEV_Delay_ms(20);
-    DEV_Digital_Write(DEV_RST_PIN,1);
+    DEV_Digital_Write(DEV_RST_PIN, 1);
     DEV_Delay_ms(20);
 }
 
@@ -51,8 +52,8 @@ parameter :
 *******************************************************************************/
 void LCD_SetBacklight(UWORD Value)
 {
-    if(Value > 100)
-        Value=100;
+    if (Value > 100)
+        Value = 100;
     DEV_Set_BL(DEV_BL_PIN, (Value * 2.55));
 }
 
@@ -60,47 +61,47 @@ void LCD_SetBacklight(UWORD Value)
 function:
     Write register address and data
 *******************************************************************************/
-void LCD_WriteData_Byte(UBYTE da) 
-{ 
-    DEV_Digital_Write(DEV_CS_PIN,0);
-    DEV_Digital_Write(DEV_DC_PIN,1);
-    DEV_SPI_WRITE(da);  
-    DEV_Digital_Write(DEV_CS_PIN,1);
-}  
-
- void LCD_WriteData_Word(UWORD da)
+void LCD_WriteData_Byte(UBYTE da)
 {
-    UBYTE i=(da>>8)&0xff;
-    DEV_Digital_Write(DEV_CS_PIN,0);
-    DEV_Digital_Write(DEV_DC_PIN,1);
+    DEV_Digital_Write(DEV_CS_PIN, 0);
+    DEV_Digital_Write(DEV_DC_PIN, 1);
+    DEV_SPI_WRITE(da);
+    DEV_Digital_Write(DEV_CS_PIN, 1);
+}
+
+void LCD_WriteData_Word(UWORD da)
+{
+    UBYTE i = (da >> 8) & 0xff;
+    DEV_Digital_Write(DEV_CS_PIN, 0);
+    DEV_Digital_Write(DEV_DC_PIN, 1);
     DEV_SPI_WRITE(i);
     DEV_SPI_WRITE(da);
-    DEV_Digital_Write(DEV_CS_PIN,1);
-}   
+    DEV_Digital_Write(DEV_CS_PIN, 1);
+}
 
-void LCD_WriteReg(UBYTE da)  
-{ 
-    DEV_Digital_Write(DEV_CS_PIN,0);
-    DEV_Digital_Write(DEV_DC_PIN,0);
+void LCD_WriteReg(UBYTE da)
+{
+    DEV_Digital_Write(DEV_CS_PIN, 0);
+    DEV_Digital_Write(DEV_DC_PIN, 0);
     DEV_SPI_WRITE(da);
-    DEV_Digital_Write(DEV_CS_PIN,1);
+    DEV_Digital_Write(DEV_CS_PIN, 1);
 }
 
 /******************************************************************************
-function: 
+function:
     Common register initialization
 ******************************************************************************/
 void LCD_Init(void)
 {
     LCD_Reset();
 
-    //************* Start Initial Sequence **********// 
-    
-    LCD_WriteReg(0x36);
+    //************* Start Initial Sequence **********//
+
+    LCD_WriteReg(ST7789_MADCTL); //
     if (HORIZONTAL)
         LCD_WriteData_Byte(0x00);
     else
-        LCD_WriteData_Byte(0x70);
+        LCD_WriteData_Byte(ST7789_MADCTL_MX | ST7789_MADCTL_MV | ST7789_MADCTL_ML);
 
     LCD_WriteReg(0x3A);
     LCD_WriteData_Byte(0x55);
@@ -172,12 +173,12 @@ void LCD_Init(void)
     LCD_WriteData_Byte(0x25);
     LCD_WriteData_Byte(0x27);
 
-    LCD_WriteReg(0x21);
+    LCD_WriteReg(ST7789_INVON);
 
-    LCD_WriteReg(0x11);
+    LCD_WriteReg(ST7789_SLPOUT);
     delay(120);
-    LCD_WriteReg(0x29); 
-} 
+    LCD_WriteReg(ST7789_DISPON);
+}
 
 /******************************************************************************
 function: Set the cursor position
@@ -187,39 +188,41 @@ parameter :
     Xend  :   End UWORD coordinates
     Yend  :   End UWORD coordinatesen
 ******************************************************************************/
-void LCD_SetCursor(UWORD Xstart, UWORD Ystart, UWORD Xend, UWORD  Yend)
-{ 
-  if (HORIZONTAL) {
+void LCD_SetCursor(UWORD Xstart, UWORD Ystart, UWORD Xend, UWORD Yend)
+{
+    if (HORIZONTAL)
+    {
         // set the X coordinates
-        LCD_WriteReg(0x2A);
+        LCD_WriteReg(ST7789_CASET);
         LCD_WriteData_Byte(Xstart + 35 >> 8);
         LCD_WriteData_Byte(Xstart + 35);
         LCD_WriteData_Byte(Xend + 35 >> 8);
         LCD_WriteData_Byte(Xend + 35);
-        
+
         // set the Y coordinates
-        LCD_WriteReg(0x2B);
+        LCD_WriteReg(ST7789_RASET);
         LCD_WriteData_Byte(Ystart >> 8);
         LCD_WriteData_Byte(Ystart);
         LCD_WriteData_Byte(Yend >> 8);
         LCD_WriteData_Byte(Yend);
     }
-    else {
+    else
+    {
         // set the X coordinates
-        LCD_WriteReg(0x2A);
+        // TODAO : ST7789_CASET missing ?
         LCD_WriteData_Byte(Ystart >> 8);
         LCD_WriteData_Byte(Ystart);
         LCD_WriteData_Byte(Yend >> 8);
         LCD_WriteData_Byte(Yend);
         // set the Y coordinates
-        LCD_WriteReg(0x2B);
-        LCD_WriteData_Byte(Xstart + 35>> 8);
+        LCD_WriteReg(ST7789_RASET);
+        LCD_WriteData_Byte(Xstart + 35 >> 8);
         LCD_WriteData_Byte(Xstart + 35);
         LCD_WriteData_Byte(Xend + 35 >> 8);
         LCD_WriteData_Byte(Xend + 35);
     }
 
-    LCD_WriteReg(0X2C);
+    LCD_WriteReg(ST7789_RAMWR);
 }
 
 /******************************************************************************
@@ -229,10 +232,12 @@ parameter :
 ******************************************************************************/
 void LCD_Clear(UWORD Color)
 {
-  UWORD i,j;    
-  LCD_SetCursor(0, 0, LCD_WIDTH, LCD_HEIGHT);
-    for(i=0; i<LCD_WIDTH; i++) {
-        for(j=0; j<LCD_HEIGHT; j++) {
+    UWORD i, j;
+    LCD_SetCursor(0, 0, LCD_WIDTH, LCD_HEIGHT);
+    for (i = 0; i < LCD_WIDTH; i++)
+    {
+        for (j = 0; j < LCD_HEIGHT; j++)
+        {
             LCD_WriteData_Word(Color);
         }
     }
@@ -247,12 +252,14 @@ parameter :
     Yend  :   End UWORD coordinates
     color :   Set the color
 ******************************************************************************/
-void LCD_ClearWindow(UWORD Xstart, UWORD Ystart, UWORD Xend, UWORD Yend,UWORD color)
-{          
-  UWORD i,j; 
+void LCD_ClearWindow(UWORD Xstart, UWORD Ystart, UWORD Xend, UWORD Yend, UWORD color)
+{
+    UWORD i, j;
     LCD_SetCursor(Xstart, Ystart, Xend, Yend);
-    for(i=Ystart; i<Yend; i++) {                                
-        for(j=Xstart; j<Xend; j++) {
+    for (i = Ystart; i < Yend; i++)
+    {
+        for (j = Xstart; j < Xend; j++)
+        {
             LCD_WriteData_Word(color);
         }
     }
@@ -267,10 +274,10 @@ parameter :
     Yend  :   End UWORD coordinates
     Color :   Set the color
 ******************************************************************************/
-void LCD_SetWindowColor(UWORD Xstart, UWORD Ystart, UWORD Xend, UWORD Yend,UWORD  Color)
+void LCD_SetWindowColor(UWORD Xstart, UWORD Ystart, UWORD Xend, UWORD Yend, UWORD Color)
 {
-    LCD_SetCursor( Xstart,Ystart,Xend,Yend);
-    LCD_WriteData_Word(Color);      
+    LCD_SetCursor(Xstart, Ystart, Xend, Yend);
+    LCD_WriteData_Word(Color);
 }
 
 /******************************************************************************
@@ -282,6 +289,6 @@ parameter :
 ******************************************************************************/
 void LCD_SetUWORD(UWORD x, UWORD y, UWORD Color)
 {
-    LCD_SetCursor(x,y,x,y);
-    LCD_WriteData_Word(Color);      
-} 
+    LCD_SetCursor(x, y, x, y);
+    LCD_WriteData_Word(Color);
+}

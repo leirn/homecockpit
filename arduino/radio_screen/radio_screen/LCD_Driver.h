@@ -6,7 +6,7 @@
 *----------------
 * | This version:   V1.0
 * | Date        :   2022-11-02
-* | Info        :   
+* | Info        :
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documnetation files (the "Software"), to deal
@@ -32,17 +32,17 @@
 
 #include "DEV_Config.h"
 
-#define LCD_WIDTH   170 //LCD width
-#define LCD_HEIGHT  320 //LCD height
+#define LCD_WIDTH 170  // LCD width
+#define LCD_HEIGHT 320 // LCD height
 
 #define HORIZONTAL 1
-#define VERTICAL   0
+#define VERTICAL 0
 
-void LCD_WriteData_Byte(UBYTE da); 
+void LCD_WriteData_Byte(UBYTE da);
 void LCD_WriteData_Word(UWORD da);
 void LCD_WriteReg(UBYTE da);
 
-void LCD_SetCursor(UWORD x1, UWORD y1, UWORD x2,UWORD y2);
+void LCD_SetCursor(UWORD x1, UWORD y1, UWORD x2, UWORD y2);
 void LCD_SetUWORD(UWORD x, UWORD y, UWORD Color);
 
 void LCD_Init(void);
