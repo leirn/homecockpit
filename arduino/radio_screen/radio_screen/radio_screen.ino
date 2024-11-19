@@ -3,13 +3,6 @@
 #include "GUI_Paint.h"
 
 #include "letters.h"
-#define LEFT_PADDING 4
-#define RIGHT_PADDING 156
-
-#define LETTER_14_WIDTH 9
-#define LETTER_14_HEIGHT 18
-#define LETTER_20_WIDTH 13
-#define LETTER_20_HEIGHT 25
 
 #define HALF_HEIGHT 85
 #define HALF_WIDTH 160
@@ -152,21 +145,4 @@ void update_comm_name(String name, int x, int y)
     Serial.println("Try to print letter")
         display_letter(x, y, var, LETTER_14_WIDTH, LETTER_14_HEIGHT, MAGENTA);
   }
-}
-
-void display_letter(int x, int y, const uint8_t **bitmap, int bitmap_width, int bitmap_height, uint16_t color)
-{
-  for (int w = 0; w < bitmap_width; w++)
-  {
-    for (int h = 0; h < bitmap_width; h++)
-    {
-      uint16_t blended_color = compute_color(bitmap[h][w], color);
-      Paint_SetPixel(x + w, y + h, blended_color);
-    }
-  }
-}
-
-void remove_letter(int x, int y, int h, int w)
-{
-  Paint_DrawRectangle(x, y, w, h, BLACK, DOT_PIXEL_1X1, DRAW_FILL_FULL);
 }

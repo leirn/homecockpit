@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#define RGB565 uint16_t
+
 #define WHITE 0xFFFF
 #define BLACK 0x0000
 #define BLUE 0x001F
@@ -25,6 +27,14 @@
 #define LGRAYBLUE 0XA651
 #define LBBLUE 0X2B12
 
+#define LEFT_PADDING 4
+#define RIGHT_PADDING 156
+
+#define LETTER_14_WIDTH 9
+#define LETTER_14_HEIGHT 18
+#define LETTER_20_WIDTH 13
+#define LETTER_20_HEIGHT 25
+
 class CommNavData
 {
 private:
@@ -36,7 +46,8 @@ private:
     String distance;
     bool selected;
     uint16_t display_buffer[160 * 85];
-    void setPixel(int x, int y, uint16_t color);
+    void setPixel(int x, int y, RGB565 color);
+    void drawRectangle(int x, int y, int w, int, h, RGB565 color);
     int min_x, min_y, max_x, max_y;
     bool toBePrinted;
 
@@ -48,7 +59,7 @@ public:
     void setId(String id);
     void setBearing(String bearing);
     void setDistance(String distance);
-    void drawBorder(uint16_t color);
+    void drawBorder(RGB565 color);
     void select(void);
     void unselect(void);
 };
@@ -59,6 +70,8 @@ class CommData : CommNavData
 
 class NavData : CommNavData
 {
+public:
+    void setActiveFrequency(String freq);
 }
 
 #endif

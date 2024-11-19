@@ -103,17 +103,19 @@ void LCD_Init(void)
     else
         LCD_WriteData_Byte(ST7789_MADCTL_MX | ST7789_MADCTL_MV | ST7789_MADCTL_ML);
 
-    LCD_WriteReg(0x3A);
-    LCD_WriteData_Byte(0x55);
+    LCD_WriteReg(ST7789_COLMOD);
+    LCD_WriteData_Byte(ST7789_COLDMOD_RGB_65K | ST7789_COLDMOD_COLOR_16BIT_PER_PIX);
 
-    LCD_WriteReg(0xB2);
+    LCD_WriteReg(ST7789_PORCTRL);
     LCD_WriteData_Byte(0x0C);
     LCD_WriteData_Byte(0x0C);
     LCD_WriteData_Byte(0x00);
     LCD_WriteData_Byte(0x33);
     LCD_WriteData_Byte(0x33);
 
-    LCD_WriteReg(0xB7);
+    // Add frame rate control ?
+
+    LCD_WriteReg(ST7789_GCTRL);
     LCD_WriteData_Byte(0x35);
 
     LCD_WriteReg(0xBB);
