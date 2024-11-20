@@ -47,7 +47,7 @@ private:
     bool selected;
     uint16_t display_buffer[160 * 85];
     void setPixel(int x, int y, RGB565 color);
-    void drawRectangle(int x, int y, int w, int, h, RGB565 color);
+    void drawRectangle(int x, int y, int w, int h, RGB565 color);
     int min_x, min_y, max_x, max_y;
     bool toBePrinted;
 

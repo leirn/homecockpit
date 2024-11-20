@@ -85,7 +85,7 @@ void CommNavData::drawBorder(RGB565 color)
     }
 }
 
-void CommNavData::drawRectangle(int x, int y, int w, int, h, RGB565 color)
+void CommNavData::drawRectangle(int x, int y, int w, int h, RGB565 color)
 {
     min_x = min(min_x, x);
     min_y = min(min_y, y);
