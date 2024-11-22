@@ -6,21 +6,6 @@
 
 #define DEBUG
 
-#define SCREEN_WIDTH 320
-#define SCREEN_HEIGHT 170
-
-#define COM1_X 160
-#define COM1_Y 0
-
-#define COM2_X 160
-#define COM2_Y 85
-
-#define NAV1_X 0
-#define NAV1_Y 0
-
-#define NAV2_X 0
-#define NAV2_Y 85
-
 #define LIGHT_GREY ((23 << 11) | (47 << 5) | 23)
 
 #define FRAME_RADIUS 5
