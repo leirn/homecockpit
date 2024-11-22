@@ -11,7 +11,7 @@ Synthèse :
 | Mix son | SoundMix@Pro    | A faire | ? | ? |
 | Systèmes | Systems_light | A vérifier | ? | ? |
 | Lumières | Systems_light | A vérifier | ? | ? |
-| Arduino Mega | ? | ? | ? | ? | ? |
+| Arduino Mega | ArduinoShield | En cours | ? | ? | ? |
 
 ## GDU
 

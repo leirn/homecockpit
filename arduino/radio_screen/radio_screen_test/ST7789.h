@@ -53,6 +53,14 @@
 #define ST7789_RDCABCMB 0x5f // Read CABC Minimum Brightness
 #define ST7789_RDCABCMB 0x68 // Read Automatic Brightness Control Self-Diagnostic Result
 
+#define ST7789_RAMCTRL 0xb0     // RAM Control
+#define ST7789_RGBINT_CTRL 0xb1 // RRGB Interface Control
+#define ST7789_PORCTRL 0xb2     // Porch settings
+#define ST7789_FRCTRL1 0xb3     // Frame rate Control 1
+#define ST7789_PARCTRL 0xb5     // Partial Control
+#define ST7789_GCTRL 0xb7       // Gate Control
+#define ST7789_GTADJ 0xb8       // Gate on time adjustment
+
 #define ST7789_RDID1 0xda // Read ID1
 #define ST7789_RDID1 0xdb // Read ID2
 #define ST7789_RDID1 0xdc // Read ID3
@@ -64,5 +72,12 @@
 #define ST7789_MADCTL_BGR 0x08
 #define ST7789_MADCTL_MH 0x04
 #define ST7789_MADCTL_RGB 0x00
+
+#define ST7789_COLDMOD_RGB_65K 0x50
+#define ST7789_COLDMOD_RGB_262K 0x60
+#define ST7789_COLDMOD_COLOR_12BIT_PER_PIX 0x03
+#define ST7789_COLDMOD_COLOR_16BIT_PER_PIX 0x05
+#define ST7789_COLDMOD_COLOR_18BIT_PER_PIX 0x06
+#define ST7789_COLDMOD_COLOR_16M_TRUNC 0x07
 
 #endif
