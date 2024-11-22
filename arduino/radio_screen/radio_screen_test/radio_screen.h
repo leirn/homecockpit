@@ -2,6 +2,7 @@
 #define RADIO_SCREEN_H
 
 #include <stdint.h>
+#include "LCD_Driver.h"
 
 #define HALF_HEIGHT 85
 #define HALF_WIDTH 160

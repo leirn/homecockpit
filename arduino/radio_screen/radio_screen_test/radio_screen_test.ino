@@ -1,14 +1,11 @@
 #include <SPI.h>
-#include "LCD_Driver.h"
 #include "GUI_Paint.h"
 
-#include "letters.h"
+#include "LCD_Driver.h"
+
+#include "radio_screen.h"
 
 #define DEBUG
-
-#define LIGHT_GREY ((23 << 11) | (47 << 5) | 23)
-
-#define FRAME_RADIUS 5
 
 CommData com1;
 CommData com2;
