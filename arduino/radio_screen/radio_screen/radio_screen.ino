@@ -4,19 +4,31 @@
 
 #include "letters.h"
 
-#define HALF_HEIGHT 85
-#define HALF_WIDTH 160
+#define DEBUG
+
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 170
+
+#define COM1_X 160
+#define COM1_Y 0
+
+#define COM2_X 160
+#define COM2_Y 85
+
+#define NAV1_X 0
+#define NAV1_Y 0
+
+#define NAV2_X 0
+#define NAV2_Y 85
 
 #define LIGHT_GREY ((23 << 11) | (47 << 5) | 23)
 
 #define FRAME_RADIUS 5
 
-CommNavData com1 = {"COM1", "123.505", "131.501", "LFPN TWR", "182", "20", false};
-CommNavData com2 = {"COM2", "120.750", "128.480", "LFPN ATIS", "150", "24", true};
-CommNavData nav1 = {"NAV1", "114.70", "115.65", "RBT", "127", "10", false};
-CommNavData nav2 = {"NAV2", "110.54", "116.52", "EPR", "321", "6.2", true};
+CommData com1;
+CommData com2;
+NavData nav1;
+NavData nav2;
 
 void setup()
 {
@@ -30,7 +42,50 @@ void setup()
 
   LCD_SetBacklight(100);
 
+  com1.setOffsetX(COM1_X);
+  com1.setOffsetY(COM1_Y);
+  com1.setName("COM1");
+  com1.select();
+  com2.setOffsetX(COM2_X);
+  com2.setOffsetY(COM2_Y);
+  com2.setName("COM2");
+  nav1.setOffsetX(NAV1_X);
+  nav1.setOffsetY(NAV1_Y);
+  nav1.setName("NAV1");
+  nav1.select();
+  nav2.setOffsetX(NAV2_X);
+  nav2.setOffsetY(NAV2_Y);
+  nav2.setName("NAV2");
+
+#ifdef DEBUG
+  com1.setActiveFrequency("123.505");
+  com2.setActiveFrequency("123.505");
+  nav1.setActiveFrequency("114.70");
+  nav2.setActiveFrequency("114.70");
+
+  com1.setStbyFrequency("123.505");
+  com2.setStbyFrequency("123.505");
+  nav1.setStbyFrequency("114.70");
+  nav2.setStbyFrequency("114.70");
+
+  com1.setId("LFPN");
+  com2.setId("LFMD");
+  nav1.setId("RBT");
+  nav2.setId("RBT");
+
+  com1.setDistance("25");
+  com2.setDistance("12");
+  nav1.setDistance("25");
+  nav2.setDistance("15");
+
+  com1.setBearing("025");
+  com2.setBearing("120");
+  nav1.setBearing("253");
+  nav2.setBearing("152");
+#endif
+
   Paint_NewImage(LCD_WIDTH, LCD_HEIGHT, ROTATE_90, WHITE);
+  refresh_display();
 }
 
 void loop()
@@ -38,111 +93,19 @@ void loop()
   // put your main code here, to run repeatedly:
   delay(5000);
 
-  Paint_NewImage(LCD_WIDTH, LCD_HEIGHT, ROTATE_90, WHITE);
-  Paint_Clear(BLACK);
-  init_display();
+  refresh_display();
   Serial.println("Loop");
 }
 
 void init_display()
 {
-  display_nav1_border();
-  display_nav2_border();
-  display_com1_border();
-  display_com2_border();
-  update_nav1_name();
-  // update_nav2_name();
-  // update_com1_name();
-  // update_com2_name();
+  refresh_display();
 }
 
-CommNavData com1 = {"COM1", "123.505", "131.501", "LFPN TWR", "182", "20", false};
-CommNavData com2 = {"COM2", "120.750", "128.480", "LFPN ATIS", "150", "24", true};
-CommNavData nav1 = {"NAV1", "114.70", "115.65", "RBT", "127", "10", false};
-CommNavData nav2 = {"NAV2", "110.54", "116.52", "EPR", "321", "6.2", true};
-
-void setNav1ActiveFreq(String freq)
+void refresh_display()
 {
-  int i = 0;
-  for (i = 0; i < freq.length(); ++i)
-  {
-    if (i < nav1.activ_freq.length())
-    {
-      if (freq.charAt(i) != nav1.activ_freq.charAt(i))
-      {
-        const uint8_t **var = (const uint8_t **)get_20_letter(freq.charAt(i));
-        display_letter(RIGHT_PADDING - (7 - i) * LETTER_20_WIDTH, 60, var, LETTER_20_WIDTH, LETTER_20_HEIGHT, GREEN);
-      }
-    }
-    else
-    {
-      const uint8_t **var = (const uint8_t **)get_20_letter(freq.charAt(i));
-      display_letter(RIGHT_PADDING - (7 - i) * LETTER_20_WIDTH, 60, var, LETTER_20_WIDTH, LETTER_20_HEIGHT, GREEN);
-    }
-  }
-  for (i; i < 7; ++i)
-  {
-    remove_letter(RIGHT_PADDING - (7 - i) * LETTER_20_WIDTH, 60, LETTER_20_WIDTH, LETTER_20_HEIGHT);
-  }
-}
-
-void display_nav1_border()
-{
-  display_border(0, 0, nav1.selected);
-}
-
-void display_nav2_border()
-{
-  display_border(0, HALF_HEIGHT, nav2.selected);
-}
-
-void display_com1_border()
-{
-  display_border(HALF_WIDTH, 0, com1.selected);
-}
-
-void display_com2_border()
-{
-  display_border(HALF_WIDTH, HALF_HEIGHT, com2.selected);
-}
-
-void display_border(int x, int y, bool selected)
-{
-  int color = LIGHT_GREY;
-  if (selected)
-  {
-    color = GREEN;
-  }
-  // Paint_DrawRoundRectangle(x + 1, y + 1, x + 158, x + 83, color, DOT_PIXEL_2X2, DRAW_FILL_EMPTY, FRAME_RADIUS);
-  Paint_DrawRectangle(x + 1, y + 1, x + 158, y + 83, color, DOT_PIXEL_2X2, DRAW_FILL_EMPTY);
-}
-
-void update_nav1_name()
-{
-  update_comm_name(nav1.name, LEFT_PADDING, 7);
-}
-
-void update_nav2_name()
-{
-  update_comm_name(nav2.name, LEFT_PADDING, HALF_HEIGHT + 7);
-}
-
-void update_com1_name()
-{
-  update_comm_name(com1.name, SCREEN_WIDTH - (LETTER_14_WIDTH * com1.name.length()), 7);
-}
-
-void update_com2_name()
-{
-  update_comm_name(com2.name, SCREEN_WIDTH - (LETTER_14_WIDTH * com2.name.length()), HALF_HEIGHT + 7);
-}
-
-void update_comm_name(String name, int x, int y)
-{
-  for (auto c : name)
-  {
-    const uint8_t **var = (const uint8_t **)get_14_letter(c);
-    Serial.println("Try to print letter")
-        display_letter(x, y, var, LETTER_14_WIDTH, LETTER_14_HEIGHT, MAGENTA);
-  }
+  com1.refresh();
+  com2.refresh();
+  nav1.refresh();
+  nav2.refresh();
 }

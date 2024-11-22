@@ -3,6 +3,9 @@
 
 #include <stdint.h>
 
+#define HALF_HEIGHT 85
+#define HALF_WIDTH 160
+
 #define RGB565 uint16_t
 
 #define WHITE 0xFFFF
@@ -49,29 +52,55 @@ private:
     void setPixel(int x, int y, RGB565 color);
     void drawRectangle(int x, int y, int w, int h, RGB565 color);
     int min_x, min_y, max_x, max_y;
+    int offset_x, offset_y;
     bool toBePrinted;
+
+protected:
+    void setName(String name, int x, int y);
+    void setActiveFreq(String freq, int x, int y);
+    void setStbyFreq(String freq, int x, int y);
+    void setId(String id, int x, int y);
+    void setBearing(String bearing, int x, int y);
+    void setDistance(String distance, int x, int y);
 
 public:
     CommNavData(void);
-    void setName(String name);
     void toggleFreq(String freq);
-    void setStbdFreq(String freq);
-    void setId(String id);
-    void setBearing(String bearing);
-    void setDistance(String distance);
     void drawBorder(RGB565 color);
     void select(void);
     void unselect(void);
+    virtual void setName(String name) = 0;
+    virtual void setActiveFrequency(String freq) = 0;
+    virtual void setStbyFrequency(String freq) = 0;
+    virtual void setId(String freq) = 0;
+    virtual void setDistance(String freq) = 0;
+    virtual void setBearing(String freq) = 0;
+    RGB565 getColor(int x, int y);
+    void refresh(void);
+    void setOffsetX(int x);
+    void setOffsetY(int y);
 };
 
 class CommData : CommNavData
 {
+public:
+    void setName(String name);
+    void setActiveFrequency(String freq);
+    void setStbyFrequency(String freq);
+    void setId(String freq);
+    void setDistance(String freq);
+    void setBearing(String freq);
 }
 
 class NavData : CommNavData
 {
 public:
+    void setName(String name);
     void setActiveFrequency(String freq);
+    void setStbyFrequency(String freq);
+    void setId(String freq);
+    void setDistance(String freq);
+    void setBearing(String freq);
 }
 
 #endif

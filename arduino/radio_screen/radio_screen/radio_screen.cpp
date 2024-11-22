@@ -9,12 +9,18 @@ CommNavData::CommNavData(void)
     this->bearing = "";
     this->distance = "";
     this->selected = false;
-    this->display_buffer = {0};
+    this->toBePrinted = false this->display_buffer = {0};
 }
 
-void CommNavData::setName(String name)
+void CommNavData::setName(String name, int x, int y)
 {
     this->name = name;
+    for (auto c : name)
+    {
+        const uint8_t **var = (const uint8_t **)get_14_letter(c);
+        Serial.println("Try to print letter")
+            display_letter(x, y, var, LETTER_14_WIDTH, LETTER_14_HEIGHT, MAGENTA);
+    }
 }
 
 void CommNavData::toggleFreq(String freq)
@@ -111,6 +117,35 @@ void CommNavData::setPixel(int x, int y, RGB565 color)
     toBePrinted = true;
 }
 
+void CommNavData::getColor(int x, int y)
+{
+    return this->display_buffer[y << 8 + x];
+}
+
+void CommNavData::refresh(void)
+{
+    if (this->toBePrinted)
+    {
+        int size = (this->max_x - this->min_x) * (this->max_y - this->min_y);
+        LCD_SetCursor(this->offset_x + this->min_x, this->offset_y + this->min_y, this->offset_x + this->max_x, this->offset_y + this->max_y);
+        for (int i = 0; i < size; ++i)
+        {
+            LCD_WriteData_Word(this->getColor(this->offset_x + i & 0x00FF, this->offset_y + i >> 8));
+        }
+        this->toBePrinted = false;
+    }
+}
+
+void CommNavData::setOffsetX(int x)
+{
+    this->offset_x = x;
+}
+
+void CommNavData::setOffsetY(int y)
+{
+    this->offset_y = y;
+}
+
 void CommNavData::displayLetter(int x, int y, const uint8_t **bitmap, int bitmap_width, int bitmap_height, uint16_t color)
 {
     for (int w = 0; w < bitmap_width; w++)
@@ -152,4 +187,14 @@ void NavData::setActiveFrequency(String freq)
         this->(RIGHT_PADDING - (7 - i) * LETTER_20_WIDTH, 60, LETTER_20_WIDTH, LETTER_20_HEIGHT);
     }
     this->activ_freq = freq;
+}
+
+void NavData::setName(String name)
+{
+    this->setName(name, LEFT_PADDING, 7);
+}
+
+void CommData::setName(String name)
+{
+    this->setName(name, HALF_WIDTH - (LETTER_14_WIDTH * name.length()), 7);
 }
