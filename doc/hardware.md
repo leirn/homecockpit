@@ -8,7 +8,7 @@ Synthèse :
 | Auto pilot | Smapp_AP | en cours | ? | ? |
 | P/MFD input|  Small_PFD_MFD | A vérifier | ? | ? |
 | Radio | Module_radio_comm_nav | En cours | ? | ? |
-| Mix son |     | A faire | ? | ? |
+| Mix son | SoundMix@Pro    | A faire | ? | ? |
 | Systèmes | Systems_light | A vérifier | ? | ? |
 | Lumières | Systems_light | A vérifier | ? | ? |
 | Arduino Mega | ArduinoShield | En cours | ? | ? | ? |
@@ -66,9 +66,9 @@ Status : En cours
 
 ### PCB
 
-__ :
+SoundMix@Pro :
 
-Status : non démarré
+Status : Initialisé
 
 ### 3d print
 
