@@ -1,0 +1,4 @@
+03-07 11:38:56.869 [INF]: Initializing WASimClient v1.1.0.0 for client 317E57E9 with net config ID -1
+03-07 11:38:57.306 [ERR]: Network connection to Simulator failed with result: HRESULT 0x80004005
+03-07 11:38:57.324 [INF]: No network connection. Shutdown complete.
+03-07 11:39:10.679 [INF]: No network connection. Shutdown complete.
