@@ -1,92 +1,88 @@
+# Architecture générale
+
+## F-16 / F-18
+
+- Connexion au PC réalisé par le module Core, qui peut contenir un arduino format Nano, configuré comme un périphérique USB Device Input de type Joystick
+- 4 ports RJ45 dispos pour des modules additionnels, de type F16 CMFD
+
+## Avion Civil
+
+- Connexion au PC réalisé par le module Core, qui peut contenir un arduino format Nano, configuré avec un protocol d'échange spécifique pour mettre de fournir des données bidirectionnelles
+- 4 ports RJ45 disponibles
+    - 1x Module multifonction
+    - 2x GDU Softkey
+    - 1x Lghts and systems
+
 # Hardware components decription
 
 Synthèse :
 
 | Composant | PCB | Status | 3D Model | Status |
 |-----------|-----|--------|----------|--------|
-| GDU       | Small_Softkey |  terminé | ? | ? |
-| Auto pilot | Smapp_AP | en cours | ? | ? |
-| P/MFD input|  Small_PFD_MFD | A vérifier | ? | ? |
-| Radio | Module_radio_comm_nav | En cours | ? | ? |
-| Mix son | SoundMix@Pro    | A faire | ? | ? |
-| Systèmes | Systems_light | A vérifier | ? | ? |
-| Lumières | Systems_light | A vérifier | ? | ? |
-| Arduino Mega | ArduinoShield | En cours | ? | ? | ? |
+| Core       | F16-18-Core |  A vérifier | ? | ? |
+| F16 CMFD / DDI      | F16-18-DDI |  A vérifier | ? | ? |
+| GDU       | Small_Softkey_Core |  A vérifier | ? | ? |
+| Multifonction       | Small_full_? |  A trier | ? | ? |
+| Systèmes | Systems_light | A moderniser | ? | ? |
+| Lumières | Systems_light | A moderniser | ? | ? |
+
+## Core
+
+### PCB
+
+F16-18-Core :
+
+- Status : terminé, à vérifier, en particulier le refroidissement du convertisseur de tension
+
+### 3d print
+
+- Status : modèle 3D à réaliser
+
+## F16 CMFD
+
+### PCB
+
+F16-18-DDI :
+
+- Status : terminé, à vérifier
+
+### 3d print
+
+- Status : modèle 3D à réaliser
+
 
 ## GDU
 
 ### PCB
 
-Small_Softkey :
+Small_Softkey_core : nouvelle version RJ45
 
-Status : terminé, commandé, testé
+- Status : terminé, à vérifier
 
 ### 3d print
 
-## Auto pilot
+- Status : modèle 3D à réaliser
+
+## Multifonction
 
 ### PCB
 
-Small_AP :
+Small_full_? : Existe en 3 versions : standard, WS2811 et SK6812. Vérifier quelle est la version officielle
 
-Status : en cours
-
-Reste à faire :
-
-- Vérifier la valeur des résistances
-- Tester l'intégration avec modèle 3D, en particulier pour la molette de trim
+- Status : unclear
 
 ### 3d print
 
-## P/MFD input
+- Status : modèle 3D à réaliser
+
+## Systèmes / lumières
 
 ### PCB
 
-Small_PFD_MFD :
+Pas de PCB eistant en RF45 à date. Nécessiterait une carte unique et commune pour n'utiliser qu'un seul RJ45, sauf à modifier soft key
 
-Status : en cours
-
-Reste à faire :
-
-- Vérifier si prêt à commander
+Status : à faire
 
 ### 3d print
 
-## Radio
-
-### PCB
-
-Module_radio_comm_nav :
-
-Status : En cours
-
-### 3d print
-
-## Mix son
-
-### PCB
-
-SoundMix@Pro :
-
-Status : Initialisé
-
-### 3d print
-
-## Systèmes
-
-### PCB
-
-Systems_light :
-
-Status : à vérifier avant commande
-
-### 3d print
-
-## Lumières
-
-### PCB
-
-Systems_light :
-
-Status : à vérifier avant commande
-### 3d print
+- Status : modèle 3D à réaliser
