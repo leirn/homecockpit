@@ -22,7 +22,7 @@ Synthèse :
 | Core       | F16-18-Core |  A vérifier | ? | ? |
 | F16 CMFD / DDI      | F16-18-DDI |  A vérifier | ? | ? |
 | GDU       | Small_Softkey_Core |  A vérifier | ? | ? |
-| Multifonction       | Small_full_? |  A trier | ? | ? |
+| Multifonction       | Small_full_WS2811 |  A trier | ? | ? |
 | Systèmes | Systems_light | A moderniser | ? | ? |
 | Lumières | Systems_light | A moderniser | ? | ? |
 
@@ -67,9 +67,9 @@ Small_Softkey_core : nouvelle version RJ45
 
 ### PCB
 
-Small_full_? : Existe en 3 versions : standard, WS2811 et SK6812. Vérifier quelle est la version officielle
+Small_full_WS2811 : 
 
-- Status : unclear
+- Status : à vérifier
 
 ### 3d print
 
