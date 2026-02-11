@@ -22,9 +22,9 @@ Synthèse :
 | Core       | F16-18-Core |  A vérifier | ? | ? |
 | F16 CMFD / DDI      | F16-18-DDI |  A vérifier | ? | ? |
 | GDU       | Small_Softkey_Core |  A vérifier | ? | ? |
-| Multifonction       | Small_full_WS2811 |  A trier | ? | ? |
-| Systèmes | Systems_light | A moderniser | ? | ? |
-| Lumières | Systems_light | A moderniser | ? | ? |
+| Multifonction       | Small_full_WS2811 |  A vérifier | ? | ? |
+| Systèmes | Systems_light | Suspendu | ? | ? |
+| Lumières | Systems_light | Suspendu | ? | ? |
 
 ## Core
 
@@ -69,7 +69,7 @@ Small_Softkey_core : nouvelle version RJ45
 
 Small_full_WS2811 : 
 
-- Status : à vérifier
+- Status : terminé, à vérifier
 
 ### 3d print
 
@@ -79,10 +79,10 @@ Small_full_WS2811 :
 
 ### PCB
 
-Pas de PCB eistant en RF45 à date. Nécessiterait une carte unique et commune pour n'utiliser qu'un seul RJ45, sauf à modifier soft key
+Pas de PCB eistant en RJ45 à date. Nécessiterait une carte unique et commune pour n'utiliser qu'un seul RJ45, sauf à modifier soft key
 
-Status : à faire
+Status : en pause, status systèmes en partie sur full WS2811
 
 ### 3d print
 
-- Status : modèle 3D à réaliser
+- Status : Sans objet
